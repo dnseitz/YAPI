@@ -34,6 +34,12 @@ public protocol YelpResponse {
   /// The request that was sent to generate this response
   var request: YelpRequest { get }
   
+  /// Suggested bounds in a map to display results in
+  var region: YelpRegion? { get }
+  
+  /// Total number of business results
+  var total: Int? { get }
+  
   /// An array containing the businesses that were in the response, or an empty array if there was an error
   var businesses: [YelpBusiness]? { get }
   

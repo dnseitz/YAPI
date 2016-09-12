@@ -10,6 +10,8 @@ import Foundation
 
 public final class YelpBusinessResponse : YelpResponse {
   public let request: YelpRequest
+  public let region: YelpRegion? = nil
+  public let total: Int? = nil
   public let businesses: [YelpBusiness]?
   public let error: YelpResponseError?
   

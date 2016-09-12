@@ -10,6 +10,8 @@ import Foundation
 
 public final class YelpSearchResponse : YelpResponse {
   public let request: YelpRequest
+  public let region: YelpRegion?
+  public let total: Int?
   public let businesses: [YelpBusiness]?
   public let error: YelpResponseError?
   
@@ -41,6 +43,20 @@ public final class YelpSearchResponse : YelpResponse {
     }
     
     if self.error == nil {
+      if let regionDict = data["region"] as? [String: AnyObject] {
+        self.region = YelpRegion(withDict: regionDict)
+      }
+      else {
+        self.region = nil
+      }
+      
+      if let total = data["total"] as? Int {
+        self.total = total
+      }
+      else {
+        self.total = nil
+      }
+      
       var businesses = [YelpBusiness]()
       for business in data["businesses"] as! [[String: AnyObject]] {
         let yelpBusiness = YelpBusiness(withDict: business)
@@ -49,6 +65,8 @@ public final class YelpSearchResponse : YelpResponse {
       self.businesses = businesses
     }
     else {
+      self.region = nil
+      self.total = nil
       self.businesses = nil
     }
     self.request = request
