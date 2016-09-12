@@ -12,6 +12,7 @@ import OAuthSwift
 
 internal let yelpHost: String = "api.yelp.com"
 internal let searchEndpoint: String = "/v2/search/"
+internal let businessEndpoint: String = "/v2/business/"
 
 /**
     Any request that can be sent to the Yelp API conforms to this protocol. This could include requests to 

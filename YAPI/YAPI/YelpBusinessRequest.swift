@@ -9,18 +9,40 @@
 import Foundation
 import OAuthSwift
 
-//public final class YelpBusinessRequest : YelpRequest {
-//  public let host = yelpHost
-//  
-//  public let path: String
-//  
-//  public let parameters: [String : String]
-//  
-//  public let session: YelpHTTPClient
-//  
-//  public var requestMethod: OAuthSwiftHTTPRequest.Method {
-//    return .GET
-//  }
-//  
-//  
-//}
+public final class YelpBusinessRequest : YelpRequest {
+  public let host = yelpHost
+  public let path: String
+  public let parameters: [String : String]
+  public let session: YelpHTTPClient
+  public var requestMethod: OAuthSwiftHTTPRequest.Method {
+    return .GET
+  }
+  
+  init(businessId: String, locale: YelpLocaleParameters? = nil, actionlink: YelpActionlinkParameters? = nil, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
+    var parameters = [String: String]()
+    
+    // Locale Parameters
+    if let locale = locale {
+      if let countryCode = locale.countryCode {
+        parameters.insertParameter(countryCode)
+      }
+      if let language = locale.language {
+        parameters.insertParameter(language)
+      }
+      if let filterLanguage = locale.filterLanguage {
+        parameters.insertParameter(filterLanguage)
+      }
+    }
+    
+    // Actionlink Parameters
+    if let actionlink = actionlink {
+      if let actionlinks = actionlink.actionlinks {
+        parameters.insertParameter(actionlinks)
+      }
+    }
+    
+    self.path = businessEndpoint + businessId
+    self.parameters = parameters
+    self.session = session
+  }
+}

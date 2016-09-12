@@ -41,15 +41,25 @@ public enum YelpAPIFactory {
   }
   
   /**
-      Build a request with the specified request parameters
+      Build a search request with the specified request parameters
    
-      - Parameter params: A struct containing information with which to create a request
+      - Parameter parameters: A struct containing information with which to create a request
    
       - Returns: A fully formed request that can be sent immediately
    */
   public static func makeSearchRequest(with parameters: YelpSearchParameters) -> YelpSearchRequest {
-    
     return YelpSearchRequest(search: parameters, locale: self.localeParameters, actionlink: self.actionlinkParameters)
+  }
+  
+  /**
+      Build a business request searching for the specified businessId
+   
+      - Parameter businessId: The Yelp businessId to search for
+   
+      - Returns: A fully formed request that can be sent immediately
+   */
+  public static func makeBusinessRequest(with businessId: String) -> YelpBusinessRequest {
+    return YelpBusinessRequest(businessId: businessId, locale: self.localeParameters, actionlink: self.actionlinkParameters)
   }
   
   /**
@@ -60,8 +70,16 @@ public enum YelpAPIFactory {
    
       - Returns: A valid response object, populated with businesses or an error
    */
-  static func makeResponse(withJSON json: [String: AnyObject], from request: YelpRequest) -> YelpResponse {
-    return YelpResponse(withJSON: json, from: request)
+  static func makeResponse(withJSON json: [String: AnyObject], from request: YelpRequest) -> YelpResponse! {
+    if let request = request as? YelpSearchRequest {
+      return YelpSearchResponse(withJSON: json, from: request)
+    }
+    if let request = request as? YelpBusinessRequest {
+      return YelpBusinessResponse(withJSON: json, from: request)
+    }
+    
+    // We should never reach here
+    return nil
   }
   
   /**
@@ -75,7 +93,7 @@ public enum YelpAPIFactory {
   static func makeResponse(with data: NSData, from request: YelpRequest) -> YelpResponse? {
     do {
       let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-      return YelpResponse(withJSON: json as! [String: AnyObject], from: request)
+      return YelpAPIFactory.makeResponse(withJSON: json as! [String: AnyObject], from: request)
     }
     catch {
       return nil

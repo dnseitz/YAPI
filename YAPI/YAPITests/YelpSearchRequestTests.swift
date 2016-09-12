@@ -9,24 +9,11 @@
 import XCTest
 @testable import YAPI
 
-class YelpRequestTests: YAPIXCTestCase {
-  
-  var session: YelpHTTPClient!
-  var request: YelpRequest!
-  let mockSession = MockURLSession()
-  
+class YelpSearchRequestTests: YelpRequestTestCase {
   override func setUp() {
     super.setUp()
     
-    session = YelpHTTPClient(session: mockSession)
     request = YelpSearchRequest(search: YelpSearchParameters(location: "Portland, OR" as YelpSearchLocation), session: session)
-  }
-  
-  override func tearDown() {
-    mockSession.nextData = nil
-    mockSession.nextError = nil
-    
-    super.tearDown()
   }
   
   func test_SendRequest_RecievesData_ParsesTheData() {
@@ -35,7 +22,7 @@ class YelpRequestTests: YAPIXCTestCase {
       XCTAssertNotNil(response)
       XCTAssertNil(error)
       
-      let business = response!.businesses[0]
+      let business = response!.businesses![0]
       
       XCTAssert(business.categories.count == 2)
       
@@ -126,7 +113,7 @@ class YelpRequestTests: YAPIXCTestCase {
       XCTAssertNotNil(response)
       XCTAssertNotNil(error)
       
-      XCTAssert(response!.businesses.count == 0)
+      XCTAssertNil(response!.businesses)
       XCTAssert((self.request as! AnyObject) === (response!.request as! AnyObject))
       XCTAssertNotNil(response!.error)
       XCTAssert(response!.error! == YelpResponseError.InvalidParameter(field: "location"))

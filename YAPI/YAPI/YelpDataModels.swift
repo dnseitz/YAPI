@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct YelpBusiness {
+public struct YelpBusiness {
   /// Yelp ID for business
   let id: String
   /// Whether business has been claimed by a business owner
@@ -210,7 +210,7 @@ struct YelpGeoLocation {
 
 struct YelpDeal {
   /// Deal identifier
-  let id: String
+  let id: String?
   /// Deal title
   let title: String
   /// Deal url
@@ -226,16 +226,16 @@ struct YelpDeal {
   /// Whether the Deal is popular (optional: this field is present only if true)
   let popular: Bool?
   /// Additional details for the Deal, separated by newlines
-  let details: String
+  let details: String?
   /// Important restrictions for the Deal, separated by newlines
-  let importantRestrictions: String
+  let importantRestrictions: String?
   /// Deal additional restrictions
-  let additionalRestrictions: String
+  let additionalRestrictions: String?
   /// Deal options
   let options: [YelpDealOptions]  
   
   init(withDict dict: [String: AnyObject]) {
-    self.id = dict["id"] as! String
+    self.id = dict["id"] as? String
     self.title = dict["title"] as! String
     self.url = NSURL(string: dict["url"] as! String)!
     self.image = ImageReference(from: NSURL(string: dict["image_url"] as! String)!)
@@ -243,9 +243,9 @@ struct YelpDeal {
     self.startTime = dict["time_start"] as! Int
     self.endTime = dict["time_end"] as? Int
     self.popular = dict["is_popular"] as? Bool
-    self.details = dict["what_you_get"] as! String
-    self.importantRestrictions = dict["important_restrictions"] as! String
-    self.additionalRestrictions = dict["additional_restrictions"] as! String
+    self.details = dict["what_you_get"] as? String
+    self.importantRestrictions = dict["important_restrictions"] as? String
+    self.additionalRestrictions = dict["additional_restrictions"] as? String
     var options = [YelpDealOptions]()
     for option in dict["options"] as! [[String: AnyObject]] {
       let yelpDealOption = YelpDealOptions(withDict: option)

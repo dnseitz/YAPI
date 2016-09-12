@@ -1,0 +1,3 @@
+language: objective-c
+osx_image: xcode7.3
+script: set -o pipefail && xcodebuild test -project YAPI.xcodeproj -scheme YAPI -sdk iphonesimulator9.3 | xcpretty
