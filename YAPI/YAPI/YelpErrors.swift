@@ -21,8 +21,6 @@ public enum YelpRequestError: YelpError, Equatable {
   case FailedToGenerateRequest
   /// The request failed to send for some reason, see the wrapped NSError for details
   case FailedToSendRequest(NSError)
-  /// Some form of location data in the request is required for a valid request
-  case NoLocationData
   
   public var description: String {
     switch self {
@@ -30,8 +28,6 @@ public enum YelpRequestError: YelpError, Equatable {
       return "Failed to generate the Network Request for some reason"
     case let .FailedToSendRequest(err):
       return "Failed to send request (\(err.code))"
-    case .NoLocationData:
-      return "Request must have some form of location data to be sent"
     }
   }
 }
@@ -42,8 +38,6 @@ public func ==(lhs: YelpRequestError, rhs: YelpRequestError) -> Bool {
     return true
   case(let .FailedToSendRequest(err1), let .FailedToSendRequest(err2)):
     return err1.domain == err2.domain && err1.code == err2.code
-  case(.NoLocationData, .NoLocationData):
-    return true
   default:
     return false
   }

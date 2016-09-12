@@ -17,16 +17,23 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   override func setUp() {
     super.setUp()
     
-    requestStub = YelpAPIFactory.makeSearchRequest()
+    requestStub = YelpAPIFactory.makeSearchRequest(with: YelpSearchParameters(location: "" as YelpSearchLocation))
+  }
+  
+  override func tearDown() {
+    YelpAPIFactory.localeParameters = nil
+    YelpAPIFactory.actionlinkParameters = nil
+    
+    super.tearDown()
   }
   
   func test_Factory_BuildsRequestWithParamStruct() {
-    let params = YelpSearchParameters(location: "TEST_LOCATION", currentLocation: CLLocation(latitude: 10, longitude: 20), limit: 99, term: .Food, offset: 15, sortMode: .Best, category: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
+    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
     let request = YelpAPIFactory.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
     XCTAssert(reqParams["location"] == "TEST_LOCATION")
-    XCTAssert(reqParams["cl"] == "10.0,20.0")
+    XCTAssert(reqParams["cll"] == "10.0,20.0")
     XCTAssert(reqParams["limit"] == "99")
     XCTAssert(reqParams["term"] == "food")
     XCTAssert(reqParams["offset"] == "15")
@@ -34,13 +41,22 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     XCTAssert(reqParams["category_filter"] == "TEST_CATEGORY1,TEST_CATEGORY2")
     XCTAssert(reqParams["radius_filter"] == "10000")
     XCTAssert(reqParams["deals_filter"] == "false")
+    
+    XCTAssertNil(reqParams["cc"])
+    XCTAssertNil(reqParams["lang"])
+    XCTAssertNil(reqParams["lang_filter"])
+    
+    XCTAssertNil(reqParams["actionlinks"])
   }
   
-  func test_Factory_BuildsRequestWithParamValues() {
-    let request = YelpAPIFactory.makeSearchRequest(withLocation: "TEST_LOCATION", withLimit: 99, withTerm: .Food, withOffset: 15, sortBy: .Best, withCategory: ["TEST_CATEGORY1", "TEST_CATEGORY2"], withRadiusInMeters: 10000, filterDeals: false)
+  func test_Factory_BuildsRequestWithLocaleParameters() {
+    YelpAPIFactory.localeParameters = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: true)
+    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
+    let request = YelpAPIFactory.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
     XCTAssert(reqParams["location"] == "TEST_LOCATION")
+    XCTAssert(reqParams["cll"] == "10.0,20.0")
     XCTAssert(reqParams["limit"] == "99")
     XCTAssert(reqParams["term"] == "food")
     XCTAssert(reqParams["offset"] == "15")
@@ -48,13 +64,22 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     XCTAssert(reqParams["category_filter"] == "TEST_CATEGORY1,TEST_CATEGORY2")
     XCTAssert(reqParams["radius_filter"] == "10000")
     XCTAssert(reqParams["deals_filter"] == "false")
+    
+    XCTAssert(reqParams["cc"] == "US")
+    XCTAssert(reqParams["lang"] == "en")
+    XCTAssert(reqParams["lang_filter"] == "true")
+    
+    XCTAssertNil(reqParams["actionlinks"])
   }
   
-  func test_Factory_BuildsRequestWithoutLocation() {
-    let request = YelpAPIFactory.makeSearchRequest(currentLocation: CLLocation(latitude: 10, longitude: 20), withLimit: 99, withTerm: .Food, withOffset: 15, sortBy: .Best, withCategory: ["TEST_CATEGORY1", "TEST_CATEGORY2"], withRadiusInMeters: 10000, filterDeals: false)
+  func test_factory_BuildsRequestWithActionlinkParameters() {
+    YelpAPIFactory.actionlinkParameters = YelpActionlinkParameters(actionlinks: false)
+    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
+    let request = YelpAPIFactory.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
-    XCTAssert(reqParams["ll"] == "10.0,20.0")
+    XCTAssert(reqParams["location"] == "TEST_LOCATION")
+    XCTAssert(reqParams["cll"] == "10.0,20.0")
     XCTAssert(reqParams["limit"] == "99")
     XCTAssert(reqParams["term"] == "food")
     XCTAssert(reqParams["offset"] == "15")
@@ -62,6 +87,34 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     XCTAssert(reqParams["category_filter"] == "TEST_CATEGORY1,TEST_CATEGORY2")
     XCTAssert(reqParams["radius_filter"] == "10000")
     XCTAssert(reqParams["deals_filter"] == "false")
+    
+    XCTAssertNil(reqParams["cc"])
+    XCTAssertNil(reqParams["lang"])
+    XCTAssertNil(reqParams["lang_filter"])
+    
+    XCTAssert(reqParams["actionlinks"] == "false")
+  }
+  
+  func test_Factory_BuildsRequestWithMinimalParameters() {
+    let params = YelpSearchParameters(location: "TEST_LOCATION" as YelpSearchLocation)
+    let request = YelpAPIFactory.makeSearchRequest(with: params)
+    let reqParams = request.parameters
+    
+    XCTAssert(reqParams["location"] == "TEST_LOCATION")
+    XCTAssertNil(reqParams["cll"])
+    XCTAssertNil(reqParams["limit"])
+    XCTAssertNil(reqParams["term"])
+    XCTAssertNil(reqParams["offset"])
+    XCTAssertNil(reqParams["sort"])
+    XCTAssertNil(reqParams["category_filter"])
+    XCTAssertNil(reqParams["radius_filter"])
+    XCTAssertNil(reqParams["deals_filter"])
+    
+    XCTAssertNil(reqParams["cc"])
+    XCTAssertNil(reqParams["lang"])
+    XCTAssertNil(reqParams["lang_filter"])
+    
+    XCTAssertNil(reqParams["actionlinks"])
   }
   
   func test_Factory_BuildsResponseWithValidJSON() {

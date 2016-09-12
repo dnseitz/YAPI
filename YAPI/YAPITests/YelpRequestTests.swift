@@ -12,12 +12,14 @@ import XCTest
 class YelpRequestTests: YAPIXCTestCase {
   
   var session: YelpHTTPClient!
+  var request: YelpRequest!
   let mockSession = MockURLSession()
   
   override func setUp() {
     super.setUp()
     
     session = YelpHTTPClient(session: mockSession)
+    request = YelpSearchRequest(search: YelpSearchParameters(location: "Portland, OR" as YelpSearchLocation), session: session)
   }
   
   override func tearDown() {
@@ -29,7 +31,6 @@ class YelpRequestTests: YAPIXCTestCase {
   
   func test_SendRequest_RecievesData_ParsesTheData() {
     mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidOneBusinessResponse, options: .IgnoreUnknownCharacters)
-    let request = YelpSearchRequest(withLocation: "Portland, OR", withSession: session)
     request.send() { (response, error) in
       XCTAssertNotNil(response)
       XCTAssertNil(error)
@@ -89,20 +90,9 @@ class YelpRequestTests: YAPIXCTestCase {
     }
   }
   
-  func test_SendRequest_WithNoLocationData_GivesAnError() {
-    let request = YelpSearchRequest(withSession: session)
-    request.send() { (response, error) -> Void in
-      XCTAssertNil(response)
-      XCTAssertNotNil(error)
-      
-      XCTAssert(error as! YelpRequestError == .NoLocationData)
-    }
-  }
-  
   func test_SendRequest_WhereRequestErrors_GivesTheError() {
     let mockError = NSError(domain: "error", code: 0, userInfo: nil)
     mockSession.nextError = mockError
-    let request = YelpSearchRequest(withLocation: "Portland, OR", withSession: session)
     request.send() { (response, error) -> Void in
       XCTAssertNil(response)
       XCTAssertNotNil(error)
@@ -112,7 +102,6 @@ class YelpRequestTests: YAPIXCTestCase {
   }
   
   func test_SendRequest_RecievesNoData_GivesAnError() {
-    let request = YelpSearchRequest(withLocation: "Portland, OR", withSession: session)
     request.send() { (response, error) -> Void in
       XCTAssertNil(response)
       XCTAssertNotNil(error)
@@ -123,7 +112,6 @@ class YelpRequestTests: YAPIXCTestCase {
   
   func test_SendRequest_RecievesBadData_GivesAnError() {
     mockSession.nextData = NSData()
-    let request = YelpSearchRequest(withLocation: "Portland, OR", withSession: session)
     request.send() { (response, error) -> Void in
       XCTAssertNil(response)
       XCTAssertNotNil(error)
@@ -134,13 +122,12 @@ class YelpRequestTests: YAPIXCTestCase {
   
   func test_SendRequest_RecievesYelpError_GivesTheError() {
     mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpErrorResponse, options: .IgnoreUnknownCharacters)
-    let request = YelpSearchRequest(withLocation: "Portland, OR", withSession: session)
     request.send() { (response, error) -> Void in
       XCTAssertNotNil(response)
       XCTAssertNotNil(error)
       
       XCTAssert(response!.businesses.count == 0)
-      XCTAssert(request === (response!.request as! AnyObject))
+      XCTAssert((self.request as! AnyObject) === (response!.request as! AnyObject))
       XCTAssertNotNil(response!.error)
       XCTAssert(response!.error! == YelpResponseError.InvalidParameter(field: "location"))
       XCTAssert(response!.wasSuccessful == false)
@@ -148,5 +135,4 @@ class YelpRequestTests: YAPIXCTestCase {
       XCTAssert(response!.error == (error as! YelpResponseError))
     }
   }
-  
 }

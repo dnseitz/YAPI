@@ -8,17 +8,6 @@
 
 import Foundation
 
-extension String {
-  
-  subscript (i: Int) -> Character {
-    return self[self.startIndex.advancedBy(i)]
-  }
-  
-  subscript (i: Int) -> String {
-    return String(self[i] as Character)
-  }
-}
-
 /**
     Used to access the different categories available to the Yelp API. The default categories given by Yelp 
     can be accessed through the singleton property of the struct.

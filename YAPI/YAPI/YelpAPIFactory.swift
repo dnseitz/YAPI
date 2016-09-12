@@ -13,6 +13,12 @@ import CoreLocation
     Factory class that generates Yelp requests and responses for use.
  */
 public enum YelpAPIFactory {
+  /// The parameters to use when determining localization
+  public static var localeParameters: YelpLocaleParameters?
+  
+  /// The parameters to use to determine whether to show action links
+  public static var actionlinkParameters: YelpActionlinkParameters?
+  
   /**
       Set the authentication keys that will be used to generate requests. These keys are needed in order 
       for the Yelp API to successfully authenticate your requests, if you generate a request without these 
@@ -34,49 +40,8 @@ public enum YelpAPIFactory {
     AuthKeys.tokenSecret = tokenSecret
   }
   
-  
   /**
-      Build a request with the specified parameters, useful for fine tuning of parameters being sent.
-      Recommend using the request(withRequestParams:) function instead with the DataManager's request
-      parameters in most cases
-   
-      - Parameters:
-        - location: A string indicating some location, usually a city
-        - limit: The number of businesses to return in the result
-        - term: The type that this request should be searching (i.e. food)
-        - offset: The number of top businesses to skip over
-        - sort: The sort mode, see YelpSortMode for values
-        - category: A string indicating a category to search
-        - radius: Radius to search around in meters
-        - dealsFilter: Boolean value indicating whether businesses with deals should be filtered
-   
-      - Returns: A fully formed request that can be sent immediately
-   
-   */
-  public static func makeSearchRequest(withLocation location: String? = nil,
-                                             currentLocation: CLLocation? = nil,
-                                             withLimit limit: Int? = nil,
-                                               withTerm term: YelpSearchTerm? = nil,
-                                           withOffset offset: Int? = nil,
-                                                 sortBy sort: YelpSortMode? = nil,
-                                       withCategory category: [String]? = nil,
-                                   withRadiusInMeters radius: Int? = nil,
-                                     filterDeals dealsFilter: Bool? = nil) -> YelpSearchRequest {
-    
-    return YelpSearchRequest(withLocation: location,
-                          currentLocation: currentLocation,
-                                withLimit: limit,
-                                 withTerm: term,
-                               withOffset: offset,
-                                   sortBy: sort,
-                             withCategory: category,
-                       withRadiusInMeters: radius,
-                              filterDeals: dealsFilter)
-  }
-  
-  /**
-      Build a request with the specified request parameters, use this in conjunction with the 
-      DataManager's request parameters property in most cases
+      Build a request with the specified request parameters
    
       - Parameter params: A struct containing information with which to create a request
    
@@ -84,15 +49,7 @@ public enum YelpAPIFactory {
    */
   public static func makeSearchRequest(with parameters: YelpSearchParameters) -> YelpSearchRequest {
     
-    return YelpSearchRequest(withLocation: parameters.location,
-                          currentLocation: parameters.currentLocation,
-                                withLimit: parameters.limit,
-                                 withTerm: parameters.term,
-                               withOffset: parameters.offset,
-                                   sortBy: parameters.sortMode,
-                             withCategory: parameters.category,
-                       withRadiusInMeters: parameters.radius,
-                              filterDeals: parameters.filterDeals)
+    return YelpSearchRequest(search: parameters, locale: self.localeParameters, actionlink: self.actionlinkParameters)
   }
   
   /**

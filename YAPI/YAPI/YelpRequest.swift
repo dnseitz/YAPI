@@ -29,14 +29,32 @@ internal let searchEndpoint: String = "/v2/search/"
     ```
  */
 public protocol YelpRequest {
+  
+  /// The hostname of the yelp endpoint
   var host: String { get }
+  
+  /// The path to the yelp api
   var path: String { get }
+  
+  /// Query parameters to include in the request
   var parameters: [String: String] { get }
+  
+  /// The HTTP Method used for this request
   var requestMethod: OAuthSwiftHTTPRequest.Method { get }
+  
+  /// The http session used to send this request
   var session: YelpHTTPClient { get }
 }
 
 public extension YelpRequest {
+  
+  /**
+      Sends the request, calling the given handler with either the yelp response or an error. This can be
+      called multiple times to retry sending the request
+   
+      - Parameter completionHandler: The block to call when the response returns, takes a YelpResponse? and
+          a YelpError? as arguments, the error can be of YelpResponseError type or YelpRequestError type
+   */
   func send(completionHandler handler: (response: YelpResponse?, error: YelpError?) -> Void) {
     guard let urlRequest = self.generateURLRequest() else {
       handler(response: nil, error: YelpRequestError.FailedToGenerateRequest)
@@ -98,36 +116,3 @@ extension YelpRequest {
   }
 }
 
-public enum YelpSortMode: Int {
-    case Best = 0
-    case Distance = 1
-    case HighestRated = 2
-}
-
-public enum YelpSearchTerm {
-  case Food
-  case Drink
-}
-
-extension YelpSearchTerm : CustomStringConvertible {
-  public var description: String {
-    switch self {
-    case .Food:
-      return "food"
-    case .Drink:
-      return "drink"
-    }
-  }
-}
-
-public struct YelpSearchParameters {
-  var location: String?
-  var currentLocation: CLLocation?
-  var limit: Int?
-  var term: YelpSearchTerm?
-  var offset: Int?
-  var sortMode: YelpSortMode?
-  var category: [String]?
-  var radius: Int?
-  var filterDeals: Bool?
-}

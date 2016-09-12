@@ -19,89 +19,66 @@ import CoreLocation
  */
 public final class YelpSearchRequest: YelpRequest {
   
-  /// The hostname of the yelp endpoint
   public let host: String = yelpHost
-  
-  /// The path to the yelp api
   public let path: String = searchEndpoint
-  
-  /// Query parameters to include in the request
   public let parameters: [String: String]
-  
-  /// The http session used to send this request
-  public let session: YelpHTTPClient
-  
   public var requestMethod: OAuthSwiftHTTPRequest.Method {
     return .GET
   }
+  public let session: YelpHTTPClient
   
-  private var sendable: Bool {
-    return (self.parameters["location"] != nil || self.parameters["ll"] != nil)
-  }
-  
-  init(withLocation location: String? = nil,
-          currentLocation cl: CLLocation? = nil,
-             withLimit limit: Int? = nil,
-               withTerm term: YelpSearchTerm? = nil,
-           withOffset offset: Int? = nil,
-                 sortBy sort: YelpSortMode? = nil,
-       withCategory category: [String]? = nil,
-   withRadiusInMeters radius: Int? = nil,
-     filterDeals dealsFilter: Bool? = nil,
-         withSession session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
-    
-    assert(location != nil || cl != nil, "Must have some way of determining location")
-    
+  init(search: YelpSearchParameters, locale: YelpLocaleParameters? = nil, actionlink: YelpActionlinkParameters? = nil, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
     var parameters = [String: String]()
-    if let location = location {
-      parameters["location"] = location
-      if let cl = cl {
-        parameters["cl"] = "\(cl.coordinate.latitude),\(cl.coordinate.longitude)"
+    
+    // Search Parameters
+    parameters.insertParameter(search.location)
+    if let hint = search.location.hint {
+      parameters.insertParameter(hint)
+    }
+    if let limit = search.limit {
+      parameters.insertParameter(limit)
+    }
+    if let term = search.term {
+      parameters.insertParameter(term)
+    }
+    if let offset = search.offset {
+      parameters.insertParameter(offset)
+    }
+    if let sortMode = search.sortMode {
+      parameters.insertParameter(sortMode)
+    }
+    if let categories = search.categories {
+      parameters.insertParameter(categories)
+    }
+    if let radius = search.radius {
+      parameters.insertParameter(radius)
+    }
+    if let filterDeals = search.filterDeals {
+      parameters.insertParameter(filterDeals)
+    }
+    
+    // Locale Parameters
+    if let locale = locale {
+      if let countryCode = locale.countryCode {
+        parameters.insertParameter(countryCode)
+      }
+      if let language = locale.language {
+        parameters.insertParameter(language)
+      }
+      if let filterLanguage = locale.filterLanguage {
+        parameters.insertParameter(filterLanguage)
       }
     }
-    else if let cl = cl {
-      parameters["ll"] = "\(cl.coordinate.latitude),\(cl.coordinate.longitude)"
-    }
-    if let limit = limit {
-      parameters["limit"] = String(limit)
-    }
-    if let term = term {
-      parameters["term"] = String(term)
-    }
-    if let offset = offset {
-      parameters["offset"] = String(offset)
-    }
-    if let sort = sort {
-      parameters["sort"] = String(sort.rawValue)
-    }
-    if let category = category {
-      parameters["category_filter"] = category.joinWithSeparator(",")
-    }
-    if let radius = radius {
-      parameters["radius_filter"] = String(radius)
-    }
-    if let dealsFilter = dealsFilter {
-      parameters["deals_filter"] = String(dealsFilter)
+    
+    // Actionlink Parameters
+    if let actionlink = actionlink {
+      if let actionlinks = actionlink.actionlinks {
+        parameters.insertParameter(actionlinks)
+      }
     }
     
     self.parameters = parameters
     self.session = session
   }
   
-  /**
-      Sends the request, calling the given handler with either the yelp response or an error. This can be
-      called multiple times to retry sending the request
-   
-      - Parameter completionHandler: The block to call when the response returns, takes a YelpResponse? and
-          a YelpError? as arguments, the error can be of YelpResponseError type or YelpRequestError type
-   */
-  public func send(completionHandler handler: (response: YelpResponse?, error: YelpError?) -> Void) {
-    
-    if !self.sendable {
-      handler(response: nil, error: YelpRequestError.NoLocationData)
-      return
-    }
-    
-    (self as YelpRequest).send(completionHandler: handler)
-  }
 }
