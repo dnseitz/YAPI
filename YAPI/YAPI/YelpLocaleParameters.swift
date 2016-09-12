@@ -13,58 +13,39 @@ import Foundation
     language if supported. Both countryCode and language should be specified for proper localization.
  */
 public struct YelpLocaleParameters {
-  enum CountryCode : String {
-    case unitedStates = "US"
-    case unitedKingdom = "GB"
-    case canada = "CA"
-  }
-  
-  enum Language : String {
+  enum LanguageParameter : String {
     case english = "en"
   }
   
-  struct FilterLanguage : YelpBooleanParameter {
+  struct FilterLanguageParameter : YelpBooleanParameter {
     let internalValue: Bool
+    
+    var key: String {
+      return "lang_filter"
+    }
+    
+    init(booleanLiteral value: BooleanLiteralType) {
+      internalValue = value
+    }
   }
   
   /// ISO 3166-1 alpha-2 country code. Default country to use when parsing the location field.
-  var countryCode: CountryCode?
+  var countryCode: YelpCountryCodeParameter?
   
   /// ISO 639 language code. Reviews and snippets written in the specified language will be shown.
-  var language: Language?
+  var language: LanguageParameter?
   
   /// Whether to filter business reviews by the specified lang
-  var filterLanguage: FilterLanguage?
+  var filterLanguage: FilterLanguageParameter?
 }
 
-extension YelpLocaleParameters.CountryCode : YelpParameter {
-  var key: String {
-    return "cc"
-  }
-  
-  var value: String {
-    return self.rawValue
-  }
-}
 
-extension YelpLocaleParameters.Language : YelpParameter {
+extension YelpLocaleParameters.LanguageParameter : YelpParameter {
   var key: String {
     return "lang"
   }
   
   var value: String {
     return self.rawValue
-  }
-}
-
-extension YelpLocaleParameters.FilterLanguage : YelpParameter {
-  var key: String {
-    return "lang_filter"
-  }
-}
-
-extension YelpLocaleParameters.FilterLanguage : BooleanLiteralConvertible {
-  init(booleanLiteral value: BooleanLiteralType) {
-    internalValue = value
   }
 }

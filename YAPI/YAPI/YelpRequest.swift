@@ -13,6 +13,7 @@ import OAuthSwift
 internal let yelpHost: String = "api.yelp.com"
 internal let searchEndpoint: String = "/v2/search/"
 internal let businessEndpoint: String = "/v2/business/"
+internal let phoneEndpoint: String = "/v2/phone_search/"
 
 /**
     Any request that can be sent to the Yelp API conforms to this protocol. This could include requests to 
@@ -48,6 +49,9 @@ public protocol YelpRequest {
 }
 
 public extension YelpRequest {
+  var host: String {
+    return yelpHost
+  }
   
   /**
       Sends the request, calling the given handler with either the yelp response or an error. This can be

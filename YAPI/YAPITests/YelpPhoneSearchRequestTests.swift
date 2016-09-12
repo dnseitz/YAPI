@@ -1,23 +1,23 @@
 //
-//  YelpRequestTests.swift
-//  Chowroulette
+//  YelpPhoneSearchRequestTests.swift
+//  YAPI
 //
-//  Created by Daniel Seitz on 7/29/16.
+//  Created by Daniel Seitz on 9/12/16.
 //  Copyright © 2016 Daniel Seitz. All rights reserved.
 //
 
 import XCTest
 @testable import YAPI
 
-class YelpSearchRequestTests: YelpRequestTestCase {
+class YelpPhoneSearchRequestTests: YelpRequestTestCase {
   override func setUp() {
     super.setUp()
     
-    request = YelpSearchRequest(search: YelpSearchParameters(location: "Portland, OR" as YelpSearchLocation), session: session)
+    request = YelpPhoneSearchRequest(phoneSearch: YelpPhoneSearchParameters(phone: "PHONENUMBER"), session: session)
   }
   
   func test_SendRequest_RecievesData_ParsesTheData() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidOneBusinessResponse, options: .IgnoreUnknownCharacters)
+    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidPhoneSearchResponse, options: .IgnoreUnknownCharacters)
     request.send() { (response, error) in
       XCTAssertNotNil(response)
       XCTAssertNil(error)
@@ -27,6 +27,7 @@ class YelpSearchRequestTests: YelpRequestTestCase {
       XCTAssert(response!.total! == 2316)
       
       XCTAssertNotNil(response!.businesses)
+      
       let business = response!.businesses![0]
       
       XCTAssert(business.categories.count == 2)

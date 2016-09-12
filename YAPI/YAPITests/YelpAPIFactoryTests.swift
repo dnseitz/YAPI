@@ -14,12 +14,14 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   
   var searchRequestStub: YelpSearchRequest!
   var businessRequestStub: YelpBusinessRequest!
+  var phoneSearchRequestStub: YelpPhoneSearchRequest!
   
   override func setUp() {
     super.setUp()
     
     searchRequestStub = YelpAPIFactory.makeSearchRequest(with: YelpSearchParameters(location: "" as YelpSearchLocation))
     businessRequestStub = YelpAPIFactory.makeBusinessRequest(with: "businessId")
+    phoneSearchRequestStub = YelpAPIFactory.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE"))
   }
   
   override func tearDown() {
@@ -29,7 +31,9 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     super.tearDown()
   }
   
-  func test_Factory_BuildsRequestWithParamStruct() {
+  // MARK: Search Request Tests
+  
+  func test_Factory_BuildsSearchRequestWithParameters() {
     let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
     let request = YelpAPIFactory.makeSearchRequest(with: params)
     let reqParams = request.parameters
@@ -51,7 +55,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     XCTAssertNil(reqParams["actionlinks"])
   }
   
-  func test_Factory_BuildsRequestWithLocaleParameters() {
+  func test_Factory_BuildsSearchRequestWithLocaleParameters() {
     YelpAPIFactory.localeParameters = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: true)
     let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
     let request = YelpAPIFactory.makeSearchRequest(with: params)
@@ -74,7 +78,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     XCTAssertNil(reqParams["actionlinks"])
   }
   
-  func test_factory_BuildsRequestWithActionlinkParameters() {
+  func test_Factory_BuildsSearchRequestWithActionlinkParameters() {
     YelpAPIFactory.actionlinkParameters = YelpActionlinkParameters(actionlinks: false)
     let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
     let request = YelpAPIFactory.makeSearchRequest(with: params)
@@ -97,7 +101,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     XCTAssert(reqParams["actionlinks"] == "false")
   }
   
-  func test_Factory_BuildsRequestWithMinimalParameters() {
+  func test_Factory_BuildsSearchRequestWithMinimalParameters() {
     let params = YelpSearchParameters(location: "TEST_LOCATION" as YelpSearchLocation)
     let request = YelpAPIFactory.makeSearchRequest(with: params)
     let reqParams = request.parameters
@@ -118,6 +122,66 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     
     XCTAssertNil(reqParams["actionlinks"])
   }
+  
+  // MARK: Business Request Tests
+  
+  func test_Factory_BuildsBusinessRequestWithBusinessId() {
+    let request = YelpAPIFactory.makeBusinessRequest(with: "businessId")
+    let reqParams = request.parameters
+    
+    XCTAssert(reqParams.count == 0)
+    XCTAssert(request.path == businessEndpoint + "businessId")
+  }
+  
+  func test_Factory_BuildsBusinessRequestWithLocaleParameters() {
+    YelpAPIFactory.localeParameters = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: true)
+    let request = YelpAPIFactory.makeBusinessRequest(with: "businessId")
+    let reqParams = request.parameters
+    
+    XCTAssert(request.path == businessEndpoint + "businessId")
+    
+    XCTAssert(reqParams["cc"] == "US")
+    XCTAssert(reqParams["lang"] == "en")
+    XCTAssert(reqParams["lang_filter"] == "true")
+    
+    XCTAssertNil(reqParams["actionlinks"])
+  }
+  
+  func test_Factory_BuildsBusinessRequestWithActionlinkParameters() {
+    YelpAPIFactory.actionlinkParameters = YelpActionlinkParameters(actionlinks: true)
+    let request = YelpAPIFactory.makeBusinessRequest(with: "businessId")
+    let reqParams = request.parameters
+    
+    XCTAssert(request.path == businessEndpoint + "businessId")
+    
+    XCTAssertNil(reqParams["cc"])
+    XCTAssertNil(reqParams["lang"])
+    XCTAssertNil(reqParams["lang_filter"])
+    
+    XCTAssert(reqParams["actionlinks"] == "true")
+  }
+  
+  // MARK: Phone Search Request Tests
+  
+  func test_Factory_BuildsPhoneSearchRequestWithParameters() {
+    let request = YelpAPIFactory.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE", countryCode: .canada, category: "CATEGORY"))
+    let reqParams = request.parameters
+    
+    XCTAssert(reqParams["phone"] == "PHONE")
+    XCTAssert(reqParams["cc"] == "CA")
+    XCTAssert(reqParams["category"] == "CATEGORY")
+  }
+  
+  func test_Factory_BuildsPhoneSearchRequestWithMinimalParameters() {
+    let request = YelpAPIFactory.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE"))
+    let reqParams = request.parameters
+    
+    XCTAssert(reqParams["phone"] == "PHONE")
+    XCTAssertNil(reqParams["cc"])
+    XCTAssertNil(reqParams["category"])
+  }
+  
+  // MARK: Response Tests
   
   func test_Factory_BuildsResponseWithValidJSON() {
     do {
@@ -181,14 +245,18 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   func test_Factory_BuildsCorrectTypeOfResponseBasedOnRequest() {
     let searchData = NSData(base64EncodedString: ResponseInjections.yelpValidOneBusinessResponse, options: .IgnoreUnknownCharacters)!
     let businessData = NSData(base64EncodedString: ResponseInjections.yelpValidBusinessResponse, options: .IgnoreUnknownCharacters)!
+    let phoneSearchData = NSData(base64EncodedString: ResponseInjections.yelpValidPhoneSearchResponse, options: .IgnoreUnknownCharacters)!
     
     let searchResponse = YelpAPIFactory.makeResponse(with: searchData, from: searchRequestStub)
     let businessResponse = YelpAPIFactory.makeResponse(with: businessData, from: businessRequestStub)
+    let phoneSearchResponse = YelpAPIFactory.makeResponse(with: phoneSearchData, from: phoneSearchRequestStub)
     
     XCTAssertNotNil(searchResponse)
     XCTAssertNotNil(businessResponse)
+    XCTAssertNotNil(phoneSearchResponse)
     
     XCTAssert(searchResponse is YelpSearchResponse)
     XCTAssert(businessResponse is YelpBusinessResponse)
+    XCTAssert(phoneSearchResponse is YelpPhoneSearchResponse)
   }
 }

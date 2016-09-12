@@ -63,6 +63,17 @@ public enum YelpAPIFactory {
   }
   
   /**
+      Build a phone search request searching for a business with a certain phone number
+   
+      - Parameter parameters: A struct containing information with which to create a request
+   
+      - Returns: A fully formed request that can be sent immediately
+   */
+  public static func makePhoneSearchRequest(with parameters: YelpPhoneSearchParameters) -> YelpPhoneSearchRequest {
+    return YelpPhoneSearchRequest(phoneSearch: parameters)
+  }
+  
+  /**
       Build a response from the JSON body recieved from making a request.
    
       - Parameter json: A dictionary containing the JSON body recieved in the Yelp response
@@ -71,15 +82,18 @@ public enum YelpAPIFactory {
       - Returns: A valid response object, populated with businesses or an error
    */
   static func makeResponse(withJSON json: [String: AnyObject], from request: YelpRequest) -> YelpResponse! {
-    if let request = request as? YelpSearchRequest {
+    switch request {
+    case is YelpSearchRequest:
       return YelpSearchResponse(withJSON: json, from: request)
-    }
-    if let request = request as? YelpBusinessRequest {
+    case is YelpBusinessRequest:
       return YelpBusinessResponse(withJSON: json, from: request)
+    case is YelpPhoneSearchRequest:
+      return YelpPhoneSearchResponse(withJSON: json, from: request)
+    default:
+      // We should never reach here
+      assert(false, "Request is not a request?")
+      return nil
     }
-    
-    // We should never reach here
-    return nil
   }
   
   /**

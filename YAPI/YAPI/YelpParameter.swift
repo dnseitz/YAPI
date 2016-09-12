@@ -26,44 +26,35 @@ protocol YelpIntParameter : IntegerLiteralConvertible, YelpParameter {
 }
 
 protocol YelpArrayParameter : ArrayLiteralConvertible, YelpParameter {
-  var internalValue : [Self.Element] { get }
+  var internalValue: [Self.Element] { get }
 }
 
 extension YelpParameter {
   public var description: String {
-    return "\(self.key)=\(self.value)"
+    return self.value
   }
 }
 
 extension YelpBooleanParameter {
-  var value: String {
+  public var value: String {
     return String(self.internalValue)
   }
 }
 
 extension YelpStringParameter {
-  var value: String {
+  public var value: String {
     return self.internalValue
   }
 }
 
 extension YelpIntParameter {
-  var value: String {
+  public var value: String {
     return String(self.internalValue)
   }
 }
 
 extension YelpArrayParameter {
-  var value: String {
-    var result: String? = nil
-    for element in self.internalValue {
-      if let _ = result {
-        result! += ",\(element)"
-      }
-      else {
-        result = "\(element)"
-      }
-    }
-    return result ?? ""
+  public var value: String {
+    return self.internalValue.map() { "\($0)" }.joinWithSeparator(",")
   }
 }

@@ -24,21 +24,21 @@ class YelpLocaleParametersTests: YAPIXCTestCase {
   }
   
   func test_CountryCode_GivesCorrectKeyValue() {
-    let cc = YelpLocaleParameters.CountryCode.canada
+    let cc = YelpCountryCodeParameter.canada
     
     XCTAssert(cc.key == "cc")
     XCTAssert(cc.value == "CA")
   }
   
   func test_Language_GivesCorrectKeyValue() {
-    let language = YelpLocaleParameters.Language.english
+    let language = YelpLocaleParameters.LanguageParameter.english
     
     XCTAssert(language.key == "lang")
     XCTAssert(language.value == "en")
   }
   
   func test_FilterLanguage_GivesCorrectKeyValue() {
-    let filter = YelpLocaleParameters.FilterLanguage(booleanLiteral: true)
+    let filter = YelpLocaleParameters.FilterLanguageParameter(booleanLiteral: true)
     
     XCTAssert(filter.key == "lang_filter")
     XCTAssert(filter.value == "true")

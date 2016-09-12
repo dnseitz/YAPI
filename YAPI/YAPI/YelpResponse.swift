@@ -45,9 +45,33 @@ public protocol YelpResponse {
   
   /// The error recieved in the response, or nil if there was no error
   var error: YelpResponseError? { get }
+  
 }
 
 extension YelpResponse {
+  static func parseError(errorDict dict: [String: AnyObject]) -> YelpResponseError {
+    switch dict["id"] as! String {
+    case "INTERNAL_ERROR":
+      return YelpResponseError.InternalError
+    case "EXCEEDED_REQS":
+      return YelpResponseError.ExceededRequests
+    case "MISSING_PARAMETER":
+      return YelpResponseError.MissingParameter(field: dict["field"] as! String)
+    case "INVALID_PARAMETER":
+      return YelpResponseError.InvalidParameter(field: dict["field"] as! String)
+    case "UNAVAILABLE_FOR_LOCATION":
+      return YelpResponseError.UnavailableForLocation
+    case "AREA_TOO_LARGE":
+      return YelpResponseError.AreaTooLarge
+    case "MULTIPLE_LOCATIONS":
+      return YelpResponseError.MultipleLocations
+    case "BUSINESS_UNAVAILABLE":
+      return YelpResponseError.BusinessUnavailable
+    default:
+      return YelpResponseError.UnknownError
+    }
+  }
+  
   public var wasSuccessful: Bool {
     return self.error == nil
   }

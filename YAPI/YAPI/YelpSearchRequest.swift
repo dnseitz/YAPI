@@ -18,8 +18,6 @@ import CoreLocation
     initializer. Instances of this class should be created through the YelpAPIFactory.
  */
 public final class YelpSearchRequest: YelpRequest {
-  
-  public let host: String = yelpHost
   public let path: String = searchEndpoint
   public let parameters: [String: String]
   public var requestMethod: OAuthSwiftHTTPRequest.Method {

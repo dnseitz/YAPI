@@ -1,14 +1,14 @@
 //
-//  YelpSearchResponse.swift
+//  YelpPhoneSearchResponse.swift
 //  YAPI
 //
-//  Created by Daniel Seitz on 9/11/16.
+//  Created by Daniel Seitz on 9/12/16.
 //  Copyright © 2016 Daniel Seitz. All rights reserved.
 //
 
 import Foundation
 
-public final class YelpSearchResponse : YelpResponse {
+public final class YelpPhoneSearchResponse : YelpResponse {
   public let request: YelpRequest
   public let region: YelpRegion?
   public let total: Int?

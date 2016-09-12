@@ -22,6 +22,9 @@ class YelpBusinessRequestTests : YelpRequestTestCase {
       XCTAssertNotNil(response)
       XCTAssertNil(error)
       
+      XCTAssertNil(response!.region)
+      XCTAssertNil(response!.total)
+      
       let business = response!.businesses![0]
       
       XCTAssert(business.categories.count == 2)

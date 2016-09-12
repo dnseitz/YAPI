@@ -17,26 +17,7 @@ public final class YelpBusinessResponse : YelpResponse {
   
   init(withJSON data: [String: AnyObject], from request: YelpRequest) {
     if let error = data["error"] as? [String: AnyObject] {
-      switch error["id"] as! String {
-      case "INTERNAL_ERROR":
-        self.error = YelpResponseError.InternalError
-      case "EXCEEDED_REQS":
-        self.error = YelpResponseError.ExceededRequests
-      case "MISSING_PARAMETER":
-        self.error = YelpResponseError.MissingParameter(field: error["field"] as! String)
-      case "INVALID_PARAMETER":
-        self.error = YelpResponseError.InvalidParameter(field: error["field"] as! String)
-      case "UNAVAILABLE_FOR_LOCATION":
-        self.error = YelpResponseError.UnavailableForLocation
-      case "AREA_TOO_LARGE":
-        self.error = YelpResponseError.AreaTooLarge
-      case "MULTIPLE_LOCATIONS":
-        self.error = YelpResponseError.MultipleLocations
-      case "BUSINESS_UNAVAILABLE":
-        self.error = YelpResponseError.BusinessUnavailable
-      default:
-        self.error = YelpResponseError.UnknownError
-      }
+      self.error = self.dynamicType.parseError(errorDict: error)
     }
     else {
       self.error = nil

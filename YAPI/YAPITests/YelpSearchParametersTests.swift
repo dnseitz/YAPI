@@ -32,49 +32,49 @@ class YelpSearchParametersTests: YAPIXCTestCase {
   }
   
   func test_Term_GivesCorrectKeyValue() {
-    let term = YelpSearchParameters.SearchTerm.drink
+    let term = YelpSearchParameters.SearchTermParameter.drink
     
     XCTAssert(term.key == "term")
     XCTAssert(term.value == "drink")
   }
   
   func test_Limit_GivesCorrectKeyValue() {
-    let limit: YelpSearchParameters.Limit = 100
+    let limit: YelpSearchParameters.LimitParameter = 100
     
     XCTAssert(limit.key == "limit")
     XCTAssert(limit.value == "100")
   }
   
   func test_Offset_GivesCorrectKeyValue() {
-    let offset: YelpSearchParameters.Offset = 50
+    let offset: YelpSearchParameters.OffsetParameter = 50
     
     XCTAssert(offset.key == "offset")
     XCTAssert(offset.value == "50")
   }
   
   func test_SortMode_GivesCorrectKeyValue() {
-    let sortMode = YelpSearchParameters.SortMode.highestRated
+    let sortMode = YelpSearchParameters.SortModeParameter.highestRated
     
     XCTAssert(sortMode.key == "sort")
     XCTAssert(sortMode.value == "2")
   }
   
   func test_Categories_GivesCorrectKeyValue() {
-    let categories: YelpSearchParameters.Categories = ["C1", "C2"]
+    let categories: YelpSearchParameters.CategoriesParameter = ["C1", "C2"]
     
     XCTAssert(categories.key == "category_filter")
     XCTAssert(categories.value == "C1,C2")
   }
   
   func test_Radius_GivesCorrectKeyValue() {
-    let radius: YelpSearchParameters.Radius = 1000
+    let radius: YelpSearchParameters.RadiusParameter = 1000
     
     XCTAssert(radius.key == "radius_filter")
     XCTAssert(radius.value == "1000")
   }
   
   func test_FilterDeals_GivesCorrectKeyValue() {
-    let deals: YelpSearchParameters.Deals = false
+    let deals: YelpSearchParameters.DealsParameter = false
     
     XCTAssert(deals.key == "deals_filter")
     XCTAssert(deals.value == "false")

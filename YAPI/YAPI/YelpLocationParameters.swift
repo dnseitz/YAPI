@@ -14,14 +14,14 @@ import CoreLocation
     parameter, and exactly one of these methods should be used for a request.
  */
 protocol YelpLocationParameter : YelpParameter {
-  var hint: YelpSearchLocation.Hint? { get }
+  var hint: YelpSearchLocation.HintParameter? { get }
 }
 
 /**
     Location is specified by a particular neighborhood, address or city.
  */
 public struct YelpSearchLocation : YelpLocationParameter, YelpStringParameter {
-  struct Hint : YelpParameter {
+  struct HintParameter : YelpParameter {
     let cll: String
     
     var key: String {
@@ -45,14 +45,10 @@ public struct YelpSearchLocation : YelpLocationParameter, YelpStringParameter {
   let internalValue: String
   
   /// An optional latitude, longitude parameter can also be specified as a hint to the geocoder to disambiguate the location text.
-  let hint: Hint?
+  let hint: HintParameter?
   
   public var key: String {
     return "location"
-  }
-  
-  public var value: String {
-    return internalValue
   }
   
   init(location: String, locationHint hint: CLLocation? = nil) {
@@ -62,7 +58,7 @@ public struct YelpSearchLocation : YelpLocationParameter, YelpStringParameter {
   init(location: String, coordinateHint hint: CLLocationCoordinate2D? = nil) {
     self.internalValue = location
     if let hint = hint {
-      self.hint = Hint(coordinate: hint)
+      self.hint = HintParameter(coordinate: hint)
     }
     else {
       self.hint = nil
@@ -97,7 +93,7 @@ extension YelpSearchLocation : StringLiteralConvertible {
 public struct YelpBoundingBox : YelpLocationParameter {
   let southWest: CLLocationCoordinate2D
   let northEast: CLLocationCoordinate2D
-  let hint: YelpSearchLocation.Hint? = nil
+  let hint: YelpSearchLocation.HintParameter? = nil
   
   public var key: String {
     return "bounds"
@@ -126,7 +122,7 @@ public struct YelpGeographicCoordinate : YelpLocationParameter {
   
   /// Accuracy of altitude
   let altitudeAccuracy: Double?
-  let hint: YelpSearchLocation.Hint? = nil
+  let hint: YelpSearchLocation.HintParameter? = nil
   
   public var key: String {
     return "ll"

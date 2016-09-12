@@ -10,7 +10,6 @@ import Foundation
 import OAuthSwift
 
 public final class YelpBusinessRequest : YelpRequest {
-  public let host = yelpHost
   public let path: String
   public let parameters: [String : String]
   public let session: YelpHTTPClient
