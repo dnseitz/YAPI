@@ -11,22 +11,22 @@ import Foundation
 /**
     A protocol describing an error caused by either a YelpRequest or YelpResponse
  */
-public protocol YelpError: ErrorType, CustomStringConvertible {}
+public protocol YelpError: Error, CustomStringConvertible {}
 
 /**
     Errors that occur while trying to send the request
  */
 public enum YelpRequestError: YelpError, Equatable {
   /// The request was unable to be generated, possibly a malformed url
-  case FailedToGenerateRequest
+  case failedToGenerateRequest
   /// The request failed to send for some reason, see the wrapped NSError for details
-  case FailedToSendRequest(NSError)
+  case failedToSendRequest(NSError)
   
   public var description: String {
     switch self {
-    case .FailedToGenerateRequest:
+    case .failedToGenerateRequest:
       return "Failed to generate the Network Request for some reason"
-    case let .FailedToSendRequest(err):
+    case let .failedToSendRequest(err):
       return "Failed to send request (\(err.code))"
     }
   }
@@ -34,9 +34,9 @@ public enum YelpRequestError: YelpError, Equatable {
 
 public func ==(lhs: YelpRequestError, rhs: YelpRequestError) -> Bool {
   switch (lhs, rhs) {
-  case(.FailedToGenerateRequest, .FailedToGenerateRequest):
+  case(.failedToGenerateRequest, .failedToGenerateRequest):
     return true
-  case(let .FailedToSendRequest(err1), let .FailedToSendRequest(err2)):
+  case(let .failedToSendRequest(err1), let .failedToSendRequest(err2)):
     return err1.domain == err2.domain && err1.code == err2.code
   default:
     return false
@@ -48,51 +48,51 @@ public func ==(lhs: YelpRequestError, rhs: YelpRequestError) -> Bool {
  */
 public enum YelpResponseError: YelpError, Equatable {
   /// An unknown error occurred with the Yelp service
-  case UnknownError
+  case unknownError
   /// An internal service error occurred with the Yelp service
-  case InternalError
+  case internalError
   /// The number of requests for the api used has exceeded its limit
-  case ExceededRequests
+  case exceededRequests
   /// A required parameter was missing, see the wrapped string for the parameter
-  case MissingParameter(field: String)
+  case missingParameter(field: String)
   /// A parameter was invalid, see the wrapped string for the parameter
-  case InvalidParameter(field: String)
+  case invalidParameter(field: String)
   /// Yelp is not available for the requested location
-  case UnavailableForLocation
+  case unavailableForLocation
   /// The search area is too large
-  case AreaTooLarge
+  case areaTooLarge
   /// The Yelp service was unable to disambiguate the search location
-  case MultipleLocations
+  case multipleLocations
   /// Information for a specific business is unavailable
-  case BusinessUnavailable
+  case businessUnavailable
   /// No data was recieved in the response
-  case NoDataRecieved
+  case noDataRecieved
   /// Data was recieved, but it couldn't be parsed as JSON
-  case FailedToParse
+  case failedToParse
   
   public var description: String {
     switch self {
-    case .UnknownError:
+    case .unknownError:
       return "An unknown error has occurred"
-    case .InternalError:
+    case .internalError:
       return "An internal Yelp service error has occurred"
-    case .ExceededRequests:
+    case .exceededRequests:
       return "The number of requests for the api used has exceeded its limit"
-    case let .MissingParameter(field: field):
+    case let .missingParameter(field: field):
       return "A required parameter was missing: '\(field)'"
-    case let .InvalidParameter(field: field):
+    case let .invalidParameter(field: field):
       return "A parameter was invalid: '\(field)'"
-    case .UnavailableForLocation:
+    case .unavailableForLocation:
       return "Yelp is unavailable in the requested location"
-    case .AreaTooLarge:
+    case .areaTooLarge:
       return "The search area is too large, maximum area is 2,500 square miles"
-    case .MultipleLocations:
+    case .multipleLocations:
       return "Yelp is unable to disambiguate the search location"
-    case .BusinessUnavailable:
+    case .businessUnavailable:
       return "Information for that business is unavailable"
-    case .NoDataRecieved:
+    case .noDataRecieved:
       return "No data was recieved in the response"
-    case .FailedToParse:
+    case .failedToParse:
       return "The data recieved was unable to be parsed"
     }
   }
@@ -100,27 +100,27 @@ public enum YelpResponseError: YelpError, Equatable {
 
 public func ==(lhs: YelpResponseError, rhs: YelpResponseError) -> Bool {
   switch (lhs, rhs) {
-  case(.UnknownError, .UnknownError):
+  case(.unknownError, .unknownError):
     return true
-  case(.InternalError, .InternalError):
+  case(.internalError, .internalError):
     return true
-  case (.ExceededRequests, .ExceededRequests):
+  case (.exceededRequests, .exceededRequests):
     return true
-  case (let .MissingParameter(field: field1), let .MissingParameter(field: field2)):
+  case (let .missingParameter(field: field1), let .missingParameter(field: field2)):
     return field1 == field2
-  case (let .InvalidParameter(field: field1), let .InvalidParameter(field: field2)):
+  case (let .invalidParameter(field: field1), let .invalidParameter(field: field2)):
     return field1 == field2
-  case (.UnavailableForLocation, .UnavailableForLocation):
+  case (.unavailableForLocation, .unavailableForLocation):
     return true
-  case (.AreaTooLarge, .AreaTooLarge):
+  case (.areaTooLarge, .areaTooLarge):
     return true
-  case (.MultipleLocations, .MultipleLocations):
+  case (.multipleLocations, .multipleLocations):
     return true
-  case (.BusinessUnavailable, .BusinessUnavailable):
+  case (.businessUnavailable, .businessUnavailable):
     return true
-  case (.NoDataRecieved, .NoDataRecieved):
+  case (.noDataRecieved, .noDataRecieved):
     return true
-  case (.FailedToParse, .FailedToParse):
+  case (.failedToParse, .failedToParse):
     return true
   default:
     return false

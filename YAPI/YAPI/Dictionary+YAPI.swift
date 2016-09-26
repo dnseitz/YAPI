@@ -8,9 +8,9 @@
 
 import Foundation
 
-extension Dictionary where Key: StringLiteralConvertible, Value: StringLiteralConvertible {
-  mutating func insertParameter(parameter: YelpParameter) {
-    if let key = parameter.key as? Key, value = parameter.value as? Value {
+extension Dictionary where Key: ExpressibleByStringLiteral, Value: ExpressibleByStringLiteral {
+  mutating func insertParameter(_ parameter: YelpParameter) {
+    if let key = parameter.key as? Key, let value = parameter.value as? Value {
       self[key] = value
     }
   }

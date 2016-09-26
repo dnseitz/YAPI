@@ -29,7 +29,7 @@ class YelpPhoneSearchResponseTests: YAPIXCTestCase {
       XCTAssert(response.total == 2316)
       XCTAssertNotNil(response.businesses)
       XCTAssert(response.businesses!.count == 1)
-      XCTAssert(requestStub === (response.request as! AnyObject))
+      XCTAssert(requestStub === response.request as AnyObject)
       XCTAssert(response.wasSuccessful == true)
       XCTAssert(response.error == nil)
     }
@@ -46,9 +46,9 @@ class YelpPhoneSearchResponseTests: YAPIXCTestCase {
       XCTAssertNil(response.region)
       XCTAssertNil(response.total)
       XCTAssertNil(response.businesses)
-      XCTAssert(requestStub === (response.request as! AnyObject))
+      XCTAssert(requestStub === response.request as AnyObject)
       XCTAssertNotNil(response.error)
-      XCTAssert(response.error! == YelpResponseError.InvalidParameter(field: "location"))
+      XCTAssert(response.error! == .invalidParameter(field: "location"))
       XCTAssert(response.wasSuccessful == false)
     }
     catch {

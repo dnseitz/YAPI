@@ -12,12 +12,12 @@ import UIKit
 final class ImageCache {
   static let globalCache = ImageCache()
   
-  private var imageCache = [String: ImageReference]()
-  private let cacheAccessQueue = ConcurrentQueue("CacheAccess", priority: .High)
+  fileprivate var imageCache = [String: ImageReference]()
+  fileprivate let cacheAccessQueue = DispatchQueue(label: "CacheAcess", attributes: .concurrent)
   
-  private init() {}
+  fileprivate init() {}
   
-  private subscript(key: String) -> ImageReference? {
+  fileprivate subscript(key: String) -> ImageReference? {
     get {
       var imageReference: ImageReference? = nil
       self.readLock() {
@@ -51,7 +51,7 @@ final class ImageCache {
    
       - Returns: true if the image is in the cache, false if it is not
    */
-  func contains(url: NSURL) -> Bool {
+  func contains(_ url: URL) -> Bool {
     return self[url.absoluteString] != nil
   }
   
@@ -62,16 +62,16 @@ final class ImageCache {
    
       - Returns: true if the image is in the cache, false if it is not
    */
-  func contains(imageReference: ImageReference) -> Bool {
+  func contains(_ imageReference: ImageReference) -> Bool {
     return self[imageReference.url.absoluteString] != nil
   }
   
-  private func readLock(block: dispatch_block_t) {
-    self.cacheAccessQueue.executeSync(block)
+  fileprivate func readLock(_ block: () -> Void) {
+    self.cacheAccessQueue.sync(execute: block)
   }
   
-  private func writeLock(block: dispatch_block_t) {
-    self.cacheAccessQueue.executeBarrierSync(block)
+  fileprivate func writeLock(_ block: () -> Void) {
+    self.cacheAccessQueue.sync(flags: .barrier, execute: block)
   }
   
 }
@@ -102,22 +102,22 @@ final class ImageCache {
  */
 final class ImageReference {
   
-  private enum State {
-    case Idle
-    case Loading
+  fileprivate enum State {
+    case idle
+    case loading
   }
-  private var state: ImageReference.State
+  fileprivate var state: ImageReference.State
   
-  private let session: YelpHTTPClient
+  fileprivate let session: YelpHTTPClient
   
-  private var _cachedImage: UIImage?
+  fileprivate var _cachedImage: UIImage?
   /// A copy of the cached image or nil if no image has been loaded yet
-  private(set) var cachedImage: UIImage? {
+  fileprivate(set) var cachedImage: UIImage? {
     get {
-      guard let imageCopy = CGImageCreateCopy(self._cachedImage?.CGImage) else {
+      guard let imageCopy = self._cachedImage?.cgImage?.copy() else {
         return nil
       }
-      return UIImage(CGImage: imageCopy)
+      return UIImage(cgImage: imageCopy)
     }
     set {
       if self._cachedImage == nil {
@@ -126,7 +126,7 @@ final class ImageReference {
     }
   }
   
-  let url: NSURL
+  let url: URL
   
   /**
       Initialize a new ImageReference with the specified url. Two ImageReferences initialized with the same
@@ -137,9 +137,9 @@ final class ImageReference {
    
       - Returns: An ImageLoader that is ready to load an image from the url
    */
-  init(from url: NSURL, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
+  init(from url: URL, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
     self.url = url
-    self.state = .Idle
+    self.state = .idle
     self.session = session
   }
   
@@ -154,28 +154,28 @@ final class ImageReference {
           will be called with the UIImage created and the error will be nil. If there is an error, the 
           image will be nil and an error object will be returned
    */
-  func load(withScale scale: CGFloat = 1.0, completionHandler handler: (image: UIImage?, error: ImageLoadError?) -> Void) {
-    if self.state == .Loading {
-      GlobalMainQueue.executeAsync() {
-        handler(image: nil, error: .LoadInProgress)
+  func load(withScale scale: CGFloat = 1.0, completionHandler handler: @escaping (_ image: UIImage?, _ error: ImageLoadError?) -> Void) {
+    if self.state == .loading {
+      DispatchQueue.main.async {
+        handler(nil, .loadInProgress)
       }
       return
     }
-    self.state = .Loading
+    self.state = .loading
     if let imageReference = ImageCache.globalCache[self.url.absoluteString] {
       self.cachedImage = imageReference.cachedImage
     }
     if let image = self.cachedImage {
-      guard let imageCopy = CGImageCreateCopy(image.CGImage) else {
-        GlobalMainQueue.executeAsync() {
-          handler(image: nil, error: .CopyError)
+      guard let imageCopy = image.cgImage?.copy() else {
+        DispatchQueue.main.async {
+          handler(nil, .copyError)
         }
         return
       }
-      GlobalMainQueue.executeAsync() {
-        handler(image: UIImage(CGImage: imageCopy, scale: scale, orientation: image.imageOrientation), error: nil)
+      DispatchQueue.main.async {
+        handler(UIImage(cgImage: imageCopy, scale: scale, orientation: image.imageOrientation), nil)
       }
-      self.state = .Idle
+      self.state = .idle
       return
     }
     
@@ -183,26 +183,26 @@ final class ImageReference {
       let imageResult: UIImage?
       let errorResult: ImageLoadError?
       defer {
-        self.state = .Idle
-        GlobalMainQueue.executeAsync() {
-          handler(image: imageResult, error: errorResult)
+        self.state = .idle
+        DispatchQueue.main.async {
+          handler(imageResult, errorResult)
         }
       }
       if let err = error {
         imageResult = nil
-        errorResult = .RequestError(err)
+        errorResult = .requestError(err)
         return
       }
 
       guard let imageData = data else {
         imageResult = nil
-        errorResult = .NoDataRecieved
+        errorResult = .noDataRecieved
         return
       }
       
       guard let image = UIImage(data: imageData) else {
         imageResult = nil
-        errorResult = .InvalidData
+        errorResult = .invalidData
         return
       }
       
@@ -216,30 +216,30 @@ final class ImageReference {
 }
 
 
-enum ImageLoadError: ErrorType, Equatable {
+enum ImageLoadError: Error, Equatable {
   /// An error occurred when trying to send the request, check the wrapped NSError object for more details
-  case RequestError(NSError)
+  case requestError(NSError)
   /// No data was recieved when trying to load the image
-  case NoDataRecieved
+  case noDataRecieved
   /// Data was recieved, but it was not an image
-  case InvalidData
+  case invalidData
   /// A load is currently in progress, wait for that to finish
-  case LoadInProgress
+  case loadInProgress
   /// Failed to create a valid copy of the cached image
-  case CopyError
+  case copyError
 }
 
 func ==(lhs: ImageLoadError, rhs: ImageLoadError) -> Bool {
   switch (lhs, rhs) {
-  case (let .RequestError(err1), let .RequestError(err2)):
+  case (let .requestError(err1), let .requestError(err2)):
     return err1.domain == err2.domain && err1.code == err2.code
-  case (.NoDataRecieved, .NoDataRecieved):
+  case (.noDataRecieved, .noDataRecieved):
     return true
-  case (.InvalidData, .InvalidData):
+  case (.invalidData, .invalidData):
     return true
-  case (.LoadInProgress, .LoadInProgress):
+  case (.loadInProgress, .loadInProgress):
     return true
-  case (.CopyError, .CopyError):
+  case (.copyError, .copyError):
     return true
   default:
     return false

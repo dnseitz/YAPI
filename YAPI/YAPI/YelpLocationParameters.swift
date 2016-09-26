@@ -66,7 +66,7 @@ public struct YelpSearchLocation : YelpLocationParameter, YelpStringParameter {
   }
 }
 
-extension YelpSearchLocation : StringLiteralConvertible {
+extension YelpSearchLocation : ExpressibleByStringLiteral {
   public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
   public typealias UnicodeScalarLiteralType = Character
   

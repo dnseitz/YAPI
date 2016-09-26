@@ -13,19 +13,19 @@ public protocol YelpParameter : CustomStringConvertible {
   var value: String { get }
 }
 
-protocol YelpBooleanParameter : BooleanLiteralConvertible, YelpParameter {
+protocol YelpBooleanParameter : ExpressibleByBooleanLiteral, YelpParameter {
   var internalValue: Bool { get }
 }
 
-protocol YelpStringParameter : StringLiteralConvertible, YelpParameter {
+protocol YelpStringParameter : ExpressibleByStringLiteral, YelpParameter {
   var internalValue: String { get }
 }
 
-protocol YelpIntParameter : IntegerLiteralConvertible, YelpParameter {
+protocol YelpIntParameter : ExpressibleByIntegerLiteral, YelpParameter {
   var internalValue: Int { get }
 }
 
-protocol YelpArrayParameter : ArrayLiteralConvertible, YelpParameter {
+protocol YelpArrayParameter : ExpressibleByArrayLiteral, YelpParameter {
   var internalValue: [Self.Element] { get }
 }
 
@@ -55,6 +55,6 @@ extension YelpIntParameter {
 
 extension YelpArrayParameter {
   public var value: String {
-    return self.internalValue.map() { "\($0)" }.joinWithSeparator(",")
+    return self.internalValue.map() { "\($0)" }.joined(separator: ",")
   }
 }

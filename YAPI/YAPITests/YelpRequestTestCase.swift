@@ -35,7 +35,7 @@ class YelpRequestTestCase : YAPIXCTestCase {
       XCTAssertNil(response)
       XCTAssertNotNil(error)
       
-      XCTAssert(error as! YelpRequestError == .FailedToSendRequest(mockError))
+      XCTAssert(error as! YelpRequestError == .failedToSendRequest(mockError))
     }
   }
   
@@ -44,30 +44,30 @@ class YelpRequestTestCase : YAPIXCTestCase {
       XCTAssertNil(response)
       XCTAssertNotNil(error)
       
-      XCTAssert(error as! YelpResponseError == .NoDataRecieved)
+      XCTAssert(error as! YelpResponseError == .noDataRecieved)
     }
   }
   
   func test_SendRequest_RecievesBadData_GivesAnError() {
-    mockSession.nextData = NSData()
+    mockSession.nextData = Data()
     request.send() { (response, error) -> Void in
       XCTAssertNil(response)
       XCTAssertNotNil(error)
       
-      XCTAssert(error as! YelpResponseError == .FailedToParse)
+      XCTAssert(error as! YelpResponseError == .failedToParse)
     }
   }
   
   func test_SendRequest_RecievesYelpError_GivesTheError() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpErrorResponse, options: .IgnoreUnknownCharacters)
+    mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpErrorResponse, options: .ignoreUnknownCharacters)
     request.send() { (response, error) -> Void in
       XCTAssertNotNil(response)
       XCTAssertNotNil(error)
       
       XCTAssertNil(response!.businesses)
-      XCTAssert((self.request as! AnyObject) === (response!.request as! AnyObject))
+      XCTAssert((self.request as AnyObject) === (response!.request as AnyObject))
       XCTAssertNotNil(response!.error)
-      XCTAssert(response!.error! == YelpResponseError.InvalidParameter(field: "location"))
+      XCTAssert(response!.error! == .invalidParameter(field: "location"))
       XCTAssert(response!.wasSuccessful == false)
       
       XCTAssert(response!.error == (error as! YelpResponseError))

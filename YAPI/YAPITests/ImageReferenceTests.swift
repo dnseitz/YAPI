@@ -30,8 +30,8 @@ class ImageReferenceTests: YAPIXCTestCase {
   }
   
   func test_LoadImage_LoadsAnImageFromValidData() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidImage, options: .IgnoreUnknownCharacters)
-    let imageReference = ImageReference(from: NSURL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
+    mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidImage, options: .ignoreUnknownCharacters)
+    let imageReference = ImageReference(from: URL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
     imageReference.load() { (image, error) -> Void in
       XCTAssertNotNil(image)
       XCTAssertNil(error)
@@ -39,52 +39,52 @@ class ImageReferenceTests: YAPIXCTestCase {
   }
   
   func test_LoadImage_LoadsAnImageFromValidData_CachesTheImage() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidImage, options: .IgnoreUnknownCharacters)
-    let imageReference = ImageReference(from: NSURL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
+    mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidImage, options: .ignoreUnknownCharacters)
+    let imageReference = ImageReference(from: URL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
     imageReference.load() { (image, error) -> Void in }
-    let imageReference2 = ImageReference(from: NSURL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
+    let imageReference2 = ImageReference(from: URL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
     imageReference2.load() { (image, error) -> Void in }
     XCTAssertNotNil(imageReference.cachedImage)
     XCTAssertNotNil(imageReference2.cachedImage)
   }
   
   func test_LoadImage_LoadsAnImageFromInvalidData_GivesAnError() {
-    mockSession.nextData = NSData()
-    let imageReference = ImageReference(from: NSURL(), session: session)
+    mockSession.nextData = Data()
+    let imageReference = ImageReference(from: URL(fileURLWithPath: ""), session: session)
     imageReference.load() { (image, error) -> Void in
       XCTAssertNil(image)
       XCTAssertNotNil(error)
       
-      XCTAssert(error! == .InvalidData)
+      XCTAssert(error! == .invalidData)
     }
   }
   
   func test_LoadImage_WhereRequestErrors_GivesTheError() {
     let mockError = NSError(domain: "error", code: 0, userInfo: nil)
     mockSession.nextError = mockError
-    let imageReference = ImageReference(from: NSURL(), session: session)
+    let imageReference = ImageReference(from: URL(fileURLWithPath: ""), session: session)
     imageReference.load() { (image, error) -> Void in
       XCTAssertNil(image)
       XCTAssertNotNil(error)
       
-      XCTAssert(error! == .RequestError(mockError))
+      XCTAssert(error! == .requestError(mockError))
     }
   }
   
   func test_LoadImage_RecievesNoData_GivesAnError() {
-    let imageReference = ImageReference(from: NSURL(), session: session)
+    let imageReference = ImageReference(from: URL(fileURLWithPath: ""), session: session)
     imageReference.load() { (image, error) -> Void in
       XCTAssertNil(image)
       XCTAssertNotNil(error)
       
-      XCTAssert(error! == .NoDataRecieved)
+      XCTAssert(error! == .noDataRecieved)
     }
   }
   
   func test_LoadImage_WithDifferentImageReferencesToSameURL_GivesCachedImage() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidImage, options: .IgnoreUnknownCharacters)
-    let imageReference = ImageReference(from: NSURL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
-    let imageReference2 = ImageReference(from: NSURL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
+    mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidImage, options: .ignoreUnknownCharacters)
+    let imageReference = ImageReference(from: URL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
+    let imageReference2 = ImageReference(from: URL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
     
     imageReference.load() { (image, error) -> Void in
       imageReference2.load() { (image2, error2) -> Void in
@@ -100,14 +100,14 @@ class ImageReferenceTests: YAPIXCTestCase {
         
         XCTAssert(imageReference.cachedImage !== image)
         XCTAssert(imageReference.cachedImage !== image2)
-        XCTAssert(cachedImageData.isEqual(imageData))
-        XCTAssert(cachedImageData.isEqual(imageData2))
+        XCTAssert(cachedImageData == imageData)
+        XCTAssert(cachedImageData == imageData2)
         XCTAssert(imageReference2.cachedImage !== image)
         XCTAssert(imageReference2.cachedImage !== image2)
-        XCTAssert(cachedImageData2.isEqual(imageData))
-        XCTAssert(cachedImageData2.isEqual(imageData2))
+        XCTAssert(cachedImageData2 == imageData)
+        XCTAssert(cachedImageData2 == imageData2)
         XCTAssert(image !== image2)
-        XCTAssert(imageData.isEqual(imageData2))
+        XCTAssert(imageData == imageData2)
         
         XCTAssert(imageReference.cachedImage !== imageReference2.cachedImage)
       }
@@ -115,9 +115,9 @@ class ImageReferenceTests: YAPIXCTestCase {
   }
   
   func test_FlushCache_RemovesAllImagesFromTheCache() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidImage, options: .IgnoreUnknownCharacters)
-    let url = NSURL(string: "http://s3-media3.fl.yelpcdn.com/asdf.jpg")!
-    let url2 = NSURL(string: "http://s3-media3.fl.yelpcdn.com/qwer.jpg")!
+    mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidImage, options: .ignoreUnknownCharacters)
+    let url = URL(string: "http://s3-media3.fl.yelpcdn.com/asdf.jpg")!
+    let url2 = URL(string: "http://s3-media3.fl.yelpcdn.com/qwer.jpg")!
     let imageReference = ImageReference(from: url, session: session)
     let imageReference2 = ImageReference(from: url2, session: session)
     
@@ -140,8 +140,8 @@ class ImageReferenceTests: YAPIXCTestCase {
   }
   
   func test_CachedImageProperty_ReturnsCopy() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidImage, options: .IgnoreUnknownCharacters)
-    let imageReference = ImageReference(from: NSURL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
+    mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidImage, options: .ignoreUnknownCharacters)
+    let imageReference = ImageReference(from: URL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
     
     imageReference.load() { (image, error) -> Void in
       let cachedImage = imageReference.cachedImage
@@ -159,8 +159,8 @@ class ImageReferenceTests: YAPIXCTestCase {
   }
   
   func test_LoadImageWithScale_ScalesTheImage() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidImage, options: .IgnoreUnknownCharacters)
-    let imageReference = ImageReference(from: NSURL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
+    mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidImage, options: .ignoreUnknownCharacters)
+    let imageReference = ImageReference(from: URL(string: "http://s3-media3.fl.yelpcdn.com/bphoto/nQK-6_vZMt5n88zsAS94ew/ms.jpg")!, session: session)
     
     imageReference.load(withScale: 0.5) { (image, error) -> Void in
       XCTAssertNotNil(image)

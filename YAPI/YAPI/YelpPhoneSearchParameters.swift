@@ -41,7 +41,7 @@ public struct YelpPhoneSearchParameters {
   }
 }
 
-extension YelpPhoneSearchParameters.PhoneParameter : StringLiteralConvertible {
+extension YelpPhoneSearchParameters.PhoneParameter : ExpressibleByStringLiteral {
   public typealias UnicodeScalarLiteralType = Character
   public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
   
@@ -58,7 +58,7 @@ extension YelpPhoneSearchParameters.PhoneParameter : StringLiteralConvertible {
   }
 }
 
-extension YelpPhoneSearchParameters.CategoryParameter : StringLiteralConvertible {
+extension YelpPhoneSearchParameters.CategoryParameter : ExpressibleByStringLiteral {
   public typealias UnicodeScalarLiteralType = Character
   public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
   

@@ -9,10 +9,10 @@
 import Foundation
 
 internal enum AuthKeys {
-  private static var _consumerKey: String?
-  private static var _consumerSecret: String?
-  private static var _token: String?
-  private static var _tokenSecret: String?
+  fileprivate static var _consumerKey: String?
+  fileprivate static var _consumerSecret: String?
+  fileprivate static var _token: String?
+  fileprivate static var _tokenSecret: String?
   
   static var consumerKey: String? {
     get {

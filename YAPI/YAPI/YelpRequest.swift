@@ -60,9 +60,9 @@ public extension YelpRequest {
       - Parameter completionHandler: The block to call when the response returns, takes a YelpResponse? and
           a YelpError? as arguments, the error can be of YelpResponseError type or YelpRequestError type
    */
-  func send(completionHandler handler: (response: YelpResponse?, error: YelpError?) -> Void) {
+  func send(completionHandler handler: @escaping (_ response: YelpResponse?, _ error: YelpError?) -> Void) {
     guard let urlRequest = self.generateURLRequest() else {
-      handler(response: nil, error: YelpRequestError.FailedToGenerateRequest)
+      handler(nil, YelpRequestError.failedToGenerateRequest)
       return
     }
     
@@ -70,20 +70,20 @@ public extension YelpRequest {
       let finalResponse: YelpResponse?
       let finalError: YelpError?
       defer {
-        GlobalMainQueue.executeAsync() {
-          handler(response: finalResponse, error: finalError)
+        DispatchQueue.main.async {
+          handler(finalResponse, finalError)
         }
       }
       
       if let err = error {
         finalResponse = nil
-        finalError = YelpRequestError.FailedToSendRequest(err)
+        finalError = YelpRequestError.failedToSendRequest(err)
         return
       }
       
       guard let jsonData = data else {
         finalResponse = nil
-        finalError = YelpResponseError.NoDataRecieved
+        finalError = YelpResponseError.noDataRecieved
         return
       }
       
@@ -91,7 +91,7 @@ public extension YelpRequest {
       
       guard let yelpResponse = optionalYelpResponse else {
         finalResponse = nil
-        finalError = YelpResponseError.FailedToParse
+        finalError = YelpResponseError.failedToParse
         return
       }
       
@@ -108,8 +108,8 @@ public extension YelpRequest {
 }
 
 extension YelpRequest {
-  func generateURLRequest() -> NSURLRequest? {
-    guard let consumerKey = AuthKeys.consumerKey, consumerSecret = AuthKeys.consumerSecret, token = AuthKeys.token, tokenSecret = AuthKeys.tokenSecret else {
+  func generateURLRequest() -> URLRequest? {
+    guard let consumerKey = AuthKeys.consumerKey, let consumerSecret = AuthKeys.consumerSecret, let token = AuthKeys.token, let tokenSecret = AuthKeys.tokenSecret else {
       assert(false, "The request requires a consumerKey, consumerSecret, token, and tokenSecret in order to access the Yelp API, set these through the YelpAPIFactory")
       return nil
     }

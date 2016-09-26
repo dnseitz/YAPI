@@ -16,13 +16,13 @@ struct YelpCategoryList {
   /// Singleton object used to access the categories available to the Yelp API
   static let sharedInstance = YelpCategoryList()!
  
-  private let categories: [String: [YelpCategoryWrapper]]
+  fileprivate let categories: [String: [YelpCategoryWrapper]]
   
-  init?(file: String = "categories", bundle: NSBundle = NSBundle.mainBundle()) {
-    let path = bundle.pathForResource(file, ofType: "json")
-    guard let data = NSData(contentsOfFile: path!) else { return nil }
+  init?(file: String = "categories", bundle: Bundle = Bundle.main) {
+    let path = bundle.path(forResource: file, ofType: "json")
+    guard let data = try? Data(contentsOf: URL(fileURLWithPath: path!)) else { return nil }
     
-    guard let categories = try? NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as! [[String: AnyObject]] else { return nil }
+    guard let categories = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [[String: AnyObject]] else { return nil }
     
     var yelpCategories = [String: [YelpCategoryWrapper]](minimumCapacity: 26)
     for category in categories {
@@ -62,9 +62,9 @@ struct YelpCategoryList {
       - Returns: An array of YelpCategories that start with the given prefix
    */
   func categoriesBeginning(with prefix: String) -> [YelpCategory] {
-    guard let yelpCategories = self.categories[prefix[0].uppercaseString] else { return [YelpCategory]() }
+    guard let yelpCategories = self.categories[prefix[0].uppercased()] else { return [YelpCategory]() }
     
-    return yelpCategories.filter { $0.category.categoryName.uppercaseString.hasPrefix(prefix.uppercaseString) }.map { $0.category }
+    return yelpCategories.filter { $0.category.categoryName.uppercased().hasPrefix(prefix.uppercased()) }.map { $0.category }
   }
   
   /**
@@ -107,6 +107,6 @@ private struct YelpCategoryWrapper {
   }
   
   func key() -> String {
-    return self.category.categoryName[0].uppercaseString
+    return self.category.categoryName[0].uppercased()
   }
 }

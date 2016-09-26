@@ -10,26 +10,26 @@ import Foundation
 @testable import YAPI
 
 class MockURLSession: URLSessionProtocol {
-  var nextData: NSData?
+  var nextData: Data?
   var nextError: NSError?
   var nextDataTask = MockURLSessionDataTask()
-  private(set) var lastURL: NSURL?
+  fileprivate(set) var lastURL: URL?
   
-  func dataTaskWithURL(url: NSURL, completionHandler: DataTaskResult) -> URLSessionDataTaskProtocol {
+  func dataTask(with url: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol {
     self.lastURL = url
-    completionHandler(data: self.nextData, response: nil, error: self.nextError)
+    completionHandler(self.nextData, nil, self.nextError)
     return self.nextDataTask
   }
   
-  func dataTaskWithRequest(request: NSURLRequest, completionHandler: DataTaskResult) -> URLSessionDataTaskProtocol {
-    self.lastURL = request.URL
-    completionHandler(data: self.nextData, response: nil, error: self.nextError)
+  func dataTask(with request: URLRequest, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol {
+    self.lastURL = request.url
+    completionHandler(self.nextData, nil, self.nextError)
     return self.nextDataTask
   }
 }
 
 class MockURLSessionDataTask: URLSessionDataTaskProtocol {
-  private(set) var resumeWasCalled = false
+  fileprivate(set) var resumeWasCalled = false
   
   func resume() {
     resumeWasCalled = true

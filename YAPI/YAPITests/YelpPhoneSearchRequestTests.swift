@@ -17,7 +17,7 @@ class YelpPhoneSearchRequestTests: YelpRequestTestCase {
   }
   
   func test_SendRequest_RecievesData_ParsesTheData() {
-    mockSession.nextData = NSData(base64EncodedString: ResponseInjections.yelpValidPhoneSearchResponse, options: .IgnoreUnknownCharacters)
+    mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidPhoneSearchResponse, options: .ignoreUnknownCharacters)
     request.send() { (response, error) in
       XCTAssertNotNil(response)
       XCTAssertNil(error)

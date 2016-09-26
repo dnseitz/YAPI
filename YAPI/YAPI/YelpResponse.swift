@@ -52,23 +52,23 @@ extension YelpResponse {
   static func parseError(errorDict dict: [String: AnyObject]) -> YelpResponseError {
     switch dict["id"] as! String {
     case "INTERNAL_ERROR":
-      return YelpResponseError.InternalError
+      return YelpResponseError.internalError
     case "EXCEEDED_REQS":
-      return YelpResponseError.ExceededRequests
+      return YelpResponseError.exceededRequests
     case "MISSING_PARAMETER":
-      return YelpResponseError.MissingParameter(field: dict["field"] as! String)
+      return YelpResponseError.missingParameter(field: dict["field"] as! String)
     case "INVALID_PARAMETER":
-      return YelpResponseError.InvalidParameter(field: dict["field"] as! String)
+      return YelpResponseError.invalidParameter(field: dict["field"] as! String)
     case "UNAVAILABLE_FOR_LOCATION":
-      return YelpResponseError.UnavailableForLocation
+      return YelpResponseError.unavailableForLocation
     case "AREA_TOO_LARGE":
-      return YelpResponseError.AreaTooLarge
+      return YelpResponseError.areaTooLarge
     case "MULTIPLE_LOCATIONS":
-      return YelpResponseError.MultipleLocations
+      return YelpResponseError.multipleLocations
     case "BUSINESS_UNAVAILABLE":
-      return YelpResponseError.BusinessUnavailable
+      return YelpResponseError.businessUnavailable
     default:
-      return YelpResponseError.UnknownError
+      return YelpResponseError.unknownError
     }
   }
   

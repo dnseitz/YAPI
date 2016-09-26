@@ -34,7 +34,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   // MARK: Search Request Tests
   
   func test_Factory_BuildsSearchRequestWithParameters() {
-    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
+    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), term: .food, limit: 99, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
     let request = YelpAPIFactory.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
@@ -57,7 +57,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   
   func test_Factory_BuildsSearchRequestWithLocaleParameters() {
     YelpAPIFactory.localeParameters = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: true)
-    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
+    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), term: .food, limit: 99, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
     let request = YelpAPIFactory.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
@@ -80,7 +80,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   
   func test_Factory_BuildsSearchRequestWithActionlinkParameters() {
     YelpAPIFactory.actionlinkParameters = YelpActionlinkParameters(actionlinks: false)
-    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), limit: 99, term: .food, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
+    let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), term: .food, limit: 99, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
     let request = YelpAPIFactory.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
@@ -186,10 +186,10 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   func test_Factory_BuildsResponseWithValidJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidThreeBusinessResponse)
-      let response = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)
+      let response = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)!
       
       XCTAssert(response.businesses!.count == 3)
-      XCTAssert(searchRequestStub === (response.request as! AnyObject))
+      XCTAssert(searchRequestStub === response.request as AnyObject)
       XCTAssert(response.wasSuccessful == true)
       XCTAssert(response.error == nil)
     } catch {
@@ -200,12 +200,12 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   func test_Factory_BuildsResponseWithErrorJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpErrorResponse)
-      let response = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)
+      let response = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)!
       
       XCTAssertNil(response.businesses)
-      XCTAssert(searchRequestStub === (response.request as! AnyObject))
+      XCTAssert(searchRequestStub === response.request as AnyObject)
       XCTAssertNotNil(response.error)
-      XCTAssert(response.error! == YelpResponseError.InvalidParameter(field: "location"))
+      XCTAssert(response.error! == .invalidParameter(field: "location"))
       XCTAssert(response.wasSuccessful == false)
     } catch {
       XCTFail()
@@ -213,39 +213,39 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   }
   
   func test_Factory_BuildsResponseWithValidNSData() {
-    let data = NSData(base64EncodedString: ResponseInjections.yelpValidThreeBusinessResponse, options: .IgnoreUnknownCharacters)!
+    let data = Data(base64Encoded: ResponseInjections.yelpValidThreeBusinessResponse, options: .ignoreUnknownCharacters)!
     let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
     XCTAssertNotNil(response)
     XCTAssert(response!.businesses!.count == 3)
-    XCTAssert(searchRequestStub === (response!.request as! AnyObject))
+    XCTAssert(searchRequestStub === (response!.request as AnyObject))
     XCTAssert(response!.wasSuccessful == true)
     XCTAssert(response!.error == nil)
   }
   
   func test_Factory_BuildsResponseWithErrorNSData() {
-    let data = NSData(base64EncodedString: ResponseInjections.yelpErrorResponse, options: .IgnoreUnknownCharacters)!
+    let data = Data(base64Encoded: ResponseInjections.yelpErrorResponse, options: .ignoreUnknownCharacters)!
     let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
     XCTAssertNotNil(response)
     XCTAssertNil(response!.businesses)
-    XCTAssert(searchRequestStub === (response!.request as! AnyObject))
+    XCTAssert(searchRequestStub === (response!.request as AnyObject))
     XCTAssertNotNil(response!.error)
-    XCTAssert(response!.error! == YelpResponseError.InvalidParameter(field: "location"))
+    XCTAssert(response!.error! == .invalidParameter(field: "location"))
     XCTAssert(response!.wasSuccessful == false)
   }
   
   func test_Factory_BuildsNilWithInvalidNSData() {
-    let data = NSData()
+    let data = Data()
     let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
     XCTAssertNil(response)
   }
   
   func test_Factory_BuildsCorrectTypeOfResponseBasedOnRequest() {
-    let searchData = NSData(base64EncodedString: ResponseInjections.yelpValidOneBusinessResponse, options: .IgnoreUnknownCharacters)!
-    let businessData = NSData(base64EncodedString: ResponseInjections.yelpValidBusinessResponse, options: .IgnoreUnknownCharacters)!
-    let phoneSearchData = NSData(base64EncodedString: ResponseInjections.yelpValidPhoneSearchResponse, options: .IgnoreUnknownCharacters)!
+    let searchData = Data(base64Encoded: ResponseInjections.yelpValidOneBusinessResponse, options: .ignoreUnknownCharacters)!
+    let businessData = Data(base64Encoded: ResponseInjections.yelpValidBusinessResponse, options: .ignoreUnknownCharacters)!
+    let phoneSearchData = Data(base64Encoded: ResponseInjections.yelpValidPhoneSearchResponse, options: .ignoreUnknownCharacters)!
     
     let searchResponse = YelpAPIFactory.makeResponse(with: searchData, from: searchRequestStub)
     let businessResponse = YelpAPIFactory.makeResponse(with: businessData, from: businessRequestStub)

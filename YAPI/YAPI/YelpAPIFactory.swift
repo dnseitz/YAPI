@@ -30,7 +30,7 @@ public enum YelpAPIFactory {
         - token: The OAuth token
         - tokenSecret: The OAuth token secret
    */
-  public static func setAuthenticationKeys(consumerKey: String,
+  public static func setAuthenticationKeys(_ consumerKey: String,
                                         consumerSecret: String,
                                                  token: String,
                                            tokenSecret: String) {
@@ -104,9 +104,9 @@ public enum YelpAPIFactory {
    
       - Returns: A valid response object, or nil if the data cannot be parsed
    */
-  static func makeResponse(with data: NSData, from request: YelpRequest) -> YelpResponse? {
+  static func makeResponse(with data: Data, from request: YelpRequest) -> YelpResponse? {
     do {
-      let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+      let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
       return YelpAPIFactory.makeResponse(withJSON: json as! [String: AnyObject], from: request)
     }
     catch {

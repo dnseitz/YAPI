@@ -17,7 +17,7 @@ public final class YelpPhoneSearchResponse : YelpResponse {
   
   init(withJSON data: [String: AnyObject], from request: YelpRequest) {
     if let error = data["error"] as? [String: AnyObject] {
-      self.error = self.dynamicType.parseError(errorDict: error)
+      self.error = type(of: self).parseError(errorDict: error)
     }
     else {
       self.error = nil

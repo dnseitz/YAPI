@@ -24,7 +24,7 @@ class YelpBusinessResponseTests: YAPIXCTestCase {
       let response = YelpBusinessResponse(withJSON: dict, from: requestStub)
       
       XCTAssert(response.businesses!.count == 1)
-      XCTAssert(requestStub === (response.request as! AnyObject))
+      XCTAssert(requestStub === response.request as AnyObject)
       XCTAssert(response.wasSuccessful == true)
       XCTAssertNil(response.error)
     }
@@ -39,9 +39,9 @@ class YelpBusinessResponseTests: YAPIXCTestCase {
       let response = YelpBusinessResponse(withJSON: dict, from: requestStub)
       
       XCTAssertNil(response.businesses)
-      XCTAssert(requestStub === (response.request as! AnyObject))
+      XCTAssert(requestStub === response.request as AnyObject)
       XCTAssertNotNil(response.error)
-      XCTAssert(response.error! == YelpResponseError.InvalidParameter(field: "location"))
+      XCTAssert(response.error! == .invalidParameter(field: "location"))
       XCTAssert(response.wasSuccessful == false)
     } catch {
       XCTFail()

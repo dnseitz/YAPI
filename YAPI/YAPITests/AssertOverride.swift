@@ -13,7 +13,7 @@ enum Asserts {
 }
 
 // Disable asserts for testing
-func assert(@autoclosure condition: () -> Bool, @autoclosure _ message: () -> String = "", file: StaticString = #file, line: UInt = #line) {
+func assert(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "", file: StaticString = #file, line: UInt = #line) {
   if Asserts.shouldAssert {
     Swift.assert(condition, message, file: file, line: line)
   }

@@ -11,7 +11,7 @@ import Foundation
 extension String {
   
   subscript (i: Int) -> Character {
-    return self[self.startIndex.advancedBy(i)]
+    return self[self.characters.index(self.startIndex, offsetBy: i)]
   }
   
   subscript (i: Int) -> String {

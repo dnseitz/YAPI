@@ -27,28 +27,29 @@ class YelpHTTPClientTests: YAPIXCTestCase {
   }
   
   func test_Send_RequestsTheURL() {
-    let url = NSURL(string: "http://yelp.com")!
+    let url = URL(string: "http://yelp.com")!
     
     subject.send(url) { (_, _, _) -> Void in }
     
-    XCTAssert(session.lastURL === url)
+    XCTAssertNotNil(session.lastURL)
+    XCTAssert(session.lastURL == url)
   }
   
   func test_Send_StartsTheRequest() {
     let dataTask = MockURLSessionDataTask()
     session.nextDataTask = dataTask
     
-    subject.send(NSURL()) { (_, _, _) -> Void in }
+    subject.send(URL(fileURLWithPath: "")) { (_, _, _) -> Void in }
     
     XCTAssert(dataTask.resumeWasCalled)
   }
   
   func test_Send_WithResponseData_ReturnsTheData() {
-    let expectedData = "{}".dataUsingEncoding(NSUTF8StringEncoding)
+    let expectedData = "{}".data(using: String.Encoding.utf8)
     session.nextData = expectedData
     
-    var actualData: NSData?
-    subject.send(NSURL()) { (data, _, _) -> Void in
+    var actualData: Data?
+    subject.send(URL(fileURLWithPath: "")) { (data, _, _) -> Void in
       actualData = data
     }
     
@@ -58,8 +59,8 @@ class YelpHTTPClientTests: YAPIXCTestCase {
   func test_Send_WithANetworkError_ReturnsANetworkError() {
     session.nextError = NSError(domain: "error", code: 0, userInfo: nil)
     
-    var error: ErrorType?
-    subject.send(NSURL()) { (_, _, theError) -> Void in
+    var error: Error?
+    subject.send(URL(fileURLWithPath: "")) { (_, _, theError) -> Void in
       error = theError
     }
     

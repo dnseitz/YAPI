@@ -21,9 +21,9 @@ public struct YelpBusiness {
   /// url of photo for this business
   let image: ImageReference?
   /// url for business page on Yelp
-  let url: NSURL
+  let url: URL
   /// url for mobile business page on Yelp
-  let mobileURL: NSURL
+  let mobileURL: URL
   /// Phone number for this business with international dialing code (e.g. +442079460000)
   let phoneNumber: String?
   /// Phone number for this business formatted for display
@@ -45,9 +45,9 @@ public struct YelpBusiness {
   /// Last time this menu was updated on Yelp (Unix timestamp)
   let menuUpdateDate: Int?
   /// URL to the SeatMe reservation page for this business. This key will not be present if the business does not take reservations through SeatMe or if the query param 'actionlinks' is not set to True in the request
-  let reservationURL: NSURL?
+  let reservationURL: URL?
   /// URL to the Eat24 page for this business. This key will not be present if the business does not offer delivery through Eat24 or if the query param 'actionlinks' is not set to True in the request
-  let eat24URL: NSURL?
+  let eat24URL: URL?
   
   init(withDict dict: [String: AnyObject]) {
     self.id = dict["id"] as! String
@@ -55,13 +55,13 @@ public struct YelpBusiness {
     self.closed = dict["is_closed"] as! Bool
     self.name = dict["name"] as! String
     if let imageURL = dict["image_url"] as? String {
-      self.image = ImageReference(from: NSURL(string: imageURL)!)
+      self.image = ImageReference(from: URL(string: imageURL)!)
     }
     else {
       self.image = nil
     }
-    self.url = NSURL(string: dict["url"] as! String)!
-    self.mobileURL = NSURL(string: dict["mobile_url"] as! String)!
+    self.url = URL(string: dict["url"] as! String)!
+    self.mobileURL = URL(string: dict["mobile_url"] as! String)!
     self.phoneNumber = dict["phone"] as? String
     self.displayPhoneNumber = dict["display_phone"] as? String
     self.reviewCount = dict["review_count"] as! Int
@@ -99,13 +99,13 @@ public struct YelpBusiness {
     self.menuProvider = dict["menu_provider"] as? String
     self.menuUpdateDate = dict["menu_date_updated"] as? Int
     if let reservationURL = dict["reservation_url"] as? String {
-      self.reservationURL = NSURL(string: reservationURL)
+      self.reservationURL = URL(string: reservationURL)
     }
     else {
       self.reservationURL = nil
     }
     if let eat24URL = dict["eat24_url"] as? String {
-      self.eat24URL = NSURL(string: eat24URL)
+      self.eat24URL = URL(string: eat24URL)
     }
     else {
       self.eat24URL = nil
@@ -135,9 +135,9 @@ struct YelpRating {
   
   init(withDict dict: [String: AnyObject]) {
     self.rating = dict["rating"] as! Float
-    self.image = ImageReference(from: NSURL(string: dict["rating_img_url"] as! String)!)
-    self.smallImage = ImageReference(from: NSURL(string: dict["rating_img_url_small"] as! String)!)
-    self.largeImage = ImageReference(from: NSURL(string: dict["rating_img_url_large"] as! String)!)
+    self.image = ImageReference(from: URL(string: dict["rating_img_url"] as! String)!)
+    self.smallImage = ImageReference(from: URL(string: dict["rating_img_url_small"] as! String)!)
+    self.largeImage = ImageReference(from: URL(string: dict["rating_img_url_large"] as! String)!)
   }
 }
 
@@ -150,7 +150,7 @@ struct YelpSnippet {
   init(withDict dict: [String: AnyObject]) {
     self.text = dict["snippet_text"] as? String
     if let imageURL = dict["snippet_image_url"] as? String {
-      self.image = ImageReference(from: NSURL(string: imageURL)!)
+      self.image = ImageReference(from: URL(string: imageURL)!)
     }
     else {
       self.image = nil
@@ -214,7 +214,7 @@ struct YelpDeal {
   /// Deal title
   let title: String
   /// Deal url
-  let url: NSURL
+  let url: URL
   /// Deal image url
   let image: ImageReference
   /// ISO_4217 Currency Code
@@ -237,8 +237,8 @@ struct YelpDeal {
   init(withDict dict: [String: AnyObject]) {
     self.id = dict["id"] as? String
     self.title = dict["title"] as! String
-    self.url = NSURL(string: dict["url"] as! String)!
-    self.image = ImageReference(from: NSURL(string: dict["image_url"] as! String)!)
+    self.url = URL(string: dict["url"] as! String)!
+    self.image = ImageReference(from: URL(string: dict["image_url"] as! String)!)
     self.currencyCode = dict["currency_code"] as! String
     self.startTime = dict["time_start"] as! Int
     self.endTime = dict["time_end"] as? Int
@@ -259,7 +259,7 @@ struct YelpDealOptions {
   /// Deal option title
   let title: String
   /// 	Deal option url for purchase
-  let purchaseURL: NSURL
+  let purchaseURL: URL
   /// Deal option price (in cents)
   let price: Int
   /// Deal option price (formatted, e.g. "$6")
@@ -275,7 +275,7 @@ struct YelpDealOptions {
   
   init(withDict dict: [String: AnyObject]) {
     self.title = dict["title"] as! String
-    self.purchaseURL = NSURL(string: dict["purchase_url"] as! String)!
+    self.purchaseURL = URL(string: dict["purchase_url"] as! String)!
     self.price = dict["price"] as! Int
     self.formattedPrice = dict["formatted_price"] as! String
     self.originalPrice = dict["original_price"] as! Int
@@ -289,7 +289,7 @@ struct YelpGiftCertificate {
   /// Gift certificate identifier
   let id: String
   /// Gift certificate landing page url
-  let url: NSURL
+  let url: URL
   /// Gift certificate image url
   let image: ImageReference
   /// ISO_4217 Currency Code
@@ -301,8 +301,8 @@ struct YelpGiftCertificate {
   
   init(withDict dict: [String: AnyObject]) {
     self.id = dict["id"] as! String
-    self.url = NSURL(string: dict["url"] as! String)!
-    self.image = ImageReference(from: NSURL(string: dict["image_url"] as! String)!)
+    self.url = URL(string: dict["url"] as! String)!
+    self.image = ImageReference(from: URL(string: dict["image_url"] as! String)!)
     self.currencyCode = dict["currency_code"] as! String
     self.unusedBalances = dict["unused_balances"] as! String
     var options = [YelpGiftCertificateOption]()
