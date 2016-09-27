@@ -19,7 +19,7 @@ public protocol YelpError: Error, CustomStringConvertible {}
 public enum YelpRequestError: YelpError, Equatable {
   /// The request was unable to be generated, possibly a malformed url
   case failedToGenerateRequest
-  /// The request failed to send for some reason, see the wrapped NSError for details
+  /// The request failed to send for some reason, see the wrapped Error for details
   case failedToSendRequest(NSError)
   
   public var description: String {

@@ -9,12 +9,12 @@
 import Foundation
 
 public struct YelpSearchParameters {
-  enum SearchTermParameter : String, YelpParameter {
-    var key: String {
+  public enum SearchTermParameter : String, YelpParameter {
+    public var key: String {
       return "term"
     }
     
-    var value: String {
+    public var value: String {
       return self.rawValue
     }
     
@@ -22,36 +22,36 @@ public struct YelpSearchParameters {
     case drink = "drink"
   }
   
-  struct LimitParameter : YelpIntParameter {
+  public struct LimitParameter : YelpIntParameter {
     let internalValue: Int
     
-    var key: String {
+    public var key: String {
       return "limit"
     }
     
-    init(integerLiteral value: IntegerLiteralType) {
+    public init(integerLiteral value: IntegerLiteralType) {
       self.internalValue = value
     }
   }
   
-  struct OffsetParameter : YelpIntParameter {
+  public struct OffsetParameter : YelpIntParameter {
     let internalValue: Int
     
-    var key: String {
+    public var key: String {
       return "offset"
     }
     
-    init(integerLiteral value: IntegerLiteralType) {
+    public init(integerLiteral value: IntegerLiteralType) {
       self.internalValue = value
     }
   }
   
-  enum SortModeParameter : Int, YelpParameter {
-    var key: String {
+  public enum SortModeParameter : Int, YelpParameter {
+    public var key: String {
       return "sort"
     }
     
-    var value: String {
+    public var value: String {
       return String(self.rawValue)
     }
   
@@ -60,69 +60,74 @@ public struct YelpSearchParameters {
     case highestRated = 2
   }
   
-  struct CategoriesParameter : YelpArrayParameter {
-    typealias Element = String
+  public struct CategoriesParameter : YelpArrayParameter {
+    public typealias Element = String
     
     let internalValue: [Element]
     
-    var key: String {
+    public var key: String {
       return "category_filter"
     }
     
-    init(arrayLiteral elements: Element...) {
-      self.internalValue = elements
+    public init?(_ elements: [Element]?) {
+      if let elements = elements {
+        self.internalValue = elements
+      }
+      else {
+        return nil
+      }
     }
   }
   
-  struct RadiusParameter : YelpIntParameter {
+  public struct RadiusParameter : YelpIntParameter {
     let internalValue: Int
     
-    var key: String {
+    public var key: String {
       return "radius_filter"
     }
     
-    init(integerLiteral value: IntegerLiteralType) {
+    public init(integerLiteral value: IntegerLiteralType) {
       self.internalValue = value
     }
   }
   
-  struct DealsParameter : YelpBooleanParameter {
+  public struct DealsParameter : YelpBooleanParameter {
     let internalValue: Bool
     
-    var key: String {
+    public var key: String {
       return "deals_filter"
     }
     
-    init(booleanLiteral value: BooleanLiteralType) {
+    public init(booleanLiteral value: BooleanLiteralType) {
       self.internalValue = value
     }
   }
   
   /// The location to search near
-  var location: YelpLocationParameter
+  public var location: YelpLocationParameter
   
   /// Search term (e.g. "food", "restaurants"). If term isn’t included we search everything. The term keyword also accepts business names such as "Starbucks".
-  var term: SearchTermParameter?
+  public var term: SearchTermParameter?
   
   /// Number of business results to return
-  var limit: LimitParameter?
+  public var limit: LimitParameter?
   
   /// Offset the list of returned business results by this amount
-  var offset: OffsetParameter?
+  public var offset: OffsetParameter?
   
   /// Sort mode
-  var sortMode: SortModeParameter?
+  public var sortMode: SortModeParameter?
   
   /// Category to filter search results with.
-  var categories: CategoriesParameter?
+  public var categories: CategoriesParameter?
   
   /// Search radius in meters. If the value is too large, a AREA_TOO_LARGE error may be returned. The max value is 40000 meters (25 miles).
-  var radius: RadiusParameter?
+  public var radius: RadiusParameter?
   
   /// Whether to exclusively search for businesses with deals
-  var filterDeals: DealsParameter?
+  public var filterDeals: DealsParameter?
   
-  init(location: YelpLocationParameter,
+  public init(location: YelpLocationParameter,
            term: SearchTermParameter? = nil,
           limit: LimitParameter? = nil,
          offset: OffsetParameter? = nil,

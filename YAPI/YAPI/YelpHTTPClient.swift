@@ -8,19 +8,20 @@
 
 import Foundation
 
-typealias DataTaskResult = (_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void
+typealias DataTaskResult = (_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void
 
 protocol URLSessionProtocol {
   func dataTask(with url: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol
   func dataTask(with request: URLRequest, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol
 }
+
 extension URLSession: URLSessionProtocol {
-  func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) -> URLSessionDataTaskProtocol {
-    return (self.dataTask(with: request, completionHandler: completionHandler as! (Data?, URLResponse?, Error?)-> Void) as URLSessionDataTask) as URLSessionDataTaskProtocol
+  func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol {
+    return (self.dataTask(with: request, completionHandler: completionHandler) as URLSessionDataTask) as URLSessionDataTaskProtocol
   }
 
-  func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) -> URLSessionDataTaskProtocol {
-    return (self.dataTask(with: url, completionHandler: completionHandler as! (Data?, URLResponse?, Error?) -> Void) as URLSessionDataTask) as URLSessionDataTaskProtocol
+  func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol {
+    return (self.dataTask(with: url, completionHandler: completionHandler) as URLSessionDataTask) as URLSessionDataTaskProtocol
   }
 }
 

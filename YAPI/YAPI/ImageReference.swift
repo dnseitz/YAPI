@@ -100,7 +100,7 @@ final class ImageCache {
       imageReference.cachedImage // COULD BE NIL HERE EVEN IF THE IMAGE WILL BE SUCCESSFULLY LOADED
     ```
  */
-final class ImageReference {
+public final class ImageReference {
   
   fileprivate enum State {
     case idle
@@ -154,7 +154,7 @@ final class ImageReference {
           will be called with the UIImage created and the error will be nil. If there is an error, the 
           image will be nil and an error object will be returned
    */
-  func load(withScale scale: CGFloat = 1.0, completionHandler handler: @escaping (_ image: UIImage?, _ error: ImageLoadError?) -> Void) {
+  public func load(withScale scale: CGFloat = 1.0, completionHandler handler: @escaping (_ image: UIImage?, _ error: ImageLoadError?) -> Void) {
     if self.state == .loading {
       DispatchQueue.main.async {
         handler(nil, .loadInProgress)
@@ -190,7 +190,7 @@ final class ImageReference {
       }
       if let err = error {
         imageResult = nil
-        errorResult = .requestError(err)
+        errorResult = .requestError(err as NSError)
         return
       }
 
@@ -216,7 +216,7 @@ final class ImageReference {
 }
 
 
-enum ImageLoadError: Error, Equatable {
+public enum ImageLoadError: Error, Equatable {
   /// An error occurred when trying to send the request, check the wrapped NSError object for more details
   case requestError(NSError)
   /// No data was recieved when trying to load the image
@@ -229,7 +229,7 @@ enum ImageLoadError: Error, Equatable {
   case copyError
 }
 
-func ==(lhs: ImageLoadError, rhs: ImageLoadError) -> Bool {
+public func ==(lhs: ImageLoadError, rhs: ImageLoadError) -> Bool {
   switch (lhs, rhs) {
   case (let .requestError(err1), let .requestError(err2)):
     return err1.domain == err2.domain && err1.code == err2.code

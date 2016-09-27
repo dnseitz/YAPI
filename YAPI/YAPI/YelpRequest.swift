@@ -46,6 +46,15 @@ public protocol YelpRequest {
   
   /// The http session used to send this request
   var session: YelpHTTPClient { get }
+  
+  /**
+   Sends the request, calling the given handler with either the yelp response or an error. This can be
+   called multiple times to retry sending the request
+   
+   - Parameter completionHandler: The block to call when the response returns, takes a YelpResponse? and
+   a YelpError? as arguments, the error can be of YelpResponseError type or YelpRequestError type
+   */
+  func send(completionHandler handler: @escaping (_ response: YelpResponse?, _ error: YelpError?) -> Void)
 }
 
 public extension YelpRequest {
@@ -53,13 +62,6 @@ public extension YelpRequest {
     return yelpHost
   }
   
-  /**
-      Sends the request, calling the given handler with either the yelp response or an error. This can be
-      called multiple times to retry sending the request
-   
-      - Parameter completionHandler: The block to call when the response returns, takes a YelpResponse? and
-          a YelpError? as arguments, the error can be of YelpResponseError type or YelpRequestError type
-   */
   func send(completionHandler handler: @escaping (_ response: YelpResponse?, _ error: YelpError?) -> Void) {
     guard let urlRequest = self.generateURLRequest() else {
       handler(nil, YelpRequestError.failedToGenerateRequest)
@@ -77,7 +79,7 @@ public extension YelpRequest {
       
       if let err = error {
         finalResponse = nil
-        finalError = YelpRequestError.failedToSendRequest(err)
+        finalError = YelpRequestError.failedToSendRequest(err as NSError)
         return
       }
       

@@ -30,7 +30,7 @@ public final class YelpSearchRequest: YelpRequest {
     
     // Search Parameters
     parameters.insertParameter(search.location)
-    if let hint = search.location.hint {
+    if let hint = (search.location as! _InternalLocation).hint {
       parameters.insertParameter(hint)
     }
     if let limit = search.limit {

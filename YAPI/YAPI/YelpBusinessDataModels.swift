@@ -11,43 +11,43 @@ import UIKit
 
 public struct YelpBusiness {
   /// Yelp ID for business
-  let id: String
+  public let id: String
   /// Whether business has been claimed by a business owner
-  let claimed: Bool
+  public let claimed: Bool
   /// Whether business has been (permenantly) closed
-  let closed: Bool
+  public let closed: Bool
   /// Name of this business
-  let name: String
+  public let name: String
   /// url of photo for this business
-  let image: ImageReference?
+  public let image: ImageReference?
   /// url for business page on Yelp
-  let url: URL
+  public let url: URL
   /// url for mobile business page on Yelp
-  let mobileURL: URL
+  public let mobileURL: URL
   /// Phone number for this business with international dialing code (e.g. +442079460000)
-  let phoneNumber: String?
+  public let phoneNumber: String?
   /// Phone number for this business formatted for display
-  let displayPhoneNumber: String?
+  public let displayPhoneNumber: String?
   /// Number of reviews for this business
-  let reviewCount: Int
+  public let reviewCount: Int
   /// Provides a list of category name, alias pairs that this business is associated with. For example, [["Local Flavor", "localflavor"], ["Active Life", "active"], ["Mass Media", "massmedia"]] The alias is provided so you can search with the category_filter.
-  let categories: [YelpCategory]
-  let rating: YelpRating
-  let snippet: YelpSnippet
+  public let categories: [YelpCategory]
+  public let rating: YelpRating
+  public let snippet: YelpSnippet
   /// Location data for this business
-  let location: YelpLocation
+  public let location: YelpLocation
   ///	Deal info for this business (optional: this field is present only if there’s a Deal)
-  let deals: [YelpDeal]?
+  public let deals: [YelpDeal]?
   /// Gift certificate info for this business (optional: this field is present only if there are gift certificates available)
-  let giftCertificates: [YelpGiftCertificate]?
+  public let giftCertificates: [YelpGiftCertificate]?
   /// Provider of the menu for this busin
-  let menuProvider: String?
+  public let menuProvider: String?
   /// Last time this menu was updated on Yelp (Unix timestamp)
-  let menuUpdateDate: Int?
+  public let menuUpdateDate: Int?
   /// URL to the SeatMe reservation page for this business. This key will not be present if the business does not take reservations through SeatMe or if the query param 'actionlinks' is not set to True in the request
-  let reservationURL: URL?
+  public let reservationURL: URL?
   /// URL to the Eat24 page for this business. This key will not be present if the business does not offer delivery through Eat24 or if the query param 'actionlinks' is not set to True in the request
-  let eat24URL: URL?
+  public let eat24URL: URL?
   
   init(withDict dict: [String: AnyObject]) {
     self.id = dict["id"] as! String
@@ -113,9 +113,9 @@ public struct YelpBusiness {
   }
 }
 
-struct YelpCategory {
-  let categoryName: String
-  let alias: String
+public struct YelpCategory {
+  public let categoryName: String
+  public let alias: String
   
   init(withTuple tuple: [String]) {
     self.categoryName = tuple[0]
@@ -123,15 +123,15 @@ struct YelpCategory {
   }
 }
 
-struct YelpRating {
+public struct YelpRating {
   /// Rating for this business (value ranges from 1, 1.5, ... 4.5, 5)
-  let rating: Float
+  public let rating: Float
   /// URL to star rating image for this business (size = 84x17)
-  let image: ImageReference
+  public let image: ImageReference
   /// URL to small version of rating image for this business (size = 50x10)
-  let smallImage: ImageReference
+  public let smallImage: ImageReference
   /// URL to large version of rating image for this business (size = 166x30)
-  let largeImage: ImageReference
+  public let largeImage: ImageReference
   
   init(withDict dict: [String: AnyObject]) {
     self.rating = dict["rating"] as! Float
@@ -141,11 +141,11 @@ struct YelpRating {
   }
 }
 
-struct YelpSnippet {
+public struct YelpSnippet {
   /// Snippet text associated with this business
-  let text: String?
+  public let text: String?
   /// URL of snippet image associated with this business
-  let image: ImageReference?
+  public let image: ImageReference?
   
   init(withDict dict: [String: AnyObject]) {
     self.text = dict["snippet_text"] as? String
@@ -158,26 +158,26 @@ struct YelpSnippet {
   }
 }
 
-struct YelpLocation {
+public struct YelpLocation {
   /// Address for this business. Only includes address fields.
-  let address: [String]
+  public let address: [String]
   /// Address for this business formatted for display. Includes all address fields, cross streets and city, state_code, etc.
-  let displayAddress: [String]
+  public let displayAddress: [String]
   /// City for this business
-  let city: String
+  public let city: String
   /// ISO 3166-2 state code for this business
-  let stateCode: String
+  public let stateCode: String
   /// Postal code for this business
-  let postalCode: String?
+  public let postalCode: String?
   /// ISO 3166-1 country code for this business
-  let countryCode: String
+  public let countryCode: String
   /// Cross streets for this business
-  let crossStreets: String?
+  public let crossStreets: String?
   /// List that provides neighborhood(s) information for business
-  let neighborhoods: [String]?
+  public let neighborhoods: [String]?
   /// Coordinates of this location. This will be omitted if coordinates are not known for the location.
-  let coordinate: YelpGeoLocation?
-  let geoAccuraccy: Float
+  public let coordinate: YelpGeoLocation?
+  public let geoAccuraccy: Float
   
   init(withDict dict: [String: AnyObject]) {
     self.address = dict["address"] as! [String]
@@ -198,9 +198,9 @@ struct YelpLocation {
   }
 }
 
-struct YelpGeoLocation {
-  let latitude: Double
-  let longitude: Double
+public struct YelpGeoLocation {
+  public let latitude: Double
+  public let longitude: Double
   
   init(withDict dict: [String: Double]) {
     self.latitude = dict["latitude"]!
@@ -208,31 +208,31 @@ struct YelpGeoLocation {
   }
 }
 
-struct YelpDeal {
+public struct YelpDeal {
   /// Deal identifier
-  let id: String?
+  public let id: String?
   /// Deal title
-  let title: String
+  public let title: String
   /// Deal url
-  let url: URL
+  public let url: URL
   /// Deal image url
-  let image: ImageReference
+  public let image: ImageReference
   /// ISO_4217 Currency Code
-  let currencyCode: String
+  public let currencyCode: String
   /// Deal start time (Unix timestamp)
-  let startTime: Int
+  public let startTime: Int
   /// Deal end time (optional: this field is present only if the Deal ends)
-  let endTime: Int?
+  public let endTime: Int?
   /// Whether the Deal is popular (optional: this field is present only if true)
-  let popular: Bool?
+  public let popular: Bool?
   /// Additional details for the Deal, separated by newlines
-  let details: String?
+  public let details: String?
   /// Important restrictions for the Deal, separated by newlines
-  let importantRestrictions: String?
+  public let importantRestrictions: String?
   /// Deal additional restrictions
-  let additionalRestrictions: String?
+  public let additionalRestrictions: String?
   /// Deal options
-  let options: [YelpDealOptions]  
+  public let options: [YelpDealOptions]
   
   init(withDict dict: [String: AnyObject]) {
     self.id = dict["id"] as? String
@@ -255,23 +255,23 @@ struct YelpDeal {
   }
 }
 
-struct YelpDealOptions {
+public struct YelpDealOptions {
   /// Deal option title
-  let title: String
+  public let title: String
   /// 	Deal option url for purchase
-  let purchaseURL: URL
+  public let purchaseURL: URL
   /// Deal option price (in cents)
-  let price: Int
+  public let price: Int
   /// Deal option price (formatted, e.g. "$6")
-  let formattedPrice: String
+  public let formattedPrice: String
   /// Deal option original price (in cents)
-  let originalPrice: Int
+  public let originalPrice: Int
   /// Deal option original price (formatted, e.g. "$12")
-  let formattedOriginalPrice: String
+  public let formattedOriginalPrice: String
   /// Whether the deal option is limited or unlimited
-  let limitedQuantity: Bool
+  public let limitedQuantity: Bool
   /// The remaining deal options available for purchase (optional: this field is only present if the deal is limited)
-  let remainingCount: Int?  
+  public let remainingCount: Int?
   
   init(withDict dict: [String: AnyObject]) {
     self.title = dict["title"] as! String
@@ -285,19 +285,19 @@ struct YelpDealOptions {
   }
 }
 
-struct YelpGiftCertificate {
+public struct YelpGiftCertificate {
   /// Gift certificate identifier
-  let id: String
+  public let id: String
   /// Gift certificate landing page url
-  let url: URL
+  public let url: URL
   /// Gift certificate image url
-  let image: ImageReference
+  public let image: ImageReference
   /// ISO_4217 Currency Code
-  let currencyCode: String
+  public let currencyCode: String
   /// Whether unused balances are returned as cash or store credit
-  let unusedBalances: String
+  public let unusedBalances: String
   /// Gift certificate options
-  let options: [YelpGiftCertificateOption]  
+  public let options: [YelpGiftCertificateOption]
   
   init(withDict dict: [String: AnyObject]) {
     self.id = dict["id"] as! String
@@ -314,11 +314,11 @@ struct YelpGiftCertificate {
   }
 }
 
-struct YelpGiftCertificateOption {
+public struct YelpGiftCertificateOption {
   /// Gift certificate option price (in cents)
-  let price: Int
+  public let price: Int
   /// Gift certificate option price (formatted, e.g. "$50")
-  let formattedPrice: String  
+  public let formattedPrice: String
   
   init(withDict dict: [String: AnyObject]) {
     self.price = dict["price"] as! Int
