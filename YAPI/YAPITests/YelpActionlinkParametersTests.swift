@@ -11,7 +11,7 @@ import XCTest
 
 class YelpActionlinkParametersTests: YAPIXCTestCase {
   func test_ParametersValue_GivesCorrectValue() {
-    let actionlink = YelpActionlinkParameters(actionlinks: true)
+    let actionlink = YelpV2ActionlinkParameters(actionlinks: true)
     
     XCTAssertNotNil(actionlink.actionlinks)
     
@@ -19,7 +19,7 @@ class YelpActionlinkParametersTests: YAPIXCTestCase {
   }
   
   func test_Actionlinks_GivesCorrectKeyValue() {
-    let actionlinks = YelpActionlinkParameters.ActionlinksParameter(booleanLiteral: false)
+    let actionlinks = YelpV2ActionlinkParameters.ActionlinksParameter(booleanLiteral: false)
     
     XCTAssert(actionlinks.key == "actionlinks")
     XCTAssert(actionlinks.value == "false")

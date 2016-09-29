@@ -18,7 +18,7 @@ class YelpPhoneSearchRequestTests: YAPIXCTestCase {
     super.setUp()
     
     session = YelpHTTPClient(session: mockSession)
-    request = YelpV2PhoneSearchRequest(phoneSearch: YelpPhoneSearchParameters(phone: "PHONENUMBER"), session: session)
+    request = YelpV2PhoneSearchRequest(phoneSearch: YelpV2PhoneSearchParameters(phone: "PHONENUMBER"), session: session)
   }
   
   func test_SendRequest_RecievesData_ParsesTheData() {

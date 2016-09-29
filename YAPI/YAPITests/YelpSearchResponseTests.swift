@@ -16,7 +16,7 @@ class YelpResponseModelTests: YAPIXCTestCase {
   override func setUp() {
     super.setUp()
     
-    requestStub = YelpAPIFactory.V2.makeSearchRequest(with: YelpSearchParameters(location: "" as YelpSearchLocation))
+    requestStub = YelpAPIFactory.V2.makeSearchRequest(with: YelpV2SearchParameters(location: "" as YelpSearchLocation))
   }
   
   func test_ValidResponse_ParsedFromEncodedJSON() {

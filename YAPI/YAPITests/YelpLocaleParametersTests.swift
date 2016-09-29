@@ -12,7 +12,7 @@ import XCTest
 class YelpLocaleParametersTests: YAPIXCTestCase {
 
   func test_ParametersValue_GivesCorrectValue() {
-    let parameter = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: false)
+    let parameter = YelpV2LocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: false)
     
     XCTAssertNotNil(parameter.countryCode)
     XCTAssertNotNil(parameter.language)
@@ -31,14 +31,14 @@ class YelpLocaleParametersTests: YAPIXCTestCase {
   }
   
   func test_Language_GivesCorrectKeyValue() {
-    let language = YelpLocaleParameters.LanguageParameter.english
+    let language = YelpV2LocaleParameters.LanguageParameter.english
     
     XCTAssert(language.key == "lang")
     XCTAssert(language.value == "en")
   }
   
   func test_FilterLanguage_GivesCorrectKeyValue() {
-    let filter = YelpLocaleParameters.FilterLanguageParameter(booleanLiteral: true)
+    let filter = YelpV2LocaleParameters.FilterLanguageParameter(booleanLiteral: true)
     
     XCTAssert(filter.key == "lang_filter")
     XCTAssert(filter.value == "true")

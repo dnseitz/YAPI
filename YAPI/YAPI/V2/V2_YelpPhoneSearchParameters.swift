@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct YelpPhoneSearchParameters {
+public struct YelpV2PhoneSearchParameters {
   public struct PhoneParameter : YelpStringParameter {
     let internalValue: String
     
@@ -41,7 +41,7 @@ public struct YelpPhoneSearchParameters {
   }
 }
 
-extension YelpPhoneSearchParameters.PhoneParameter : ExpressibleByStringLiteral {
+extension YelpV2PhoneSearchParameters.PhoneParameter : ExpressibleByStringLiteral {
   public typealias UnicodeScalarLiteralType = Character
   public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
   
@@ -58,7 +58,7 @@ extension YelpPhoneSearchParameters.PhoneParameter : ExpressibleByStringLiteral 
   }
 }
 
-extension YelpPhoneSearchParameters.CategoryParameter : ExpressibleByStringLiteral {
+extension YelpV2PhoneSearchParameters.CategoryParameter : ExpressibleByStringLiteral {
   public typealias UnicodeScalarLiteralType = Character
   public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
   

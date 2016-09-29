@@ -15,14 +15,14 @@ import CoreLocation
  */
 public protocol YelpLocationParameter : YelpParameter {}
 
-internal protocol _InternalLocation : YelpLocationParameter {
+internal protocol InternalLocation : YelpLocationParameter {
   var hint: YelpSearchLocation.HintParameter? { get }
 }
 
 /**
     Location is specified by a particular neighborhood, address or city.
  */
-public struct YelpSearchLocation : _InternalLocation, YelpStringParameter {
+public struct YelpSearchLocation : InternalLocation, YelpStringParameter {
   public struct HintParameter : YelpParameter {
     let cll: String
     
@@ -92,7 +92,7 @@ extension YelpSearchLocation : ExpressibleByStringLiteral {
     Location is specified by a bounding box, defined by a southwest latitude/longitude and a northeast 
     latitude/longitude geographic coordinate.
  */
-public struct YelpBoundingBox : _InternalLocation {
+public struct YelpBoundingBox : InternalLocation {
   let southWest: CLLocationCoordinate2D
   let northEast: CLLocationCoordinate2D
   let hint: YelpSearchLocation.HintParameter? = nil
@@ -111,7 +111,7 @@ public struct YelpBoundingBox : _InternalLocation {
   }
 }
 
-public struct YelpGeographicCoordinate : _InternalLocation {
+public struct YelpGeographicCoordinate : InternalLocation {
   
   /// Coordinate of geo-point to search near
   let coordinate: CLLocationCoordinate2D

@@ -36,10 +36,10 @@ public enum YelpAPIFactory {
   
   public enum V2 {
     /// The parameters to use when determining localization
-    public static var localeParameters: YelpLocaleParameters?
+    public static var localeParameters: YelpV2LocaleParameters?
     
     /// The parameters to use to determine whether to show action links
-    public static var actionlinkParameters: YelpActionlinkParameters?
+    public static var actionlinkParameters: YelpV2ActionlinkParameters?
     
     /**
         Build a search request with the specified request parameters
@@ -48,7 +48,7 @@ public enum YelpAPIFactory {
      
         - Returns: A fully formed request that can be sent immediately
      */
-    public static func makeSearchRequest(with parameters: YelpSearchParameters) -> YelpV2SearchRequest {
+    public static func makeSearchRequest(with parameters: YelpV2SearchParameters) -> YelpV2SearchRequest {
       return YelpV2SearchRequest(search: parameters, locale: self.localeParameters, actionlink: self.actionlinkParameters)
     }
     
@@ -70,7 +70,7 @@ public enum YelpAPIFactory {
      
         - Returns: A fully formed request that can be sent immediately
      */
-    public static func makePhoneSearchRequest(with parameters: YelpPhoneSearchParameters) -> YelpV2PhoneSearchRequest {
+    public static func makePhoneSearchRequest(with parameters: YelpV2PhoneSearchParameters) -> YelpV2PhoneSearchRequest {
       return YelpV2PhoneSearchRequest(phoneSearch: parameters)
     }
   }

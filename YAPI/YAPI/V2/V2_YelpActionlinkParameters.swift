@@ -12,7 +12,7 @@ import Foundation
     Parameters for including actionable links for actions like Food ordering on Eat24 and booking a table 
     at a restaurant via Seatme
  */
-public struct YelpActionlinkParameters {
+public struct YelpV2ActionlinkParameters {
   struct ActionlinksParameter : YelpBooleanParameter {
     let internalValue: Bool
     

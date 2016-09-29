@@ -11,7 +11,7 @@ import XCTest
 
 class YelpPhoneSearchParametersTests: YAPIXCTestCase {
   func test_ParametersValue_GivesCorrectValue() {
-    let phoneSearch = YelpPhoneSearchParameters(phone: "PHONENUMBER", countryCode: .unitedStates, category: "CATEGORY")
+    let phoneSearch = YelpV2PhoneSearchParameters(phone: "PHONENUMBER", countryCode: .unitedStates, category: "CATEGORY")
     
     XCTAssertNotNil(phoneSearch.countryCode)
     XCTAssertNotNil(phoneSearch.category)
@@ -22,7 +22,7 @@ class YelpPhoneSearchParametersTests: YAPIXCTestCase {
   }
   
   func test_Phone_GivesCorrectKeyValue() {
-    let phone: YelpPhoneSearchParameters.PhoneParameter = "PHONE"
+    let phone: YelpV2PhoneSearchParameters.PhoneParameter = "PHONE"
     
     XCTAssert(phone.key == "phone")
     XCTAssert(phone.value == "PHONE")
@@ -36,7 +36,7 @@ class YelpPhoneSearchParametersTests: YAPIXCTestCase {
   }
   
   func test_Category_GivesCorrectKeyValue() {
-    let category: YelpPhoneSearchParameters.CategoryParameter = "CATEGORY"
+    let category: YelpV2PhoneSearchParameters.CategoryParameter = "CATEGORY"
     
     XCTAssert(category.key == "category")
     XCTAssert(category.value == "CATEGORY")

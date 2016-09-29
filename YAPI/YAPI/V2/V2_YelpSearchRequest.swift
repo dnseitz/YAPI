@@ -27,12 +27,12 @@ public final class YelpV2SearchRequest: InternalYelpRequest {
   }
   public let session: YelpHTTPClient
   
-  init(search: YelpSearchParameters, locale: YelpLocaleParameters? = nil, actionlink: YelpActionlinkParameters? = nil, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
+  init(search: YelpV2SearchParameters, locale: YelpV2LocaleParameters? = nil, actionlink: YelpV2ActionlinkParameters? = nil, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
     var parameters = [String: String]()
     
     // Search Parameters
     parameters.insertParameter(search.location)
-    if let hint = (search.location as! _InternalLocation).hint {
+    if let hint = (search.location as? InternalLocation)?.hint {
       parameters.insertParameter(hint)
     }
     if let limit = search.limit {

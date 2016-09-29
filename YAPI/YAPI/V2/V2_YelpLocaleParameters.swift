@@ -12,7 +12,7 @@ import Foundation
     Optional locale parameters. Results will be localized in the region format and
     language if supported. Both countryCode and language should be specified for proper localization.
  */
-public struct YelpLocaleParameters {
+public struct YelpV2LocaleParameters {
   enum LanguageParameter : String {
     case english = "en"
   }
@@ -40,7 +40,7 @@ public struct YelpLocaleParameters {
 }
 
 
-extension YelpLocaleParameters.LanguageParameter : YelpParameter {
+extension YelpV2LocaleParameters.LanguageParameter : YelpParameter {
   var key: String {
     return "lang"
   }

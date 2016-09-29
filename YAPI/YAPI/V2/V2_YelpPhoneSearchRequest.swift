@@ -19,7 +19,7 @@ public final class YelpV2PhoneSearchRequest : InternalYelpRequest {
     return .GET
   }
   
-  init(phoneSearch: YelpPhoneSearchParameters, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
+  init(phoneSearch: YelpV2PhoneSearchParameters, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
     var parameters = [String: String]()
     
     parameters.insertParameter(phoneSearch.phone)

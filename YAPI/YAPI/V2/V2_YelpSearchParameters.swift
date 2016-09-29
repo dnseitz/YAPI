@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct YelpSearchParameters {
+public struct YelpV2SearchParameters {
   public enum SearchTermParameter : String, YelpParameter {
     public var key: String {
       return "term"

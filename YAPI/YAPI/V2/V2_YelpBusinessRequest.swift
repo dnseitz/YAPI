@@ -19,7 +19,7 @@ public final class YelpV2BusinessRequest : InternalYelpRequest {
     return .GET
   }
   
-  init(businessId: String, locale: YelpLocaleParameters? = nil, actionlink: YelpActionlinkParameters? = nil, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
+  init(businessId: String, locale: YelpV2LocaleParameters? = nil, actionlink: YelpV2ActionlinkParameters? = nil, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
     var parameters = [String: String]()
     
     // Locale Parameters
