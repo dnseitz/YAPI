@@ -9,16 +9,22 @@
 import XCTest
 @testable import YAPI
 
-class YelpBusinessRequestTests : YelpRequestTestCase {
+class YelpV2BusinessRequestTests : YAPIXCTestCase {
+  var session: YelpHTTPClient!
+  var request: YelpV2BusinessRequest!
+  var mockSession = MockURLSession()
+  
   override func setUp() {
     super.setUp()
     
-    request = YelpBusinessRequest(businessId: "BUSINESS_ID", session: session)
+    session = YelpHTTPClient(session: mockSession)
+    request = YelpV2BusinessRequest(businessId: "BUSINESS_ID", session: session)
   }
   
   func test_SendRequest_RecievesData_ParsesTheData() {
     mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidBusinessResponse, options: .ignoreUnknownCharacters)
     request.send() { (response, error) in
+      let response = response as? YelpV2Response
       XCTAssertNotNil(response)
       XCTAssertNil(error)
       
@@ -84,6 +90,6 @@ class YelpBusinessRequestTests : YelpRequestTestCase {
   }
   
   func test_BusinessRequest_HasModifiedEndpoint() {
-    XCTAssert(request.path == businessEndpoint + "BUSINESS_ID")
+    XCTAssert(request.path == YelpEndpoints.V2.business + "BUSINESS_ID")
   }
 }

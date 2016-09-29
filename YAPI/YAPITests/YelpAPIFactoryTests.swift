@@ -12,21 +12,21 @@ import CoreLocation
 
 class YelpAPIFactoryTests: YAPIXCTestCase {
   
-  var searchRequestStub: YelpSearchRequest!
-  var businessRequestStub: YelpBusinessRequest!
-  var phoneSearchRequestStub: YelpPhoneSearchRequest!
+  var searchRequestStub: YelpV2SearchRequest!
+  var businessRequestStub: YelpV2BusinessRequest!
+  var phoneSearchRequestStub: YelpV2PhoneSearchRequest!
   
   override func setUp() {
     super.setUp()
     
-    searchRequestStub = YelpAPIFactory.makeSearchRequest(with: YelpSearchParameters(location: "" as YelpSearchLocation))
-    businessRequestStub = YelpAPIFactory.makeBusinessRequest(with: "businessId")
-    phoneSearchRequestStub = YelpAPIFactory.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE"))
+    searchRequestStub = YelpAPIFactory.V2.makeSearchRequest(with: YelpSearchParameters(location: "" as YelpSearchLocation))
+    businessRequestStub = YelpAPIFactory.V2.makeBusinessRequest(with: "businessId")
+    phoneSearchRequestStub = YelpAPIFactory.V2.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE"))
   }
   
   override func tearDown() {
-    YelpAPIFactory.localeParameters = nil
-    YelpAPIFactory.actionlinkParameters = nil
+    YelpAPIFactory.V2.localeParameters = nil
+    YelpAPIFactory.V2.actionlinkParameters = nil
     
     super.tearDown()
   }
@@ -35,7 +35,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   
   func test_Factory_BuildsSearchRequestWithParameters() {
     let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), term: .food, limit: 99, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
-    let request = YelpAPIFactory.makeSearchRequest(with: params)
+    let request = YelpAPIFactory.V2.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
     XCTAssert(reqParams["location"] == "TEST_LOCATION")
@@ -56,9 +56,9 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   }
   
   func test_Factory_BuildsSearchRequestWithLocaleParameters() {
-    YelpAPIFactory.localeParameters = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: true)
+    YelpAPIFactory.V2.localeParameters = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: true)
     let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), term: .food, limit: 99, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
-    let request = YelpAPIFactory.makeSearchRequest(with: params)
+    let request = YelpAPIFactory.V2.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
     XCTAssert(reqParams["location"] == "TEST_LOCATION")
@@ -79,9 +79,9 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   }
   
   func test_Factory_BuildsSearchRequestWithActionlinkParameters() {
-    YelpAPIFactory.actionlinkParameters = YelpActionlinkParameters(actionlinks: false)
+    YelpAPIFactory.V2.actionlinkParameters = YelpActionlinkParameters(actionlinks: false)
     let params = YelpSearchParameters(location: YelpSearchLocation(location: "TEST_LOCATION", locationHint: CLLocation(latitude: 10, longitude: 20)), term: .food, limit: 99, offset: 15, sortMode: .best, categories: ["TEST_CATEGORY1", "TEST_CATEGORY2"], radius: 10000, filterDeals: false)
-    let request = YelpAPIFactory.makeSearchRequest(with: params)
+    let request = YelpAPIFactory.V2.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
     XCTAssert(reqParams["location"] == "TEST_LOCATION")
@@ -103,7 +103,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   
   func test_Factory_BuildsSearchRequestWithMinimalParameters() {
     let params = YelpSearchParameters(location: "TEST_LOCATION" as YelpSearchLocation)
-    let request = YelpAPIFactory.makeSearchRequest(with: params)
+    let request = YelpAPIFactory.V2.makeSearchRequest(with: params)
     let reqParams = request.parameters
     
     XCTAssert(reqParams["location"] == "TEST_LOCATION")
@@ -126,19 +126,19 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   // MARK: Business Request Tests
   
   func test_Factory_BuildsBusinessRequestWithBusinessId() {
-    let request = YelpAPIFactory.makeBusinessRequest(with: "businessId")
+    let request = YelpAPIFactory.V2.makeBusinessRequest(with: "businessId")
     let reqParams = request.parameters
     
     XCTAssert(reqParams.count == 0)
-    XCTAssert(request.path == businessEndpoint + "businessId")
+    XCTAssert(request.path == YelpEndpoints.V2.business + "businessId")
   }
   
   func test_Factory_BuildsBusinessRequestWithLocaleParameters() {
-    YelpAPIFactory.localeParameters = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: true)
-    let request = YelpAPIFactory.makeBusinessRequest(with: "businessId")
+    YelpAPIFactory.V2.localeParameters = YelpLocaleParameters(countryCode: .unitedStates, language: .english, filterLanguage: true)
+    let request = YelpAPIFactory.V2.makeBusinessRequest(with: "businessId")
     let reqParams = request.parameters
     
-    XCTAssert(request.path == businessEndpoint + "businessId")
+    XCTAssert(request.path == YelpEndpoints.V2.business + "businessId")
     
     XCTAssert(reqParams["cc"] == "US")
     XCTAssert(reqParams["lang"] == "en")
@@ -148,11 +148,11 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   }
   
   func test_Factory_BuildsBusinessRequestWithActionlinkParameters() {
-    YelpAPIFactory.actionlinkParameters = YelpActionlinkParameters(actionlinks: true)
-    let request = YelpAPIFactory.makeBusinessRequest(with: "businessId")
+    YelpAPIFactory.V2.actionlinkParameters = YelpActionlinkParameters(actionlinks: true)
+    let request = YelpAPIFactory.V2.makeBusinessRequest(with: "businessId")
     let reqParams = request.parameters
     
-    XCTAssert(request.path == businessEndpoint + "businessId")
+    XCTAssert(request.path == YelpEndpoints.V2.business + "businessId")
     
     XCTAssertNil(reqParams["cc"])
     XCTAssertNil(reqParams["lang"])
@@ -164,7 +164,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   // MARK: Phone Search Request Tests
   
   func test_Factory_BuildsPhoneSearchRequestWithParameters() {
-    let request = YelpAPIFactory.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE", countryCode: .canada, category: "CATEGORY"))
+    let request = YelpAPIFactory.V2.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE", countryCode: .canada, category: "CATEGORY"))
     let reqParams = request.parameters
     
     XCTAssert(reqParams["phone"] == "PHONE")
@@ -173,7 +173,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   }
   
   func test_Factory_BuildsPhoneSearchRequestWithMinimalParameters() {
-    let request = YelpAPIFactory.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE"))
+    let request = YelpAPIFactory.V2.makePhoneSearchRequest(with: YelpPhoneSearchParameters(phone: "PHONE"))
     let reqParams = request.parameters
     
     XCTAssert(reqParams["phone"] == "PHONE")
@@ -188,8 +188,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidThreeBusinessResponse)
       let response = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)!
       
-      XCTAssert(response.businesses!.count == 3)
-      XCTAssert(searchRequestStub === response.request as AnyObject)
+      XCTAssert(response is YelpV2SearchResponse)
       XCTAssert(response.wasSuccessful == true)
       XCTAssert(response.error == nil)
     } catch {
@@ -202,8 +201,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
       let dict = try self.dictFromBase64(ResponseInjections.yelpErrorResponse)
       let response = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)!
       
-      XCTAssertNil(response.businesses)
-      XCTAssert(searchRequestStub === response.request as AnyObject)
+      XCTAssert(response is YelpV2SearchResponse)
       XCTAssertNotNil(response.error)
       XCTAssert(response.error! == .invalidParameter(field: "location"))
       XCTAssert(response.wasSuccessful == false)
@@ -217,8 +215,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
     XCTAssertNotNil(response)
-    XCTAssert(response!.businesses!.count == 3)
-    XCTAssert(searchRequestStub === (response!.request as AnyObject))
+    XCTAssert(response is YelpV2SearchResponse)
     XCTAssert(response!.wasSuccessful == true)
     XCTAssert(response!.error == nil)
   }
@@ -228,8 +225,7 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
     XCTAssertNotNil(response)
-    XCTAssertNil(response!.businesses)
-    XCTAssert(searchRequestStub === (response!.request as AnyObject))
+    XCTAssert(response is YelpV2SearchResponse)
     XCTAssertNotNil(response!.error)
     XCTAssert(response!.error! == .invalidParameter(field: "location"))
     XCTAssert(response!.wasSuccessful == false)
@@ -255,8 +251,8 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     XCTAssertNotNil(businessResponse)
     XCTAssertNotNil(phoneSearchResponse)
     
-    XCTAssert(searchResponse is YelpSearchResponse)
-    XCTAssert(businessResponse is YelpBusinessResponse)
-    XCTAssert(phoneSearchResponse is YelpPhoneSearchResponse)
+    XCTAssert(searchResponse is YelpV2SearchResponse)
+    XCTAssert(businessResponse is YelpV2BusinessResponse)
+    XCTAssert(phoneSearchResponse is YelpV2PhoneSearchResponse)
   }
 }

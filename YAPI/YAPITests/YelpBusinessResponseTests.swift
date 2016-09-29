@@ -10,21 +10,20 @@ import XCTest
 @testable import YAPI
 
 class YelpBusinessResponseTests: YAPIXCTestCase {
-  var requestStub: YelpBusinessRequest!
+  var requestStub: YelpV2BusinessRequest!
   
   override func setUp() {
     super.setUp()
     
-    requestStub = YelpAPIFactory.makeBusinessRequest(with: "businessId")
+    requestStub = YelpAPIFactory.V2.makeBusinessRequest(with: "businessId")
   }
   
   func test_ValidResponse_ParsedFromEncodedJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidBusinessResponse)
-      let response = YelpBusinessResponse(withJSON: dict, from: requestStub)
+      let response = YelpV2BusinessResponse(withJSON: dict)
       
       XCTAssert(response.businesses!.count == 1)
-      XCTAssert(requestStub === response.request as AnyObject)
       XCTAssert(response.wasSuccessful == true)
       XCTAssertNil(response.error)
     }
@@ -36,10 +35,9 @@ class YelpBusinessResponseTests: YAPIXCTestCase {
   func test_ErrorResponse_ParsedFromEncodedJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpErrorResponse)
-      let response = YelpBusinessResponse(withJSON: dict, from: requestStub)
+      let response = YelpV2BusinessResponse(withJSON: dict)
       
       XCTAssertNil(response.businesses)
-      XCTAssert(requestStub === response.request as AnyObject)
       XCTAssertNotNil(response.error)
       XCTAssert(response.error! == .invalidParameter(field: "location"))
       XCTAssert(response.wasSuccessful == false)

@@ -9,8 +9,10 @@
 import Foundation
 import OAuthSwift
 
-public final class YelpPhoneSearchRequest : YelpRequest {
-  public let path: String = phoneEndpoint
+public final class YelpV2PhoneSearchRequest : InternalYelpRequest {
+  public typealias Response = YelpV2PhoneSearchResponse
+  
+  public let path: String = YelpEndpoints.V2.phone
   public let parameters: [String: String]
   public let session: YelpHTTPClient
   public var requestMethod: OAuthSwiftHTTPRequest.Method {

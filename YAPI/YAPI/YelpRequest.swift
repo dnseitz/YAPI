@@ -11,9 +11,18 @@ import CoreLocation
 import OAuthSwift
 
 internal let yelpHost: String = "api.yelp.com"
-internal let searchEndpoint: String = "/v2/search/"
-internal let businessEndpoint: String = "/v2/business/"
-internal let phoneEndpoint: String = "/v2/phone_search/"
+
+internal enum YelpEndpoints {
+  internal enum V2 {
+    static let search: String = "/v2/search/"
+    static let business: String = "/v2/business/"
+    static let phone: String = "/v2/phone_search/"
+  }
+  
+  internal enum V3 {
+    
+  }
+}
 
 /**
     Any request that can be sent to the Yelp API conforms to this protocol. This could include requests to 
@@ -31,6 +40,7 @@ internal let phoneEndpoint: String = "/v2/phone_search/"
     ```
  */
 public protocol YelpRequest {
+  associatedtype Response: YelpResponse
   
   /// The hostname of the yelp endpoint
   var host: String { get }
@@ -54,22 +64,42 @@ public protocol YelpRequest {
    - Parameter completionHandler: The block to call when the response returns, takes a YelpResponse? and
    a YelpError? as arguments, the error can be of YelpResponseError type or YelpRequestError type
    */
-  func send(completionHandler handler: @escaping (_ response: YelpResponse?, _ error: YelpError?) -> Void)
+  func send(completionHandler handler: @escaping (_ response: Self.Response?, _ error: YelpError?) -> Void)
+}
+
+protocol InternalYelpRequest : YelpRequest {
+  func makeResponse(with data: Data) -> Self.Response?
 }
 
 public extension YelpRequest {
   var host: String {
     return yelpHost
   }
-  
-  func send(completionHandler handler: @escaping (_ response: YelpResponse?, _ error: YelpError?) -> Void) {
+}
+
+extension YelpRequest {
+  func generateURLRequest() -> URLRequest? {
+    guard let consumerKey = AuthKeys.consumerKey, let consumerSecret = AuthKeys.consumerSecret, let token = AuthKeys.token, let tokenSecret = AuthKeys.tokenSecret else {
+      assert(false, "The request requires a consumerKey, consumerSecret, token, and tokenSecret in order to access the Yelp API, set these through the YelpAPIFactory")
+      return nil
+    }
+    let oauth = OAuthSwiftClient(consumerKey: consumerKey, consumerSecret: consumerSecret, accessToken: token, accessTokenSecret: tokenSecret)
+    
+    guard let request = oauth.makeRequest("https://\(self.host)\(self.path)", method: self.requestMethod, parameters: self.parameters, headers: nil, body: nil) else { return nil }
+    
+    return try? request.makeRequest()
+  }
+}
+
+extension InternalYelpRequest {
+  public func send(completionHandler handler: @escaping (_ response: Self.Response?, _ error: YelpError?) -> Void) {
     guard let urlRequest = self.generateURLRequest() else {
       handler(nil, YelpRequestError.failedToGenerateRequest)
       return
     }
     
     self.session.send(urlRequest) {(data, response, error) in
-      let finalResponse: YelpResponse?
+      let finalResponse: Self.Response?
       let finalError: YelpError?
       defer {
         DispatchQueue.main.async {
@@ -89,7 +119,7 @@ public extension YelpRequest {
         return
       }
       
-      let optionalYelpResponse = YelpAPIFactory.makeResponse(with: jsonData, from: self)
+      let optionalYelpResponse = self.makeResponse(with: jsonData)
       
       guard let yelpResponse = optionalYelpResponse else {
         finalResponse = nil
@@ -107,19 +137,9 @@ public extension YelpRequest {
       }
     }
   }
-}
-
-extension YelpRequest {
-  func generateURLRequest() -> URLRequest? {
-    guard let consumerKey = AuthKeys.consumerKey, let consumerSecret = AuthKeys.consumerSecret, let token = AuthKeys.token, let tokenSecret = AuthKeys.tokenSecret else {
-      assert(false, "The request requires a consumerKey, consumerSecret, token, and tokenSecret in order to access the Yelp API, set these through the YelpAPIFactory")
-      return nil
-    }
-    let oauth = OAuthSwiftClient(consumerKey: consumerKey, consumerSecret: consumerSecret, accessToken: token, accessTokenSecret: tokenSecret)
-    
-    guard let request = oauth.makeRequest("https://\(self.host)\(self.path)", method: self.requestMethod, parameters: self.parameters, headers: nil, body: nil) else { return nil }
-    
-    return try? request.makeRequest()
+  
+  func makeResponse(with data: Data) -> Self.Response? {
+    return YelpAPIFactory.makeResponse(with: data, from: self) as? Self.Response
   }
 }
 

@@ -11,25 +11,24 @@ import XCTest
 
 class YelpResponseModelTests: YAPIXCTestCase {
   
-  var requestStub: YelpSearchRequest!
+  var requestStub: YelpV2SearchRequest!
   
   override func setUp() {
     super.setUp()
     
-    requestStub = YelpAPIFactory.makeSearchRequest(with: YelpSearchParameters(location: "" as YelpSearchLocation))
+    requestStub = YelpAPIFactory.V2.makeSearchRequest(with: YelpSearchParameters(location: "" as YelpSearchLocation))
   }
   
   func test_ValidResponse_ParsedFromEncodedJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidThreeBusinessResponse)
-      let response = YelpSearchResponse(withJSON: dict, from: requestStub)
+      let response = YelpV2SearchResponse(withJSON: dict)
       
       XCTAssertNotNil(response.region)
       XCTAssertNotNil(response.total)
       XCTAssert(response.total == 50559)
       XCTAssertNotNil(response.businesses)
       XCTAssert(response.businesses!.count == 3)
-      XCTAssert(requestStub === response.request as AnyObject)
       XCTAssert(response.wasSuccessful == true)
       XCTAssert(response.error == nil)
     }
@@ -41,12 +40,11 @@ class YelpResponseModelTests: YAPIXCTestCase {
   func test_ErrorResponse_ParsedFromEncodedJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpErrorResponse)
-      let response = YelpSearchResponse(withJSON: dict, from: requestStub)
+      let response = YelpV2SearchResponse(withJSON: dict)
       
       XCTAssertNil(response.region)
       XCTAssertNil(response.total)
       XCTAssertNil(response.businesses)
-      XCTAssert(requestStub === response.request as AnyObject)
       XCTAssertNotNil(response.error)
       XCTAssert(response.error! == .invalidParameter(field: "location"))
       XCTAssert(response.wasSuccessful == false)
@@ -59,7 +57,7 @@ class YelpResponseModelTests: YAPIXCTestCase {
   func test_Region_ParsesCorrectly() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidThreeBusinessResponse)
-      let response = YelpSearchResponse(withJSON: dict, from: requestStub)
+      let response = YelpV2SearchResponse(withJSON: dict)
       
       XCTAssertNotNil(response.region)
       XCTAssert(response.region!.span.latitudeDelta == 0.013946349999997665)

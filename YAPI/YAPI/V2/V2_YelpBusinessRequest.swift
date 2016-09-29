@@ -9,7 +9,9 @@
 import Foundation
 import OAuthSwift
 
-public final class YelpBusinessRequest : YelpRequest {
+public final class YelpV2BusinessRequest : InternalYelpRequest {
+  public typealias Response = YelpV2BusinessResponse
+  
   public let path: String
   public let parameters: [String : String]
   public let session: YelpHTTPClient
@@ -40,7 +42,7 @@ public final class YelpBusinessRequest : YelpRequest {
       }
     }
     
-    self.path = businessEndpoint + businessId
+    self.path = YelpEndpoints.V2.business + businessId
     self.parameters = parameters
     self.session = session
   }

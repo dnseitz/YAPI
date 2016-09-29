@@ -9,16 +9,22 @@
 import XCTest
 @testable import YAPI
 
-class YelpPhoneSearchRequestTests: YelpRequestTestCase {
+class YelpPhoneSearchRequestTests: YAPIXCTestCase {
+  var session: YelpHTTPClient!
+  var request: YelpV2PhoneSearchRequest!
+  var mockSession = MockURLSession()
+  
   override func setUp() {
     super.setUp()
     
-    request = YelpPhoneSearchRequest(phoneSearch: YelpPhoneSearchParameters(phone: "PHONENUMBER"), session: session)
+    session = YelpHTTPClient(session: mockSession)
+    request = YelpV2PhoneSearchRequest(phoneSearch: YelpPhoneSearchParameters(phone: "PHONENUMBER"), session: session)
   }
   
   func test_SendRequest_RecievesData_ParsesTheData() {
     mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidPhoneSearchResponse, options: .ignoreUnknownCharacters)
     request.send() { (response, error) in
+      let response = response as? YelpV2Response
       XCTAssertNotNil(response)
       XCTAssertNil(error)
       

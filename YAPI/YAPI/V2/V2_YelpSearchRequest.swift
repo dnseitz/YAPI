@@ -17,8 +17,10 @@ import CoreLocation
     send another request create a new instance of this class. The query parameters can only be set in the 
     initializer. Instances of this class should be created through the YelpAPIFactory.
  */
-public final class YelpSearchRequest: YelpRequest {
-  public let path: String = searchEndpoint
+public final class YelpV2SearchRequest: InternalYelpRequest {
+  public typealias Response = YelpV2SearchResponse
+  
+  public let path: String = YelpEndpoints.V2.search
   public let parameters: [String: String]
   public var requestMethod: OAuthSwiftHTTPRequest.Method {
     return .GET
@@ -78,5 +80,4 @@ public final class YelpSearchRequest: YelpRequest {
     self.parameters = parameters
     self.session = session
   }
-  
 }

@@ -8,14 +8,13 @@
 
 import Foundation
 
-public final class YelpSearchResponse : YelpResponse {
-  public let request: YelpRequest
+public final class YelpV2SearchResponse : YelpV2Response {
   public let region: YelpRegion?
   public let total: Int?
   public let businesses: [YelpBusiness]?
   public let error: YelpResponseError?
   
-  init(withJSON data: [String: AnyObject], from request: YelpRequest) {
+  init(withJSON data: [String: AnyObject]) {
     if let error = data["error"] as? [String: AnyObject] {
       self.error = type(of: self).parseError(errorDict: error)
     }
@@ -50,6 +49,5 @@ public final class YelpSearchResponse : YelpResponse {
       self.total = nil
       self.businesses = nil
     }
-    self.request = request
   }
 }

@@ -9,16 +9,16 @@
 import XCTest
 @testable import YAPI
 
-class YelpRequestTestCase : YAPIXCTestCase {
+class YelpV2GenericRequestTestCase : YAPIXCTestCase {
   var session: YelpHTTPClient!
-  var request: YelpRequest!
+  var request: YelpV2BusinessRequest!
   let mockSession = MockURLSession()
   
   override func setUp() {
     super.setUp()
     
     session = YelpHTTPClient(session: mockSession)
-    request = YelpBusinessRequest(businessId: "", session: session)
+    request = YelpV2BusinessRequest(businessId: "", session: session)
   }
   
   override func tearDown() {
@@ -61,11 +61,11 @@ class YelpRequestTestCase : YAPIXCTestCase {
   func test_SendRequest_RecievesYelpError_GivesTheError() {
     mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpErrorResponse, options: .ignoreUnknownCharacters)
     request.send() { (response, error) -> Void in
+      let response = response as? YelpV2Response
       XCTAssertNotNil(response)
       XCTAssertNotNil(error)
       
       XCTAssertNil(response!.businesses)
-      XCTAssert((self.request as AnyObject) === (response!.request as AnyObject))
       XCTAssertNotNil(response!.error)
       XCTAssert(response!.error! == .invalidParameter(field: "location"))
       XCTAssert(response!.wasSuccessful == false)

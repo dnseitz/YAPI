@@ -13,12 +13,6 @@ import CoreLocation
     Factory class that generates Yelp requests and responses for use.
  */
 public enum YelpAPIFactory {
-  /// The parameters to use when determining localization
-  public static var localeParameters: YelpLocaleParameters?
-  
-  /// The parameters to use to determine whether to show action links
-  public static var actionlinkParameters: YelpActionlinkParameters?
-  
   /**
       Set the authentication keys that will be used to generate requests. These keys are needed in order 
       for the Yelp API to successfully authenticate your requests, if you generate a request without these 
@@ -40,37 +34,49 @@ public enum YelpAPIFactory {
     AuthKeys.tokenSecret = tokenSecret
   }
   
-  /**
-      Build a search request with the specified request parameters
-   
-      - Parameter parameters: A struct containing information with which to create a request
-   
-      - Returns: A fully formed request that can be sent immediately
-   */
-  public static func makeSearchRequest(with parameters: YelpSearchParameters) -> YelpSearchRequest {
-    return YelpSearchRequest(search: parameters, locale: self.localeParameters, actionlink: self.actionlinkParameters)
+  public enum V2 {
+    /// The parameters to use when determining localization
+    public static var localeParameters: YelpLocaleParameters?
+    
+    /// The parameters to use to determine whether to show action links
+    public static var actionlinkParameters: YelpActionlinkParameters?
+    
+    /**
+        Build a search request with the specified request parameters
+     
+        - Parameter parameters: A struct containing information with which to create a request
+     
+        - Returns: A fully formed request that can be sent immediately
+     */
+    public static func makeSearchRequest(with parameters: YelpSearchParameters) -> YelpV2SearchRequest {
+      return YelpV2SearchRequest(search: parameters, locale: self.localeParameters, actionlink: self.actionlinkParameters)
+    }
+    
+    /**
+        Build a business request searching for the specified businessId
+     
+        - Parameter businessId: The Yelp businessId to search for
+     
+        - Returns: A fully formed request that can be sent immediately
+     */
+    public static func makeBusinessRequest(with businessId: String) -> YelpV2BusinessRequest {
+      return YelpV2BusinessRequest(businessId: businessId, locale: self.localeParameters, actionlink: self.actionlinkParameters)
+    }
+    
+    /**
+        Build a phone search request searching for a business with a certain phone number
+     
+        - Parameter parameters: A struct containing information with which to create a request
+     
+        - Returns: A fully formed request that can be sent immediately
+     */
+    public static func makePhoneSearchRequest(with parameters: YelpPhoneSearchParameters) -> YelpV2PhoneSearchRequest {
+      return YelpV2PhoneSearchRequest(phoneSearch: parameters)
+    }
   }
   
-  /**
-      Build a business request searching for the specified businessId
-   
-      - Parameter businessId: The Yelp businessId to search for
-   
-      - Returns: A fully formed request that can be sent immediately
-   */
-  public static func makeBusinessRequest(with businessId: String) -> YelpBusinessRequest {
-    return YelpBusinessRequest(businessId: businessId, locale: self.localeParameters, actionlink: self.actionlinkParameters)
-  }
-  
-  /**
-      Build a phone search request searching for a business with a certain phone number
-   
-      - Parameter parameters: A struct containing information with which to create a request
-   
-      - Returns: A fully formed request that can be sent immediately
-   */
-  public static func makePhoneSearchRequest(with parameters: YelpPhoneSearchParameters) -> YelpPhoneSearchRequest {
-    return YelpPhoneSearchRequest(phoneSearch: parameters)
+  public enum V3 {
+    
   }
   
   /**
@@ -81,14 +87,14 @@ public enum YelpAPIFactory {
    
       - Returns: A valid response object, populated with businesses or an error
    */
-  static func makeResponse(withJSON json: [String: AnyObject], from request: YelpRequest) -> YelpResponse! {
+  static func makeResponse<T: YelpRequest>(withJSON json: [String: AnyObject], from request: T) -> YelpResponse! {
     switch request {
-    case is YelpSearchRequest:
-      return YelpSearchResponse(withJSON: json, from: request)
-    case is YelpBusinessRequest:
-      return YelpBusinessResponse(withJSON: json, from: request)
-    case is YelpPhoneSearchRequest:
-      return YelpPhoneSearchResponse(withJSON: json, from: request)
+    case is YelpV2SearchRequest:
+      return YelpV2SearchResponse(withJSON: json)
+    case is YelpV2BusinessRequest:
+      return YelpV2BusinessResponse(withJSON: json)
+    case is YelpV2PhoneSearchRequest:
+      return YelpV2PhoneSearchResponse(withJSON: json)
     default:
       // We should never reach here
       assert(false, "Request is not a request?")
@@ -104,7 +110,7 @@ public enum YelpAPIFactory {
    
       - Returns: A valid response object, or nil if the data cannot be parsed
    */
-  static func makeResponse(with data: Data, from request: YelpRequest) -> YelpResponse? {
+  static func makeResponse<T: YelpRequest>(with data: Data, from request: T) -> YelpResponse? {
     do {
       let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
       return YelpAPIFactory.makeResponse(withJSON: json as! [String: AnyObject], from: request)
