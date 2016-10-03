@@ -31,14 +31,14 @@ class YelpLocaleParametersTests: YAPIXCTestCase {
   }
   
   func test_Language_GivesCorrectKeyValue() {
-    let language = YelpV2LocaleParameters.LanguageParameter.english
+    let language = YelpV2LocaleParameters.Language.english
     
     XCTAssert(language.key == "lang")
     XCTAssert(language.value == "en")
   }
   
   func test_FilterLanguage_GivesCorrectKeyValue() {
-    let filter = YelpV2LocaleParameters.FilterLanguageParameter(booleanLiteral: true)
+    let filter = YelpV2LocaleParameters.FilterLanguage(booleanLiteral: true)
     
     XCTAssert(filter.key == "lang_filter")
     XCTAssert(filter.value == "true")

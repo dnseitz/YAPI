@@ -13,7 +13,7 @@ import Foundation
     at a restaurant via Seatme
  */
 public struct YelpV2ActionlinkParameters {
-  struct ActionlinksParameter : YelpBooleanParameter {
+  struct Actionlinks : YelpBooleanParameter {
     let internalValue: Bool
     
     var key: String {
@@ -26,6 +26,6 @@ public struct YelpV2ActionlinkParameters {
   }
   
   /// Whether to include links to actionable content if available
-  var actionlinks: ActionlinksParameter?
+  var actionlinks: Actionlinks?
 }
 

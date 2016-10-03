@@ -9,7 +9,7 @@
 import Foundation
 
 public struct YelpV2PhoneSearchParameters {
-  public struct PhoneParameter : YelpStringParameter {
+  public struct Phone : YelpStringParameter {
     let internalValue: String
     
     public var key: String {
@@ -17,7 +17,7 @@ public struct YelpV2PhoneSearchParameters {
     }
   }
   
-  public struct CategoryParameter : YelpStringParameter {
+  public struct Category : YelpStringParameter {
     var internalValue: String
     
     public var key: String {
@@ -26,22 +26,22 @@ public struct YelpV2PhoneSearchParameters {
   }
   
   /// Parameter that specifies the business phone number to search for. Outside of the US and Canada, include the international dialing code (e.g. +442079460000) or use the `countryCode` parameter
-  var phone: PhoneParameter
+  var phone: Phone
   
   /// ISO 3166-1 alpha-2 country code. Default country to use when parsing the phone number.
   var countryCode: YelpCountryCodeParameter?
   
   /// Category to filter search results with.
-  var category: CategoryParameter?
+  var category: Category?
   
-  init(phone: PhoneParameter, countryCode: YelpCountryCodeParameter? = nil, category: CategoryParameter? = nil) {
+  init(phone: Phone, countryCode: YelpCountryCodeParameter? = nil, category: Category? = nil) {
     self.phone = phone
     self.countryCode = countryCode
     self.category = category
   }
 }
 
-extension YelpV2PhoneSearchParameters.PhoneParameter : ExpressibleByStringLiteral {
+extension YelpV2PhoneSearchParameters.Phone : ExpressibleByStringLiteral {
   public typealias UnicodeScalarLiteralType = Character
   public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
   
@@ -58,7 +58,7 @@ extension YelpV2PhoneSearchParameters.PhoneParameter : ExpressibleByStringLitera
   }
 }
 
-extension YelpV2PhoneSearchParameters.CategoryParameter : ExpressibleByStringLiteral {
+extension YelpV2PhoneSearchParameters.Category : ExpressibleByStringLiteral {
   public typealias UnicodeScalarLiteralType = Character
   public typealias ExtendedGraphemeClusterLiteralType = StringLiteralType
   

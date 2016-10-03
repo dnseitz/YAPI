@@ -9,7 +9,7 @@
 import Foundation
 
 public struct YelpV2SearchParameters {
-  public enum SearchTermParameter : String, YelpParameter {
+  public enum SearchTerm : String, YelpParameter {
     public var key: String {
       return "term"
     }
@@ -22,7 +22,7 @@ public struct YelpV2SearchParameters {
     case drink = "drink"
   }
   
-  public struct LimitParameter : YelpIntParameter {
+  public struct Limit : YelpIntParameter {
     let internalValue: Int
     
     public var key: String {
@@ -34,7 +34,7 @@ public struct YelpV2SearchParameters {
     }
   }
   
-  public struct OffsetParameter : YelpIntParameter {
+  public struct Offset : YelpIntParameter {
     let internalValue: Int
     
     public var key: String {
@@ -46,7 +46,7 @@ public struct YelpV2SearchParameters {
     }
   }
   
-  public enum SortModeParameter : Int, YelpParameter {
+  public enum SortMode : Int, YelpParameter {
     public var key: String {
       return "sort"
     }
@@ -60,7 +60,7 @@ public struct YelpV2SearchParameters {
     case highestRated = 2
   }
   
-  public struct CategoriesParameter : YelpArrayParameter {
+  public struct Categories : YelpArrayParameter {
     public typealias Element = String
     
     let internalValue: [Element]
@@ -79,7 +79,7 @@ public struct YelpV2SearchParameters {
     }
   }
   
-  public struct RadiusParameter : YelpIntParameter {
+  public struct Radius : YelpIntParameter {
     let internalValue: Int
     
     public var key: String {
@@ -91,7 +91,7 @@ public struct YelpV2SearchParameters {
     }
   }
   
-  public struct DealsParameter : YelpBooleanParameter {
+  public struct Deals : YelpBooleanParameter {
     let internalValue: Bool
     
     public var key: String {
@@ -107,34 +107,34 @@ public struct YelpV2SearchParameters {
   public var location: YelpLocationParameter
   
   /// Search term (e.g. "food", "restaurants"). If term isn’t included we search everything. The term keyword also accepts business names such as "Starbucks".
-  public var term: SearchTermParameter?
+  public var term: SearchTerm?
   
   /// Number of business results to return
-  public var limit: LimitParameter?
+  public var limit: Limit?
   
   /// Offset the list of returned business results by this amount
-  public var offset: OffsetParameter?
+  public var offset: Offset?
   
   /// Sort mode
-  public var sortMode: SortModeParameter?
+  public var sortMode: SortMode?
   
   /// Category to filter search results with.
-  public var categories: CategoriesParameter?
+  public var categories: Categories?
   
   /// Search radius in meters. If the value is too large, a AREA_TOO_LARGE error may be returned. The max value is 40000 meters (25 miles).
-  public var radius: RadiusParameter?
+  public var radius: Radius?
   
   /// Whether to exclusively search for businesses with deals
-  public var filterDeals: DealsParameter?
+  public var filterDeals: Deals?
   
   public init(location: YelpLocationParameter,
-           term: SearchTermParameter? = nil,
-          limit: LimitParameter? = nil,
-         offset: OffsetParameter? = nil,
-       sortMode: SortModeParameter? = nil,
-     categories: CategoriesParameter? = nil,
-         radius: RadiusParameter? = nil,
-    filterDeals: DealsParameter? = nil) {
+           term: SearchTerm? = nil,
+          limit: Limit? = nil,
+         offset: Offset? = nil,
+       sortMode: SortMode? = nil,
+     categories: Categories? = nil,
+         radius: Radius? = nil,
+    filterDeals: Deals? = nil) {
     
     self.location = location
     self.term = term

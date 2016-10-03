@@ -20,7 +20,7 @@ internal enum YelpEndpoints {
   }
   
   internal enum V3 {
-    
+    static let token: String = "/oauth2/token/"
   }
 }
 

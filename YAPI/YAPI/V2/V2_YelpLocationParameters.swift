@@ -16,14 +16,14 @@ import CoreLocation
 public protocol YelpLocationParameter : YelpParameter {}
 
 internal protocol InternalLocation : YelpLocationParameter {
-  var hint: YelpSearchLocation.HintParameter? { get }
+  var hint: YelpSearchLocation.Hint? { get }
 }
 
 /**
     Location is specified by a particular neighborhood, address or city.
  */
 public struct YelpSearchLocation : InternalLocation, YelpStringParameter {
-  public struct HintParameter : YelpParameter {
+  public struct Hint : YelpParameter {
     let cll: String
     
     public var key: String {
@@ -47,7 +47,7 @@ public struct YelpSearchLocation : InternalLocation, YelpStringParameter {
   let internalValue: String
   
   /// An optional latitude, longitude parameter can also be specified as a hint to the geocoder to disambiguate the location text.
-  let hint: HintParameter?
+  let hint: Hint?
   
   public var key: String {
     return "location"
@@ -60,7 +60,7 @@ public struct YelpSearchLocation : InternalLocation, YelpStringParameter {
   init(location: String, coordinateHint hint: CLLocationCoordinate2D? = nil) {
     self.internalValue = location
     if let hint = hint {
-      self.hint = HintParameter(coordinate: hint)
+      self.hint = Hint(coordinate: hint)
     }
     else {
       self.hint = nil
@@ -95,7 +95,7 @@ extension YelpSearchLocation : ExpressibleByStringLiteral {
 public struct YelpBoundingBox : InternalLocation {
   let southWest: CLLocationCoordinate2D
   let northEast: CLLocationCoordinate2D
-  let hint: YelpSearchLocation.HintParameter? = nil
+  let hint: YelpSearchLocation.Hint? = nil
   
   public var key: String {
     return "bounds"
@@ -124,7 +124,7 @@ public struct YelpGeographicCoordinate : InternalLocation {
   
   /// Accuracy of altitude
   let altitudeAccuracy: Double?
-  let hint: YelpSearchLocation.HintParameter? = nil
+  let hint: YelpSearchLocation.Hint? = nil
   
   public var key: String {
     return "ll"

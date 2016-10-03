@@ -13,11 +13,11 @@ import Foundation
     language if supported. Both countryCode and language should be specified for proper localization.
  */
 public struct YelpV2LocaleParameters {
-  enum LanguageParameter : String {
+  enum Language : String {
     case english = "en"
   }
   
-  struct FilterLanguageParameter : YelpBooleanParameter {
+  struct FilterLanguage : YelpBooleanParameter {
     let internalValue: Bool
     
     var key: String {
@@ -33,14 +33,14 @@ public struct YelpV2LocaleParameters {
   var countryCode: YelpCountryCodeParameter?
   
   /// ISO 639 language code. Reviews and snippets written in the specified language will be shown.
-  var language: LanguageParameter?
+  var language: Language?
   
   /// Whether to filter business reviews by the specified lang
-  var filterLanguage: FilterLanguageParameter?
+  var filterLanguage: FilterLanguage?
 }
 
 
-extension YelpV2LocaleParameters.LanguageParameter : YelpParameter {
+extension YelpV2LocaleParameters.Language : YelpParameter {
   var key: String {
     return "lang"
   }

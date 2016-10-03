@@ -19,7 +19,7 @@ class YelpActionlinkParametersTests: YAPIXCTestCase {
   }
   
   func test_Actionlinks_GivesCorrectKeyValue() {
-    let actionlinks = YelpV2ActionlinkParameters.ActionlinksParameter(booleanLiteral: false)
+    let actionlinks = YelpV2ActionlinkParameters.Actionlinks(booleanLiteral: false)
     
     XCTAssert(actionlinks.key == "actionlinks")
     XCTAssert(actionlinks.value == "false")
