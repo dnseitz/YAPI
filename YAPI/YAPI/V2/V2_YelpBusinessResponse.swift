@@ -16,7 +16,7 @@ public final class YelpV2BusinessResponse : YelpV2Response {
   
   init(withJSON data: [String: AnyObject]) {
     if let error = data["error"] as? [String: AnyObject] {
-      self.error = type(of: self).parseError(errorDict: error)
+      self.error = YelpV2BusinessResponse.parseError(errorDict: error)
     }
     else {
       self.error = nil

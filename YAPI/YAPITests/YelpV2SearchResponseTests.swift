@@ -10,15 +10,6 @@ import XCTest
 @testable import YAPI
 
 class YelpResponseModelTests: YAPIXCTestCase {
-  
-  var requestStub: YelpV2SearchRequest!
-  
-  override func setUp() {
-    super.setUp()
-    
-    requestStub = YelpAPIFactory.V2.makeSearchRequest(with: YelpV2SearchParameters(location: "" as YelpSearchLocation))
-  }
-  
   func test_ValidResponse_ParsedFromEncodedJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidThreeBusinessResponse)

@@ -10,14 +10,6 @@ import XCTest
 @testable import YAPI
 
 class YelpBusinessResponseTests: YAPIXCTestCase {
-  var requestStub: YelpV2BusinessRequest!
-  
-  override func setUp() {
-    super.setUp()
-    
-    requestStub = YelpAPIFactory.V2.makeBusinessRequest(with: "businessId")
-  }
-  
   func test_ValidResponse_ParsedFromEncodedJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidBusinessResponse)
