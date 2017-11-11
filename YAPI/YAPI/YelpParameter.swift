@@ -25,7 +25,13 @@ protocol YelpIntParameter : ExpressibleByIntegerLiteral, YelpParameter {
   var internalValue: Int { get }
 }
 
+protocol YelpDoubleParameter : ExpressibleByFloatLiteral, YelpParameter {
+  var internalValue: Double { get }
+}
+
 protocol YelpArrayParameter : ExpressibleByArrayLiteral, YelpParameter {
+  associatedtype Element
+  
   var internalValue: [Self.Element] { get }
   
   init?(_ elements: [Self.Element]?)
@@ -75,6 +81,21 @@ extension YelpIntParameter {
   public init?(_ value: IntegerLiteralType?) {
     if let value = value {
       self.init(integerLiteral: value)
+    }
+    else {
+      return nil
+    }
+  }
+}
+
+extension YelpDoubleParameter {
+  public var value: String {
+    return String(self.internalValue)
+  }
+  
+  public init?(_ value: FloatLiteralType?) {
+    if let value = value {
+      self.init(floatLiteral: value)
     }
     else {
       return nil
