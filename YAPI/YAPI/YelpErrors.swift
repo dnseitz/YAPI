@@ -135,6 +135,9 @@ public enum YelpParseError: YelpError, Equatable {
   // A required field was missing in the response
   case missing(field: String)
   
+  // A piece of data was not recognized
+  case invalid(field: String, value: String)
+  
   // The cause of the failure is unknown
   case unknown
   
@@ -144,6 +147,8 @@ public enum YelpParseError: YelpError, Equatable {
       return "The data is not in JSON format"
     case .missing(field: let field):
       return "A required field <\(field)> was missing in the response"
+    case .invalid(field: let field, value: let value):
+      return "A piece of data was not recognized <\(field): \(value)>"
     case .unknown:
       return "The cause of the failure is unknown"
     }
@@ -155,6 +160,8 @@ public func ==(lhs: YelpParseError, rhs: YelpParseError) -> Bool {
   case (.invalidJson, .invalidJson):
     return true
   case (.missing(field: let field1), .missing(field: let field2)):
+    return field1 == field2
+  case (.invalid(field: let field1, value: _), .invalid(field: let field2, value: _)):
     return field1 == field2
   case (.unknown, .unknown):
     return true

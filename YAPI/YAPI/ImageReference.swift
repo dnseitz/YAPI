@@ -184,9 +184,7 @@ public final class ImageReference {
       let errorResult: ImageLoadError?
       defer {
         self.state = .idle
-//        DispatchQueue.main.async {
         handler(imageResult, errorResult)
-//        }
       }
       if let err = error {
         imageResult = nil

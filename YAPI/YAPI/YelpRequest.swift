@@ -80,12 +80,10 @@ public extension YelpRequest {
     }
     
     self.session.send(urlRequest) {(data, response, error) in
-      let finalResponse: Self.Response?
-      let finalError: YelpError?
+      var finalResponse: Self.Response?
+      var finalError: YelpError?
       defer {
-        DispatchQueue.main.async {
-          handler(finalResponse, finalError)
-        }
+        handler(finalResponse, finalError)
       }
       
       if let err = error {
@@ -126,7 +124,7 @@ fileprivate extension YelpRequest {
       assert(false, "The request requires a consumerKey, consumerSecret, token, and tokenSecret in order to access the Yelp API, set these through the YelpAPIFactory")
       return nil
     }
-    let oauth = OAuthSwiftClient(consumerKey: consumerKey, consumerSecret: consumerSecret, accessToken: token, accessTokenSecret: tokenSecret)
+    let oauth = OAuthSwiftClient(consumerKey: consumerKey, consumerSecret: consumerSecret, oauthToken: token, oauthTokenSecret: tokenSecret, version: .oauth2)
     
     guard let request = oauth.makeRequest("https://\(self.host)\(self.path)", method: self.requestMethod, parameters: self.parameters, headers: nil, body: nil) else { return nil }
     
