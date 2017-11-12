@@ -63,6 +63,8 @@ public enum YelpResponseError: YelpError {
   /// An access token must be supplied in order to use this endpoint,
   /// make sure you have authenticated through the YelpAPIFactory
   case tokenMissing
+  /// Invalid combination of client_id and client_secret.
+  case badAuth
   
   public var description: String {
     switch self {
@@ -99,6 +101,8 @@ public enum YelpResponseError: YelpError {
       return "The resource could not be found."
     case .tokenMissing:
       return "An access token must be supplied in order to use this endpoint, make sure you have authenticated through the YelpAPIFactory"
+    case .badAuth:
+      return "Invalid combination of client_id and client_secret."
     }
   }
 }

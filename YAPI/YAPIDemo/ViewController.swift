@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     }
     */
     let searchParameters = YelpV3SearchParameters(location: YelpV3LocationParameter(location: "Portland, OR"))
-    YelpAPIFactory.V3.authenticate(appId: "YvxjDSJzUHNbMDcxZ-1XTQ", clientSecret: "l79vZwLjzgoO9Gt6N6Gs6H5NJ85VBL1OOksSpfZTuvbcYzpqeGr3jzT7XNbYzBy5") { error in
+    YelpAPIFactory.V3.authenticate(appId: appId, clientSecret: clientSecret) { error in
       if let error = error {
         print("Error: \(error)")
       }

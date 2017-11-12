@@ -17,6 +17,8 @@ extension YelpV3Response {
       return .notFound
     case "TOKEN_MISSING"?:
       return .tokenMissing
+    case "BAD_CLIENT_ID_OR_SECRET"?:
+      return .badAuth
     case let error:
       return .unknownError(cause: UnknownErrorCode(code: error))
     }

@@ -94,7 +94,7 @@ public enum YelpAPIFactory {
         switch result {
         case .ok(let response):
           AuthKeys.token = response.accessToken
-          completionBlock(nil)
+          completionBlock(response.error)
         case .err(let error):
           completionBlock(error)
         }
