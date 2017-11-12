@@ -180,8 +180,8 @@ public final class ImageReference {
     }
     
     self.session.send(self.url) {(data, response, error) in
-      let imageResult: UIImage?
-      let errorResult: ImageLoadError?
+      var imageResult: UIImage?
+      var errorResult: ImageLoadError?
       defer {
         self.state = .idle
         handler(imageResult, errorResult)
