@@ -12,18 +12,6 @@ public protocol Language {
   var rawValue: String { get }
 }
 
-/*
-func initNetworkConnection() {
-  var readStream: Unmanaged<CFReadStream>?
-  var writeStream: Unmanaged<CFWriteStream>?
-  
-  CFStreamCreatePairWithSocketToHost(kCFAllocatorNull, "localhost" as CFString!, 1234, &readStream, &writeStream)
-  
-  let inputStream = readStream!.takeRetainedValue()
-  let outputStream = writeStream!.takeRetainedValue()
-}
-*/
-
 public enum YelpLocale {
   public enum Czech : String, Language {
     case czechRepublic = "cs_CZ"

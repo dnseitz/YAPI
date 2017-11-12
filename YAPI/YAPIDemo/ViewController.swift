@@ -26,7 +26,7 @@ class ViewController: UIViewController {
       print(response?.accessToken)
     }
     */
-    
+    let searchParameters = YelpV3SearchParameters(location: YelpV3LocationParameter(location: "Portland, OR"))
     YelpAPIFactory.V3.authenticate(appId: "YvxjDSJzUHNbMDcxZ-1XTQ", clientSecret: "l79vZwLjzgoO9Gt6N6Gs6H5NJ85VBL1OOksSpfZTuvbcYzpqeGr3jzT7XNbYzBy5") { error in
       if let error = error {
         print("Error: \(error)")
@@ -34,7 +34,6 @@ class ViewController: UIViewController {
       else {
         print("Authenticated!")
 //        let searchParameters = YelpV3SearchParameters(location: YelpV3LocationParameter(latitude: 45.509523, longitude: -122.679544))
-        let searchParameters = YelpV3SearchParameters(location: YelpV3LocationParameter(location: "Portland, OR"))
         let request = YelpAPIFactory.V3.makeSearchRequest(with: searchParameters)
         request.send { result in
           switch result {
@@ -46,6 +45,14 @@ class ViewController: UIViewController {
             print("Error: \(error)")
           }
         }
+      }
+    }
+    let unauthedRequest = YelpAPIFactory.V3.makeSearchRequest(with: searchParameters)
+    
+    unauthedRequest.send { result in
+      
+      if case .err(let error) = result {
+        print("Error received: \(error)")
       }
     }
   }

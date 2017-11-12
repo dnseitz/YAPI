@@ -60,6 +60,9 @@ public enum YelpResponseError: YelpError {
   case failedToParse(cause: YelpParseError)
   /// Resource could not be found
   case notFound
+  /// An access token must be supplied in order to use this endpoint,
+  /// make sure you have authenticated through the YelpAPIFactory
+  case tokenMissing
   
   public var description: String {
     switch self {
@@ -94,6 +97,8 @@ public enum YelpResponseError: YelpError {
       return "The data recieved was unable to be parsed: '\(cause)'"
     case .notFound:
       return "The resource could not be found."
+    case .tokenMissing:
+      return "An access token must be supplied in order to use this endpoint, make sure you have authenticated through the YelpAPIFactory"
     }
   }
 }
