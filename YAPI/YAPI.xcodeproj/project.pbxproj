@@ -38,6 +38,7 @@
 		0874903B1FB81FDE0072E539 /* YelpCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0874903A1FB81FDE0072E539 /* YelpCoordinate.swift */; };
 		0874903D1FB827AF0072E539 /* YelpV3SearchResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0874903C1FB827AF0072E539 /* YelpV3SearchResponseTests.swift */; };
 		0874903F1FB828B80072E539 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0874903E1FB828B80072E539 /* Utilities.swift */; };
+		087490421FB82D880072E539 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087490411FB82D880072E539 /* ResultTests.swift */; };
 		087A2FD11D9D8414005AA466 /* YelpAPIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A2FD01D9D8414005AA466 /* YelpAPIFactory.swift */; };
 		087A2FD81D9D85B0005AA466 /* YelpParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A2FD71D9D85B0005AA466 /* YelpParameter.swift */; };
 		089008D41D98F2E600D8DF7E /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089008D31D98F2E600D8DF7E /* OAuthSwift.framework */; };
@@ -145,6 +146,7 @@
 		0874903A1FB81FDE0072E539 /* YelpCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = YelpCoordinate.swift; path = Shared/YelpCoordinate.swift; sourceTree = "<group>"; };
 		0874903C1FB827AF0072E539 /* YelpV3SearchResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = YelpV3SearchResponseTests.swift; path = V3/ResponseTests/YelpV3SearchResponseTests.swift; sourceTree = "<group>"; };
 		0874903E1FB828B80072E539 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Utilities.swift; path = Utilities/Utilities.swift; sourceTree = "<group>"; };
+		087490411FB82D880072E539 /* ResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ResultTests.swift; path = Misc/ResultTests.swift; sourceTree = "<group>"; };
 		087A2FD01D9D8414005AA466 /* YelpAPIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpAPIFactory.swift; sourceTree = "<group>"; };
 		087A2FD71D9D85B0005AA466 /* YelpParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpParameter.swift; sourceTree = "<group>"; };
 		089008D11D98F26300D8DF7E /* OAuthSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OAuthSwift.framework; path = "../OAuthSwift/build/Debug-iphoneos/OAuthSwift.framework"; sourceTree = "<group>"; };
@@ -324,6 +326,7 @@
 		083C5E3F1D77280A00132923 /* YAPITests */ = {
 			isa = PBXGroup;
 			children = (
+				087490401FB82D590072E539 /* Miscelaneous */,
 				089CC6AC1D9AE3590018F1D1 /* V2 */,
 				089CC6AD1D9AE35D0018F1D1 /* V3 */,
 				08CD2CF51D7811F800DBFA24 /* TestHelpers */,
@@ -372,6 +375,14 @@
 				0874903A1FB81FDE0072E539 /* YelpCoordinate.swift */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		087490401FB82D590072E539 /* Miscelaneous */ = {
+			isa = PBXGroup;
+			children = (
+				087490411FB82D880072E539 /* ResultTests.swift */,
+			);
+			name = Miscelaneous;
 			sourceTree = "<group>";
 		};
 		087A2FD21D9D84A3005AA466 /* Models */ = {
@@ -828,6 +839,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				087490421FB82D880072E539 /* ResultTests.swift in Sources */,
 				08A0FA971D85FA8900FEB43C /* YelpActionlinkParametersTests.swift in Sources */,
 				08A0FAA71D86303C00FEB43C /* YelpRequestTestCase.swift in Sources */,
 				08CD2CE11D78073100DBFA24 /* NetworkMockObjects.swift in Sources */,
