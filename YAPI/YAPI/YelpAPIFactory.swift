@@ -24,7 +24,7 @@ public enum YelpAPIFactory {
         - token: The OAuth token
         - tokenSecret: The OAuth token secret
    */
-  public static func setAuthenticationKeys(_ consumerKey: String,
+  public static func setAuthenticationKeys(consumerKey: String,
                                         consumerSecret: String,
                                                  token: String,
                                            tokenSecret: String) {
