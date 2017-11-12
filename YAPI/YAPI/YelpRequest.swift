@@ -137,7 +137,7 @@ public extension YelpRequest {
       }
       
       if let err = error {
-        result = .err(YelpRequestError.failedToSendRequest(err as NSError))
+        result = Result.err(YelpRequestError.failedToSendRequest(err as NSError))
         return
       }
       
@@ -146,14 +146,7 @@ public extension YelpRequest {
         return
       }
       
-      let responseResult = YelpAPIFactory.makeResponse(with: jsonData, from: self)//self.makeResponse(with: jsonData)
-      
-      guard case .ok(let yelpResponse) = responseResult else {
-        result = .err(YelpResponseError.failedToParse(cause: responseResult.unwrapErr()))
-        return
-      }
-      
-      result = .ok(yelpResponse)
+      result = YelpAPIFactory.makeResponse(with: jsonData, from: self)
     }
   }
 }

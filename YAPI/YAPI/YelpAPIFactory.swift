@@ -121,11 +121,15 @@ public enum YelpAPIFactory {
   static func makeResponse<T: YelpRequest>(withJSON json: [String: AnyObject], from request: T) -> Result<T.Response, YelpError> {
     do {
       return try .ok(T.Response.init(withJSON: json))
-    } catch {
-      if let error = error as? YelpError {
-        return .err(error)
-      }
-      return .err(YelpResponseError.unknownError)
+    }
+    catch let error as YelpParseError {
+      return .err(YelpResponseError.failedToParse(cause: error))
+    }
+    catch let error as YelpError {
+      return .err(error)
+    }
+    catch {
+      return .err(YelpResponseError.unknownError(cause: error))
     }
   }
   
@@ -143,7 +147,7 @@ public enum YelpAPIFactory {
       return YelpAPIFactory.makeResponse(withJSON: json as! [String: AnyObject], from: request)
     }
     catch {
-      return .err(YelpParseError.invalidJson)
+      return .err(YelpResponseError.failedToParse(cause: .invalidJson(cause: error)))
     }
   }
   

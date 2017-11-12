@@ -34,7 +34,9 @@ class YelpV2GenericRequestTestCase : YAPIXCTestCase {
     request.send() { result in
       XCTAssert(result.isErr())
       
-      XCTAssert(result.unwrapErr() as! YelpRequestError == .failedToSendRequest(mockError))
+      guard case YelpRequestError.failedToSendRequest(mockError) = result.unwrapErr() else {
+        return XCTFail("Wrong error type thrown: \(result.unwrapErr())")
+      }
     }
   }
   
@@ -42,7 +44,9 @@ class YelpV2GenericRequestTestCase : YAPIXCTestCase {
     request.send() { result in
       XCTAssert(result.isErr())
       
-      XCTAssert(result.unwrapErr() as! YelpResponseError == .noDataRecieved)
+      guard case YelpResponseError.noDataRecieved = result.unwrapErr() else {
+        return XCTFail("Wrong error type thrown: \(result.unwrapErr())")
+      }
     }
   }
   
@@ -50,8 +54,10 @@ class YelpV2GenericRequestTestCase : YAPIXCTestCase {
     mockSession.nextData = Data()
     request.send() { result in
       XCTAssert(result.isErr())
-      
-      XCTAssert(result.unwrapErr() as! YelpResponseError == .failedToParse(cause: .invalidJson))
+
+      guard case YelpResponseError.failedToParse(cause: YelpParseError.invalidJson) = result.unwrapErr() else {
+        return XCTFail("Wrong error type given: \(result.unwrapErr())")
+      }
     }
   }
   
@@ -63,7 +69,10 @@ class YelpV2GenericRequestTestCase : YAPIXCTestCase {
       
       XCTAssertNil(response.businesses)
       XCTAssertNotNil(response.error)
-      XCTAssert(response.error! == .invalidParameter(field: "location"))
+      
+      guard case YelpResponseError.invalidParameter(field: "location") = response.error! else {
+        return XCTFail("Wrong error type given: \(response.error!)")
+      }
       XCTAssert(response.wasSuccessful == false)
     }
   }

@@ -16,7 +16,7 @@ public protocol YelpError: Error, CustomStringConvertible {}
 /**
     Errors that occur while trying to send the request
  */
-public enum YelpRequestError: YelpError, Equatable {
+public enum YelpRequestError: YelpError {
   /// The request was unable to be generated, possibly a malformed url
   case failedToGenerateRequest
   /// The request failed to send for some reason, see the wrapped NSError for details
@@ -32,23 +32,12 @@ public enum YelpRequestError: YelpError, Equatable {
   }
 }
 
-public func ==(lhs: YelpRequestError, rhs: YelpRequestError) -> Bool {
-  switch (lhs, rhs) {
-  case(.failedToGenerateRequest, .failedToGenerateRequest):
-    return true
-  case(let .failedToSendRequest(err1), let .failedToSendRequest(err2)):
-    return err1.domain == err2.domain && err1.code == err2.code
-  default:
-    return false
-  }
-}
-
 /**
     Errors that can return from a Yelp response and if there are any issues generating the response
  */
-public enum YelpResponseError: YelpError, Equatable {
+public enum YelpResponseError: YelpError {
   /// An unknown error occurred with the Yelp service
-  case unknownError
+  case unknownError(cause: Error?)
   /// An internal service error occurred with the Yelp service
   case internalError
   /// The number of requests for the api used has exceeded its limit
@@ -68,14 +57,21 @@ public enum YelpResponseError: YelpError, Equatable {
   /// No data was recieved in the response
   case noDataRecieved
   /// Data was recieved, but it couldn't be parsed as JSON
-  case failedToParse(cause: YelpError)
+  case failedToParse(cause: YelpParseError)
   /// Resource could not be found
   case notFound
   
   public var description: String {
     switch self {
-    case .unknownError:
-      return "An unknown error has occurred"
+    case .unknownError(cause: let cause):
+      let causeDescription: String
+      if let cause = cause {
+        causeDescription = ": \(cause)"
+      }
+      else {
+        causeDescription = ""
+      }
+      return "An unknown error has occurred" + causeDescription
     case .internalError:
       return "An internal Yelp service error has occurred"
     case .exceededRequests:
@@ -102,41 +98,10 @@ public enum YelpResponseError: YelpError, Equatable {
   }
 }
 
-public func ==(lhs: YelpResponseError, rhs: YelpResponseError) -> Bool {
-  switch (lhs, rhs) {
-  case(.unknownError, .unknownError):
-    return true
-  case(.internalError, .internalError):
-    return true
-  case (.exceededRequests, .exceededRequests):
-    return true
-  case (let .missingParameter(field: field1), let .missingParameter(field: field2)):
-    return field1 == field2
-  case (let .invalidParameter(field: field1), let .invalidParameter(field: field2)):
-    return field1 == field2
-  case (.unavailableForLocation, .unavailableForLocation):
-    return true
-  case (.areaTooLarge, .areaTooLarge):
-    return true
-  case (.multipleLocations, .multipleLocations):
-    return true
-  case (.businessUnavailable, .businessUnavailable):
-    return true
-  case (.noDataRecieved, .noDataRecieved):
-    return true
-  case (.failedToParse(cause: _), .failedToParse(cause: _)):
-    return true
-  case (.notFound, .notFound):
-    return true
-  default:
-    return false
-  }
-}
-
-public enum YelpParseError: YelpError, Equatable {
+public enum YelpParseError: YelpError {
   
   // The data is not in JSON format
-  case invalidJson
+  case invalidJson(cause: Error)
   
   // A required field was missing in the response
   case missing(field: String)
@@ -149,8 +114,8 @@ public enum YelpParseError: YelpError, Equatable {
   
   public var description: String {
     switch self {
-    case .invalidJson:
-      return "The data is not in JSON format"
+    case .invalidJson(cause: let cause):
+      return "The data is not in JSON format: <\(cause)>"
     case .missing(field: let field):
       return "A required field <\(field)> was missing in the response"
     case .invalid(field: let field, value: let value):
@@ -161,17 +126,12 @@ public enum YelpParseError: YelpError, Equatable {
   }
 }
 
-public func ==(lhs: YelpParseError, rhs: YelpParseError) -> Bool {
-  switch (lhs, rhs) {
-  case (.invalidJson, .invalidJson):
-    return true
-  case (.missing(field: let field1), .missing(field: let field2)):
-    return field1 == field2
-  case (.invalid(field: let field1, value: _), .invalid(field: let field2, value: _)):
-    return field1 == field2
-  case (.unknown, .unknown):
-    return true
-  default:
-    return false
+internal struct UnknownErrorCode: Error {
+  let code: String
+  
+  init?(code: String?) {
+    guard let code = code else { return nil }
+    
+    self.code = code
   }
 }

@@ -40,25 +40,25 @@ public protocol YelpV2Response : YelpResponse {
 
 extension YelpV2Response {
   static func parseError(errorDict dict: [String: AnyObject]) -> YelpResponseError {
-    switch dict["id"] as! String {
-    case "INTERNAL_ERROR":
+    switch dict["id"] as? String {
+    case "INTERNAL_ERROR"?:
       return YelpResponseError.internalError
-    case "EXCEEDED_REQS":
+    case "EXCEEDED_REQS"?:
       return YelpResponseError.exceededRequests
-    case "MISSING_PARAMETER":
+    case "MISSING_PARAMETER"?:
       return YelpResponseError.missingParameter(field: dict["field"] as! String)
-    case "INVALID_PARAMETER":
+    case "INVALID_PARAMETER"?:
       return YelpResponseError.invalidParameter(field: dict["field"] as! String)
-    case "UNAVAILABLE_FOR_LOCATION":
+    case "UNAVAILABLE_FOR_LOCATION"?:
       return YelpResponseError.unavailableForLocation
-    case "AREA_TOO_LARGE":
+    case "AREA_TOO_LARGE"?:
       return YelpResponseError.areaTooLarge
-    case "MULTIPLE_LOCATIONS":
+    case "MULTIPLE_LOCATIONS"?:
       return YelpResponseError.multipleLocations
-    case "BUSINESS_UNAVAILABLE":
+    case "BUSINESS_UNAVAILABLE"?:
       return YelpResponseError.businessUnavailable
-    default:
-      return YelpResponseError.unknownError
+    case let error:
+      return YelpResponseError.unknownError(cause: UnknownErrorCode(code: error))
     }
   }
   

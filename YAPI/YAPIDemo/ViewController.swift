@@ -33,7 +33,8 @@ class ViewController: UIViewController {
       }
       else {
         print("Authenticated!")
-        let searchParameters = YelpV3SearchParameters(location: YelpV3LocationParameter(latitude: 45.509523, longitude: -122.679544))
+//        let searchParameters = YelpV3SearchParameters(location: YelpV3LocationParameter(latitude: 45.509523, longitude: -122.679544))
+        let searchParameters = YelpV3SearchParameters(location: YelpV3LocationParameter(location: "Portland, OR"))
         let request = YelpAPIFactory.V3.makeSearchRequest(with: searchParameters)
         request.send { result in
           switch result {

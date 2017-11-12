@@ -211,7 +211,10 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
         return XCTFail("Response is not of the required type")
       }
       XCTAssertNotNil(response.error)
-      XCTAssert(response.error! == .invalidParameter(field: "location"))
+      
+      guard case .invalidParameter(field: "location") = response.error! else {
+        return XCTFail("Wrong error type given: \(response.error!)")
+      }
       XCTAssert(response.wasSuccessful == false)
     } catch {
       XCTFail()
@@ -241,7 +244,10 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
       return XCTFail("Response is not of the required type")
     }
     XCTAssertNotNil(response.error)
-    XCTAssert(response.error! == .invalidParameter(field: "location"))
+    
+    guard case .invalidParameter(field: "location") = response.error! else {
+      return XCTFail("Wrong error type given: \(response.error!)")
+    }
     XCTAssert(response.wasSuccessful == false)
   }
   
@@ -250,8 +256,8 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
     XCTAssert(response.isErr())
-    guard case .invalidJson = response.unwrapErr() else {
-      return XCTFail("Wrong error type returned")
+    guard case YelpResponseError.failedToParse(cause: YelpParseError.invalidJson) = response.unwrapErr() else {
+      return XCTFail("Wrong error type returned: \(response.unwrapErr())")
     }
   }
   

@@ -15,8 +15,8 @@ extension YelpV3Response {
     switch dict["code"] as? String {
     case "NOT_FOUND"?:
       return .notFound
-    default:
-      return .unknownError
+    case let error:
+      return .unknownError(cause: UnknownErrorCode(code: error))
     }
   }
 }
