@@ -9,8 +9,8 @@
 import UIKit
 import YAPI
 
-let appId = ProcessInfo.processInfo.environment["APP_ID"]!
-let clientSecret = ProcessInfo.processInfo.environment["CLIENT_SECRET"]!
+let appId = "YvxjDSJzUHNbMDcxZ-1XTQ"
+let clientSecret = "l79vZwLjzgoO9Gt6N6Gs6H5NJ85VBL1OOksSpfZTuvbcYzpqeGr3jzT7XNbYzBy5"
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
