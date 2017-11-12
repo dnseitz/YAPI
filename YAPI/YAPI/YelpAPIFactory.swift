@@ -104,6 +104,10 @@ public enum YelpAPIFactory {
     private static func makeTokenRequest(with parameters: YelpV3TokenParameters) -> YelpV3TokenRequest {
       return YelpV3TokenRequest(token: parameters)
     }
+    
+    public static func makeSearchRequest(with parameters: YelpV3SearchParameters) -> YelpV3SearchRequest {
+      return YelpV3SearchRequest(searchParameters: parameters)
+    }
   }
   
   /**
@@ -114,14 +118,14 @@ public enum YelpAPIFactory {
    
       - Returns: A valid response object, populated with businesses or an error
    */
-  static func makeResponse<T: YelpRequest>(withJSON json: [String: AnyObject], from request: T) -> Result<T.Response, YelpParseError> {
+  static func makeResponse<T: YelpRequest>(withJSON json: [String: AnyObject], from request: T) -> Result<T.Response, YelpError> {
     do {
       return try .ok(T.Response.init(withJSON: json))
     } catch {
-      if let parseError = error as? YelpParseError {
-        return .err(parseError)
+      if let error = error as? YelpError {
+        return .err(error)
       }
-      return .err(.unknown)
+      return .err(YelpResponseError.unknownError)
     }
   }
   
@@ -133,13 +137,13 @@ public enum YelpAPIFactory {
    
       - Returns: A valid response object, or nil if the data cannot be parsed
    */
-  static func makeResponse<T: YelpRequest>(with data: Data, from request: T) -> Result<T.Response, YelpParseError> {
+  static func makeResponse<T: YelpRequest>(with data: Data, from request: T) -> Result<T.Response, YelpError> {
     do {
       let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
       return YelpAPIFactory.makeResponse(withJSON: json as! [String: AnyObject], from: request)
     }
     catch {
-      return .err(.invalidJson)
+      return .err(YelpParseError.invalidJson)
     }
   }
   

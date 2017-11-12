@@ -207,17 +207,18 @@ public struct YelpV3SearchParameters {
    */
   public let attributes: Attributes?
   
-  private init(location: YelpV3LocationParameter,
-               term: Term?, radius: Radius?,
-               categories: Categories?,
-               locale: Locale?,
-               limit: Limit?,
-               offset: Offset?,
-               sortBy: SortMode?,
-               price: Price?,
-               openNow: OpenNow?,
-               openAt: OpenAt?,
-               attributes: Attributes?) {
+  public init(location: YelpV3LocationParameter,
+               term: Term? = nil,
+               radius: Radius? = nil,
+               categories: Categories? = nil,
+               locale: Locale? = nil,
+               limit: Limit? = nil,
+               offset: Offset? = nil,
+               sortBy: SortMode? = nil,
+               price: Price? = nil,
+               openNow: OpenNow? = nil,
+               openAt: OpenAt? = nil,
+               attributes: Attributes? = nil) {
     self.location = location
     self.term = term
     self.radius = radius
@@ -230,56 +231,6 @@ public struct YelpV3SearchParameters {
     self.openNow = openNow
     self.openAt = openAt
     self.attributes = attributes
-  }
-  
-  public init(location: YelpV3LocationParameter,
-              term: Term? = nil,
-              radius: Radius? = nil,
-              categories: Categories? = nil,
-              locale: Locale? = nil,
-              limit: Limit? = nil,
-              offset: Offset? = nil,
-              sortBy: SortMode? = nil,
-              price: Price? = nil,
-              openNow: OpenNow? = nil,
-              attributes: Attributes? = nil) {
-    self.init(location: location,
-              term: term,
-              radius: radius,
-              categories: categories,
-              locale: locale,
-              limit: limit,
-              offset: offset,
-              sortBy: sortBy,
-              price: price,
-              openNow: openNow,
-              openAt: nil,
-              attributes: attributes)
-  }
-  
-  public init(location: YelpV3LocationParameter,
-              term: Term? = nil,
-              radius: Radius? = nil,
-              categories: Categories? = nil,
-              locale: Locale? = nil,
-              limit: Limit? = nil,
-              offset: Offset? = nil,
-              sortBy: SortMode? = nil,
-              price: Price? = nil,
-              openAt: OpenAt? = nil,
-              attributes: Attributes? = nil) {
-    self.init(location: location,
-              term: term,
-              radius: radius,
-              categories: categories,
-              locale: locale,
-              limit: limit,
-              offset: offset,
-              sortBy: sortBy,
-              price: price,
-              openNow: nil,
-              openAt: openAt,
-              attributes: attributes)
   }
 }
 

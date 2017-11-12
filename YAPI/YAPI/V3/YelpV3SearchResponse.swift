@@ -23,12 +23,29 @@ public final class YelpV3SearchResponse: YelpV3Response {
   public var error: YelpResponseError?
   
   public init(withJSON data: [String : AnyObject]) throws {
-    self.total = try data.parseParam(key: Params.total)
+    if let error = data["error"] as? [String: AnyObject] {
+      self.error = YelpV3SearchResponse.parse(error: error)
+    }
+    else {
+      self.error = nil
+    }
 
-    let businesses: [[String: AnyObject]] = try data.parseParam(key: Params.businesses)
-    self.businesses = try businesses.map { try YelpV3Business(withDict: $0) }
+    do {
+      self.total = try data.parseParam(key: Params.total)
 
-    let region: [String: AnyObject] = try data.parseParam(key: Params.region)
-    self.region = YelpRegion(withDict: region)
+      let businesses: [[String: AnyObject]] = try data.parseParam(key: Params.businesses)
+      self.businesses = try businesses.map { try YelpV3Business(withDict: $0) }
+
+      let region: [String: AnyObject] = try data.parseParam(key: Params.region)
+      self.region = YelpRegion(withDict: region)
+    }
+    catch {
+      if let responseError = self.error {
+        throw responseError
+      }
+      else {
+        throw error
+      }
+    }
   }
 }

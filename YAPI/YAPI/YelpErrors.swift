@@ -68,7 +68,9 @@ public enum YelpResponseError: YelpError, Equatable {
   /// No data was recieved in the response
   case noDataRecieved
   /// Data was recieved, but it couldn't be parsed as JSON
-  case failedToParse(cause: YelpParseError)
+  case failedToParse(cause: YelpError)
+  /// Resource could not be found
+  case notFound
   
   public var description: String {
     switch self {
@@ -94,6 +96,8 @@ public enum YelpResponseError: YelpError, Equatable {
       return "No data was recieved in the response"
     case .failedToParse(cause: let cause):
       return "The data recieved was unable to be parsed: '\(cause)'"
+    case .notFound:
+      return "The resource could not be found."
     }
   }
 }
@@ -120,8 +124,10 @@ public func ==(lhs: YelpResponseError, rhs: YelpResponseError) -> Bool {
     return true
   case (.noDataRecieved, .noDataRecieved):
     return true
-  case (.failedToParse(cause: let cause1), .failedToParse(cause: let cause2)):
-    return cause1 == cause2
+  case (.failedToParse(cause: _), .failedToParse(cause: _)):
+    return true
+  case (.notFound, .notFound):
+    return true
   default:
     return false
   }

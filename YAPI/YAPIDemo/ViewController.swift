@@ -8,6 +8,7 @@
 
 import UIKit
 import YAPI
+import CoreLocation
 
 class ViewController: UIViewController {
 
@@ -32,6 +33,18 @@ class ViewController: UIViewController {
       }
       else {
         print("Authenticated!")
+        let searchParameters = YelpV3SearchParameters(location: YelpV3LocationParameter(latitude: 45.509523, longitude: -122.679544))
+        let request = YelpAPIFactory.V3.makeSearchRequest(with: searchParameters)
+        request.send { result in
+          switch result {
+          case .ok(let response):
+            for business in response.businesses {
+              print("\(business.name)\n")
+            }
+          case .err(let error):
+            print("Error: \(error)")
+          }
+        }
       }
     }
   }

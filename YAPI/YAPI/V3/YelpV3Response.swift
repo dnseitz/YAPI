@@ -12,12 +12,11 @@ public protocol YelpV3Response : YelpResponse {}
 
 extension YelpV3Response {
   static func parse(error dict: [String: AnyObject]) -> YelpResponseError {
-    return .unknownError
-    /*
-    switch dict["id"] as? String {
+    switch dict["code"] as? String {
+    case "NOT_FOUND"?:
+      return .notFound
     default:
       return .unknownError
     }
-    */
   }
 }

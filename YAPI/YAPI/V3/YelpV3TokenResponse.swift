@@ -25,9 +25,6 @@ public final class YelpV3TokenResponse : YelpV3Response {
   public let expiresIn: Int?
   
   public let error: YelpResponseError?
-  public var wasSuccessful: Bool {
-    return error == nil
-  }
   
   public init(withJSON data: [String: AnyObject]) throws {
     if let error = data["error"] as? [String: AnyObject] {

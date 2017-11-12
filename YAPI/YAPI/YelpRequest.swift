@@ -50,6 +50,7 @@ private func oauthClient(for version: OAuthSwiftCredential.Version) -> OAuthSwif
           return nil
       }
       let credential = OAuthSwiftCredential(consumerKey: consumerKey, consumerSecret: consumerSecret)
+      credential.version = .oauth2
       let client = OAuthSwiftClient(credential: credential)
       oauth2Client = client
       return client
@@ -68,7 +69,7 @@ internal enum YelpEndpoints {
   
   internal enum V3 {
     static let token: String = "/oauth2/token"
-    static let search: String = "/v3/businesses/search/"
+    static let search: String = "/v3/businesses/search"
   }
 }
 

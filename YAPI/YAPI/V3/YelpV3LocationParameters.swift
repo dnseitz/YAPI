@@ -69,7 +69,7 @@ public struct YelpV3LocationParameter {
     self.longitude = Longitude(coordinate.longitude)
   }
   
-  public init(location: CLLocation) {
+  public init(coreLocation location: CLLocation) {
     self.init(coordinate: location.coordinate)
   }
 }

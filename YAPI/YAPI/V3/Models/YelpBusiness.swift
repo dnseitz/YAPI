@@ -140,10 +140,10 @@ public struct YelpV3Location {
   public let address1: String
   
   /// Street address of this business, continued.
-  public let address2: String
+  public let address2: String?
   
   /// Street address of this business, continued.
-  public let address3: String
+  public let address3: String?
   
   /// City of this business.
   public let city: String
@@ -163,8 +163,8 @@ public struct YelpV3Location {
   
   init(withDict dict: [String: AnyObject]) throws {
     self.address1 = try dict.parseParam(key: Params.address1)
-    self.address2 = try dict.parseParam(key: Params.address2)
-    self.address3 = try dict.parseParam(key: Params.address3)
+    self.address2 = try? dict.parseParam(key: Params.address2)
+    self.address3 = try? dict.parseParam(key: Params.address3)
     self.city = try dict.parseParam(key: Params.city)
     self.country = try dict.parseParam(key: Params.country)
     self.displayAddress = (try? dict.parseParam(key: Params.display_address)) ?? []

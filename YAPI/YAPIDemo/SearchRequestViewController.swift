@@ -77,13 +77,13 @@ class SearchRequestViewController: UIViewController {
   }
   
   func setLimit() {
-    guard let value = self.limit.text else { return }
-    self.searchParameters.limit = YelpV2SearchParameters.Limit(Int(value))
+    guard let text = self.limit.text, let value = Int(text) else { return }
+    self.searchParameters.limit = YelpV2SearchParameters.Limit(value)
   }
   
   func setOffset() {
-    guard let value = self.offset.text else { return }
-    self.searchParameters.offset = YelpV2SearchParameters.Offset(Int(value))
+    guard let text = self.offset.text, let value = Int(text) else { return }
+    self.searchParameters.offset = YelpV2SearchParameters.Offset(value)
   }
   
   func setSortMode() {
@@ -105,8 +105,8 @@ class SearchRequestViewController: UIViewController {
   }
   
   func setRadius() {
-    guard let value = self.offset.text else { return }
-    self.searchParameters.radius = YelpV2SearchParameters.Radius(Int(value))
+    guard let text = self.offset.text, let value = Int(text) else { return }
+    self.searchParameters.radius = YelpV2SearchParameters.Radius(value)
   }
   
   func setDeals() {

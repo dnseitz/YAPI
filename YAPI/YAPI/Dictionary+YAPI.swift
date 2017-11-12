@@ -9,9 +9,12 @@
 import Foundation
 
 extension Dictionary where Key: ExpressibleByStringLiteral, Value: ExpressibleByStringLiteral {
-  mutating func insertParameter(_ parameter: YelpParameter) {
-    if let key = parameter.key as? Key, let value = parameter.value as? Value {
-      self[key] = value
+  mutating func insertParameter(_ parameter: YelpParameter?) {
+    if
+      let parameter = parameter,
+      let key = parameter.key as? Key,
+      let value = parameter.value as? Value {
+        self[key] = value
     }
   }
 }
