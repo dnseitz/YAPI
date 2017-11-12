@@ -23,18 +23,17 @@ class YelpPhoneSearchRequestTests: YAPIXCTestCase {
   
   func test_SendRequest_RecievesData_ParsesTheData() {
     mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidPhoneSearchResponse, options: .ignoreUnknownCharacters)
-    request.send() { (response, error) in
-      let response = response as? YelpV2Response
-      XCTAssertNotNil(response)
-      XCTAssertNil(error)
+    request.send() { result in
+      XCTAssert(result.isOk())
+      let response = result.unwrap()
       
-      XCTAssertNil(response!.region)
-      XCTAssertNotNil(response!.total)
-      XCTAssert(response!.total! == 2316)
+      XCTAssertNil(response.region)
+      XCTAssertNotNil(response.total)
+      XCTAssert(response.total! == 2316)
       
-      XCTAssertNotNil(response!.businesses)
+      XCTAssertNotNil(response.businesses)
       
-      let business = response!.businesses![0]
+      let business = response.businesses![0]
       
       XCTAssert(business.categories.count == 2)
       

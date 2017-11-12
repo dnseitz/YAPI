@@ -13,28 +13,29 @@ import CoreLocation
     Factory class that generates Yelp requests and responses for use.
  */
 public enum YelpAPIFactory {
-  /**
-      Set the authentication keys that will be used to generate requests. These keys are needed in order 
-      for the Yelp API to successfully authenticate your requests, if you generate a request without these 
-      set the request will fail to send
-   
-      - Parameters:
-        - consumerKey: The OAuth consumer key
-        - consumerSecret: The OAuth consumer secret
-        - token: The OAuth token
-        - tokenSecret: The OAuth token secret
-   */
-  public static func setAuthenticationKeys(consumerKey: String,
-                                        consumerSecret: String,
-                                                 token: String,
-                                           tokenSecret: String) {
-    AuthKeys.consumerKey = consumerKey
-    AuthKeys.consumerSecret = consumerSecret
-    AuthKeys.token = token
-    AuthKeys.tokenSecret = tokenSecret
-  }
   
   public enum V2 {
+    /**
+     Set the authentication keys that will be used to generate requests. These keys are needed in order
+     for the Yelp API to successfully authenticate your requests, if you generate a request without these
+     set the request will fail to send
+     
+     - Parameters:
+     - consumerKey: The OAuth consumer key
+     - consumerSecret: The OAuth consumer secret
+     - token: The OAuth token
+     - tokenSecret: The OAuth token secret
+     */
+    public static func setAuthenticationKeys(consumerKey: String,
+                                             consumerSecret: String,
+                                             token: String,
+                                             tokenSecret: String) {
+      AuthKeys.consumerKey = consumerKey
+      AuthKeys.consumerSecret = consumerSecret
+      AuthKeys.token = token
+      AuthKeys.tokenSecret = tokenSecret
+    }
+
     /// The parameters to use when determining localization
     public static var localeParameters: YelpV2LocaleParameters?
     
@@ -76,7 +77,33 @@ public enum YelpAPIFactory {
   }
   
   public enum V3 {
-    
+    public static func authenticate(appId: String,
+                                    clientSecret: String,
+                                    completionBlock: @escaping (_ error: YelpError?) -> Void) {
+      AuthKeys.consumerKey = appId
+      AuthKeys.consumerSecret = clientSecret
+      
+      let clientId = YelpV3TokenParameters.ClientID(internalValue: appId)
+      let clientSecret = YelpV3TokenParameters.ClientSecret(internalValue: clientSecret)
+      
+      let request = makeTokenRequest(with: YelpV3TokenParameters(grantType: .clientCredentials,
+                                                                 clientId: clientId,
+                                                                 clientSecret: clientSecret))
+      
+      request.send { result in
+        switch result {
+        case .ok(let response):
+          AuthKeys.token = response.accessToken
+          completionBlock(nil)
+        case .err(let error):
+          completionBlock(error)
+        }
+      }
+    }
+
+    private static func makeTokenRequest(with parameters: YelpV3TokenParameters) -> YelpV3TokenRequest {
+      return YelpV3TokenRequest(token: parameters)
+    }
   }
   
   /**

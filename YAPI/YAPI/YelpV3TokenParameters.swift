@@ -45,6 +45,12 @@ public struct YelpV3TokenParameters {
   
   /// The client secret for you app with Yelp.
   public let clientSecret: ClientSecret
+  
+  public init(grantType: GrantType, clientId: ClientID, clientSecret: ClientSecret) {
+    self.grantType = grantType
+    self.clientId = clientId
+    self.clientSecret = clientSecret
+  }
 }
 
 extension YelpV3TokenParameters.ClientID {

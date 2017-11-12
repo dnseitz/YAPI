@@ -14,9 +14,12 @@ public protocol YelpV3Response : YelpResponse {
 
 extension YelpV3Response {
   static func parseError(error dict: [String: AnyObject]) -> YelpResponseError {
-    switch dict["id"] as! String {
+    return .unknownError
+    /*
+    switch dict["id"] as? String {
     default:
       return .unknownError
     }
+    */
   }
 }

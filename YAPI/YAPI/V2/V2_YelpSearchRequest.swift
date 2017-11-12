@@ -21,6 +21,7 @@ public final class YelpV2SearchRequest: YelpRequest {
   
   public typealias Response = YelpV2SearchResponse
   
+  public let oauthVersion: OAuthSwiftCredential.Version = .oauth1
   public let path: String = YelpEndpoints.V2.search
   public let parameters: [String: String]
   public var requestMethod: OAuthSwiftHTTPRequest.Method {

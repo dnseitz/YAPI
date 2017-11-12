@@ -23,14 +23,10 @@ class YelpV3TokenRequestTests: YAPIXCTestCase {
   
   func test_SendRequest_RecievesData_ParsesTheData() {
     mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidTokenRequestResponse, options: .ignoreUnknownCharacters)
-    request.send { (response, error) in
-      XCTAssertNotNil(response)
-      XCTAssertNil(error)
+    request.send { result in
+      XCTAssert(result.isOk())
       
-      guard let response = response else {
-        XCTFail()
-        return
-      }
+      let response = result.unwrap()
       
       XCTAssert(response.wasSuccessful)
       XCTAssert(response.accessToken == "your access token")

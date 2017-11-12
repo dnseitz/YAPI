@@ -12,6 +12,7 @@ import OAuthSwift
 public final class YelpV2BusinessRequest : YelpRequest {
   public typealias Response = YelpV2BusinessResponse
   
+  public let oauthVersion: OAuthSwiftCredential.Version = .oauth1
   public let path: String
   public let parameters: [String : String]
   public let session: YelpHTTPClient

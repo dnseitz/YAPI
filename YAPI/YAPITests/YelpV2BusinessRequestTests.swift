@@ -23,15 +23,15 @@ class YelpV2BusinessRequestTests : YAPIXCTestCase {
   
   func test_SendRequest_RecievesData_ParsesTheData() {
     mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpValidBusinessResponse, options: .ignoreUnknownCharacters)
-    request.send() { (response, error) in
-      let response = response as? YelpV2Response
-      XCTAssertNotNil(response)
-      XCTAssertNil(error)
+    request.send() { result in
+      XCTAssert(result.isOk())
       
-      XCTAssertNil(response!.region)
-      XCTAssertNil(response!.total)
+      let response = result.unwrap()
       
-      let business = response!.businesses![0]
+      XCTAssertNil(response.region)
+      XCTAssertNil(response.total)
+      
+      let business = response.businesses![0]
       
       XCTAssert(business.categories.count == 2)
       

@@ -14,7 +14,7 @@ class YAPIXCTestCase : XCTestCase {
   override class func setUp() {
     super.setUp()
     
-    YelpAPIFactory.setAuthenticationKeys(consumerKey: "", consumerSecret: "", token: "", tokenSecret: "")
+    YelpAPIFactory.V2.setAuthenticationKeys(consumerKey: "", consumerSecret: "", token: "", tokenSecret: "")
     Asserts.shouldAssert = false
   }
   

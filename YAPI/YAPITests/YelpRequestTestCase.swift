@@ -31,46 +31,40 @@ class YelpV2GenericRequestTestCase : YAPIXCTestCase {
   func test_SendRequest_WhereRequestErrors_GivesTheError() {
     let mockError = NSError(domain: "error", code: 0, userInfo: nil)
     mockSession.nextError = mockError
-    request.send() { (response, error) -> Void in
-      XCTAssertNil(response)
-      XCTAssertNotNil(error)
+    request.send() { result in
+      XCTAssert(result.isErr())
       
-      XCTAssert(error as! YelpRequestError == .failedToSendRequest(mockError))
+      XCTAssert(result.unwrapErr() as! YelpRequestError == .failedToSendRequest(mockError))
     }
   }
   
   func test_SendRequest_RecievesNoData_GivesAnError() {
-    request.send() { (response, error) -> Void in
-      XCTAssertNil(response)
-      XCTAssertNotNil(error)
+    request.send() { result in
+      XCTAssert(result.isErr())
       
-      XCTAssert(error as! YelpResponseError == .noDataRecieved)
+      XCTAssert(result.unwrapErr() as! YelpResponseError == .noDataRecieved)
     }
   }
   
   func test_SendRequest_RecievesBadData_GivesAnError() {
     mockSession.nextData = Data()
-    request.send() { (response, error) -> Void in
-      XCTAssertNil(response)
-      XCTAssertNotNil(error)
+    request.send() { result in
+      XCTAssert(result.isErr())
       
-      XCTAssert(error as! YelpResponseError == .failedToParse(cause: .invalidJson))
+      XCTAssert(result.unwrapErr() as! YelpResponseError == .failedToParse(cause: .invalidJson))
     }
   }
   
   func test_SendRequest_RecievesYelpError_GivesTheError() {
     mockSession.nextData = Data(base64Encoded: ResponseInjections.yelpErrorResponse, options: .ignoreUnknownCharacters)
-    request.send() { (response, error) -> Void in
-      let response = response as? YelpV2Response
-      XCTAssertNotNil(response)
-      XCTAssertNotNil(error)
+    request.send() { result in
+      XCTAssert(result.isOk())
+      let response = result.unwrap()
       
-      XCTAssertNil(response!.businesses)
-      XCTAssertNotNil(response!.error)
-      XCTAssert(response!.error! == .invalidParameter(field: "location"))
-      XCTAssert(response!.wasSuccessful == false)
-      
-      XCTAssert(response!.error == (error as! YelpResponseError))
+      XCTAssertNil(response.businesses)
+      XCTAssertNotNil(response.error)
+      XCTAssert(response.error! == .invalidParameter(field: "location"))
+      XCTAssert(response.wasSuccessful == false)
     }
   }
 }

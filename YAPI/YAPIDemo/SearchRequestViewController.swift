@@ -22,7 +22,7 @@ class SearchRequestViewController: UIViewController {
   
   @IBOutlet weak var responseField: UITextView!
   
-  var searchParameters: YelpSearchParameters = YelpSearchParameters(location: "Portland, OR" as YelpSearchLocation)
+  var searchParameters: YelpV2SearchParameters = YelpV2SearchParameters(location: "Portland, OR" as YelpSearchLocation)
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -43,13 +43,15 @@ class SearchRequestViewController: UIViewController {
     setDeals()
     setCategories()
     
-    let request = YelpAPIFactory.makeSearchRequest(with: self.searchParameters)
+    let request = YelpAPIFactory.V2.makeSearchRequest(with: self.searchParameters)
     
     request.send { (response, error) in
       var text = ""
       defer {
         print(text)
-        self.responseField.text = text
+        DispatchQueue.main.async {
+          self.responseField.text = text
+        }
       }
       if let error = error {
         text += "Error recieved: \(error)\n"
@@ -78,16 +80,16 @@ class SearchRequestViewController: UIViewController {
   
   func setLimit() {
     guard let value = self.limit.text else { return }
-    self.searchParameters.limit = YelpSearchParameters.LimitParameter(Int(value))
+    self.searchParameters.limit = YelpV2SearchParameters.Limit(Int(value))
   }
   
   func setOffset() {
     guard let value = self.offset.text else { return }
-    self.searchParameters.offset = YelpSearchParameters.OffsetParameter(Int(value))
+    self.searchParameters.offset = YelpV2SearchParameters.Offset(Int(value))
   }
   
   func setSortMode() {
-    let mode: YelpSearchParameters.SortModeParameter
+    let mode: YelpV2SearchParameters.SortMode
     switch self.sortMode.selectedSegmentIndex {
     case 0:
       mode = .best
@@ -106,21 +108,21 @@ class SearchRequestViewController: UIViewController {
   
   func setRadius() {
     guard let value = self.offset.text else { return }
-    self.searchParameters.radius = YelpSearchParameters.RadiusParameter(Int(value))
+    self.searchParameters.radius = YelpV2SearchParameters.Radius(Int(value))
   }
   
   func setDeals() {
-    self.searchParameters.filterDeals = YelpSearchParameters.DealsParameter(self.deals.isOn)
+    self.searchParameters.filterDeals = YelpV2SearchParameters.Deals(self.deals.isOn)
   }
   
   func setCategories() {
     guard let value = self.categories.text else { return }
     let array = value.components(separatedBy: ",")
     let categories = array.map { $0.trimmingCharacters(in: CharacterSet.whitespaces) }
-    self.searchParameters.categories = YelpSearchParameters.CategoriesParameter(categories)
+    self.searchParameters.categories = YelpV2SearchParameters.Categories(categories)
   }
   
   func clearParameters() {
-    self.searchParameters = YelpSearchParameters(location: "Portland, OR" as YelpSearchLocation)
+    self.searchParameters = YelpV2SearchParameters(location: "Portland, OR" as YelpSearchLocation)
   }
 }
