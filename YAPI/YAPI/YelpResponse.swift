@@ -17,3 +17,9 @@ public protocol YelpResponse {
   /// The error recieved in the response, or nil if there was no error
   var error: YelpResponseError? { get }
 }
+
+extension YelpResponse {
+  public var wasSuccessful: Bool {
+    return error == nil
+  }
+}

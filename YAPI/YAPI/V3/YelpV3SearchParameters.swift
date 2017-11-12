@@ -88,29 +88,22 @@ public struct YelpV3SearchParameters {
   }
   
   public struct Price: YelpArrayParameter {
-    public enum DollarSigns: Int {
-      case one = 1
-      case two = 2
-      case three = 3
-      case four = 4
-      case five = 5
-    }
-    public typealias Element = DollarSigns
+    public typealias Element = YelpPrice
     
-    let internalValue: [DollarSigns]
+    let internalValue: [Element]
     public let key: String = "price"
     
     public init(_ elements: [Element]) {
       self.internalValue = elements
     }
     
-    public init(low: DollarSigns, high: DollarSigns) {
+    public init(low: Element, high: Element) {
       assert(low.rawValue <= high.rawValue)
       
       let lowValue = min(low.rawValue, high.rawValue)
       let highValue = max(low.rawValue, high.rawValue)
       
-      let range = Array(lowValue...highValue).flatMap { DollarSigns(rawValue: $0) }
+      let range = Array(lowValue...highValue).flatMap { Element(rawValue: $0) }
       self.init(range)
     }
   }

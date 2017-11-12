@@ -114,12 +114,26 @@ public struct YelpBusiness {
 }
 
 public struct YelpCategory {
+  private enum Params {
+    static let alias = "alias"
+    static let title = "title"
+  }
   public let categoryName: String
   public let alias: String
   
   init(withTuple tuple: [String]) {
     self.categoryName = tuple[0]
     self.alias = tuple[1]
+  }
+  
+  init(withDict dict: [String: AnyObject]) throws {
+    self.categoryName = try dict.parseParam(key: Params.title)
+    self.alias = try dict.parseParam(key: Params.alias)
+  }
+  
+  init(name: String, alias: String) {
+    self.categoryName = name
+    self.alias = alias
   }
 }
 

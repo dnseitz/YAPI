@@ -143,6 +143,11 @@ public final class ImageReference {
     self.session = session
   }
   
+  convenience init?(from string: String, session: YelpHTTPClient = YelpHTTPClient.sharedSession) {
+    guard let url = URL(string: string) else { return nil }
+    self.init(from: url, session: session)
+  }
+  
   /**
       Load an image in the background and pass it to the completion handler once finished. This can be 
       called multiple times to retrieve the same image at different scales. Only one load is allowed to be 

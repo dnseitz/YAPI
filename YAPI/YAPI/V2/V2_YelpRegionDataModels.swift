@@ -12,13 +12,18 @@ import CoreLocation
 public struct YelpRegion {
   
   /// Span of suggested map bounds
-  let span: YelpRegionSpan
+  let span: YelpRegionSpan?
   
   /// Center position of map bounds
   let center: YelpRegionCenter
   
   init(withDict dict: [String: AnyObject]) {
-    self.span = YelpRegionSpan(withDict: dict["span"] as! [String: AnyObject])
+    if let span = dict["span"] as? [String: AnyObject] {
+      self.span = YelpRegionSpan(withDict: span)
+    }
+    else {
+      self.span = nil
+    }
     self.center = YelpRegionCenter(withDict: dict["center"] as! [String: AnyObject])
   }
 }

@@ -15,3 +15,10 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: ExpressibleBy
     }
   }
 }
+
+extension Dictionary where Key: StringProtocol {
+  func parseParam<ReturnType>(key: Key) throws -> ReturnType {
+    guard let value = self[key] as? ReturnType else { throw YelpParseError.missing(field: key.description) }
+    return value
+  }
+}

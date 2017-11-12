@@ -10,7 +10,7 @@ import Foundation
 import OAuthSwift
 
 /*
-public final class YelpV3SearchRequest : InternalYelpRequest {
+public final class YelpV3SearchRequest : YelpRequest {
   public typealias Response = YelpV3SearchResponse
  
   public let oauthVersion: OAuthSwiftCredential.Version = .oauth2
@@ -24,4 +24,5 @@ public final class YelpV3SearchRequest : InternalYelpRequest {
   init(_: search)
   
 }
-*/
+ */
+
