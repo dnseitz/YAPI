@@ -68,7 +68,7 @@ public enum YelpResponseError: YelpError, Equatable {
   /// No data was recieved in the response
   case noDataRecieved
   /// Data was recieved, but it couldn't be parsed as JSON
-  case failedToParse
+  case failedToParse(cause: YelpParseError)
   
   public var description: String {
     switch self {
@@ -92,8 +92,8 @@ public enum YelpResponseError: YelpError, Equatable {
       return "Information for that business is unavailable"
     case .noDataRecieved:
       return "No data was recieved in the response"
-    case .failedToParse:
-      return "The data recieved was unable to be parsed"
+    case .failedToParse(cause: let cause):
+      return "The data recieved was unable to be parsed: '\(cause)'"
     }
   }
 }
@@ -120,7 +120,43 @@ public func ==(lhs: YelpResponseError, rhs: YelpResponseError) -> Bool {
     return true
   case (.noDataRecieved, .noDataRecieved):
     return true
-  case (.failedToParse, .failedToParse):
+  case (.failedToParse(cause: let cause1), .failedToParse(cause: let cause2)):
+    return cause1 == cause2
+  default:
+    return false
+  }
+}
+
+public enum YelpParseError: YelpError, Equatable {
+  
+  // The data is not in JSON format
+  case invalidJson
+  
+  // A required field was missing in the response
+  case missing(field: String)
+  
+  // The cause of the failure is unknown
+  case unknown
+  
+  public var description: String {
+    switch self {
+    case .invalidJson:
+      return "The data is not in JSON format"
+    case .missing(field: let field):
+      return "A required field <\(field)> was missing in the response"
+    case .unknown:
+      return "The cause of the failure is unknown"
+    }
+  }
+}
+
+public func ==(lhs: YelpParseError, rhs: YelpParseError) -> Bool {
+  switch (lhs, rhs) {
+  case (.invalidJson, .invalidJson):
+    return true
+  case (.missing(field: let field1), .missing(field: let field2)):
+    return field1 == field2
+  case (.unknown, .unknown):
     return true
   default:
     return false

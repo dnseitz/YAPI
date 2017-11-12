@@ -54,7 +54,7 @@ class YelpV2GenericRequestTestCase : YAPIXCTestCase {
       XCTAssertNil(response)
       XCTAssertNotNil(error)
       
-      XCTAssert(error as! YelpResponseError == .failedToParse)
+      XCTAssert(error as! YelpResponseError == .failedToParse(cause: .invalidJson))
     }
   }
   

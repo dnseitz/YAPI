@@ -9,6 +9,8 @@
 import Foundation
 
 public protocol YelpResponse {
+  init(withJSON data: [String: AnyObject]) throws
+
   /// If the response was recieved without an error
   var wasSuccessful: Bool { get }
   

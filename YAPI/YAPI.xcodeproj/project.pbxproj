@@ -31,6 +31,7 @@
 		083C5E711D772AC200132923 /* YelpHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083C5E5D1D772AC200132923 /* YelpHTTPClient.swift */; };
 		083C5E721D772AC200132923 /* YelpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083C5E5E1D772AC200132923 /* YelpRequest.swift */; };
 		083C5E751D772AC200132923 /* YelpErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083C5E611D772AC200132923 /* YelpErrors.swift */; };
+		087490321FB7C3CD0072E539 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087490311FB7C3CD0072E539 /* Result.swift */; };
 		087A2FD11D9D8414005AA466 /* YelpAPIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A2FD01D9D8414005AA466 /* YelpAPIFactory.swift */; };
 		087A2FD81D9D85B0005AA466 /* YelpParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A2FD71D9D85B0005AA466 /* YelpParameter.swift */; };
 		089008D41D98F2E600D8DF7E /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089008D31D98F2E600D8DF7E /* OAuthSwift.framework */; };
@@ -131,6 +132,7 @@
 		083C5E5D1D772AC200132923 /* YelpHTTPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpHTTPClient.swift; sourceTree = "<group>"; };
 		083C5E5E1D772AC200132923 /* YelpRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpRequest.swift; sourceTree = "<group>"; };
 		083C5E611D772AC200132923 /* YelpErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpErrors.swift; sourceTree = "<group>"; };
+		087490311FB7C3CD0072E539 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		087A2FD01D9D8414005AA466 /* YelpAPIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpAPIFactory.swift; sourceTree = "<group>"; };
 		087A2FD71D9D85B0005AA466 /* YelpParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpParameter.swift; sourceTree = "<group>"; };
 		089008D11D98F26300D8DF7E /* OAuthSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OAuthSwift.framework; path = "../OAuthSwift/build/Debug-iphoneos/OAuthSwift.framework"; sourceTree = "<group>"; };
@@ -337,6 +339,7 @@
 				08CD2CD11D77F70E00DBFA24 /* ImageReference.swift */,
 				083C5E541D772AC200132923 /* YelpCategoryList.swift */,
 				083C5E5D1D772AC200132923 /* YelpHTTPClient.swift */,
+				087490311FB7C3CD0072E539 /* Result.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -769,6 +772,7 @@
 				083C5E751D772AC200132923 /* YelpErrors.swift in Sources */,
 				089CC6CD1D9AE8360018F1D1 /* V2_YelpSearchParameters.swift in Sources */,
 				08CD2CFD1D7B3F7700DBFA24 /* YelpAuthentication.swift in Sources */,
+				087490321FB7C3CD0072E539 /* Result.swift in Sources */,
 				089CC6D41D9AE84C0018F1D1 /* V2_YelpBusinessDataModels.swift in Sources */,
 				089CC6C21D9AE81B0018F1D1 /* V2_YelpPhoneSearchRequest.swift in Sources */,
 				089CC6C31D9AE81B0018F1D1 /* V2_YelpBusinessRequest.swift in Sources */,

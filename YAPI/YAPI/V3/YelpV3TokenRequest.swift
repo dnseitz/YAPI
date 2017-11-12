@@ -12,7 +12,7 @@ import OAuthSwift
 /**
     A YelpRequest that is used in order to retrieve an access token for the Yelp API.
  */
-public final class YelpV3TokenRequest : InternalYelpRequest {
+public final class YelpV3TokenRequest : YelpRequest {
   public typealias Response = YelpV3TokenResponse
   
   public let path: String = YelpEndpoints.V3.token

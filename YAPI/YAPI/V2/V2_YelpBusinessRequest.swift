@@ -9,7 +9,7 @@
 import Foundation
 import OAuthSwift
 
-public final class YelpV2BusinessRequest : InternalYelpRequest {
+public final class YelpV2BusinessRequest : YelpRequest {
   public typealias Response = YelpV2BusinessResponse
   
   public let path: String

@@ -9,6 +9,10 @@
 import XCTest
 @testable import YAPI
 
+fileprivate func compare(_ x: Double, _ y: Double) -> Bool {
+  return fabs(x - y) < Double.ulpOfOne
+}
+
 class YelpResponseModelTests: YAPIXCTestCase {
   func test_ValidResponse_ParsedFromEncodedJSON() {
     do {
@@ -51,10 +55,10 @@ class YelpResponseModelTests: YAPIXCTestCase {
       let response = YelpV2SearchResponse(withJSON: dict)
       
       XCTAssertNotNil(response.region)
-      XCTAssert(response.region!.span.latitudeDelta == 0.013946349999997665)
-      XCTAssert(response.region!.span.longitudeDelta == 0.00908831000000987)
-      XCTAssert(response.region!.center.latitude == 37.75342474999999)
-      XCTAssert(response.region!.center.longitude == -122.42292094999999)
+      XCTAssert(compare(response.region!.span.latitudeDelta, 0.013946349999997665))
+      XCTAssert(compare(response.region!.span.longitudeDelta, 0.00908831000000987))
+      XCTAssert(compare(response.region!.center.latitude, 37.75342474999999))
+      XCTAssert(compare(response.region!.center.longitude, -122.42292094999999))
     }
     catch {
       XCTFail()

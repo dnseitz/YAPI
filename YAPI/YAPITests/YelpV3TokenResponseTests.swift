@@ -13,7 +13,7 @@ class YelpV3TokenResponseTests: YAPIXCTestCase {
   func test_ValidResponse_ParsedFromEncodedJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidTokenRequestResponse)
-      let response = YelpV3TokenResponse(withJSON: dict)
+      let response = try YelpV3TokenResponse(withJSON: dict)
       
       XCTAssertNil(response.error)
       XCTAssert(response.wasSuccessful)
@@ -29,7 +29,7 @@ class YelpV3TokenResponseTests: YAPIXCTestCase {
   func test_ErrorResponse_ParsedFromEncodedJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpErrorResponse)
-      let response = YelpV3TokenResponse(withJSON: dict)
+      let response = try YelpV3TokenResponse(withJSON: dict)
       
       XCTAssertNotNil(response.error)
       XCTAssert(!response.wasSuccessful)

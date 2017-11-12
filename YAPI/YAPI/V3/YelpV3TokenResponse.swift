@@ -22,7 +22,7 @@ public final class YelpV3TokenResponse : YelpV3Response {
     return error == nil
   }
   
-  init(withJSON data: [String: AnyObject]) {
+  public init(withJSON data: [String: AnyObject]) throws {
     if let error = data["error"] as? [String: AnyObject] {
       self.error = YelpV3TokenResponse.parseError(error: error)
     }

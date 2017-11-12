@@ -68,31 +68,11 @@ public protocol YelpRequest {
   func send(completionHandler handler: @escaping (_ response: Self.Response?, _ error: YelpError?) -> Void)
 }
 
-protocol InternalYelpRequest : YelpRequest {
-  func makeResponse(with data: Data) -> Self.Response?
-}
-
 public extension YelpRequest {
   var host: String {
     return yelpHost
   }
-}
 
-extension YelpRequest {
-  func generateURLRequest() -> URLRequest? {
-    guard let consumerKey = AuthKeys.consumerKey, let consumerSecret = AuthKeys.consumerSecret, let token = AuthKeys.token, let tokenSecret = AuthKeys.tokenSecret else {
-      assert(false, "The request requires a consumerKey, consumerSecret, token, and tokenSecret in order to access the Yelp API, set these through the YelpAPIFactory")
-      return nil
-    }
-    let oauth = OAuthSwiftClient(consumerKey: consumerKey, consumerSecret: consumerSecret, accessToken: token, accessTokenSecret: tokenSecret)
-    
-    guard let request = oauth.makeRequest("https://\(self.host)\(self.path)", method: self.requestMethod, parameters: self.parameters, headers: nil, body: nil) else { return nil }
-    
-    return try? request.makeRequest()
-  }
-}
-
-extension InternalYelpRequest {
   public func send(completionHandler handler: @escaping (_ response: Self.Response?, _ error: YelpError?) -> Void) {
     guard let urlRequest = self.generateURLRequest() else {
       handler(nil, YelpRequestError.failedToGenerateRequest)
@@ -120,11 +100,11 @@ extension InternalYelpRequest {
         return
       }
       
-      let optionalYelpResponse = self.makeResponse(with: jsonData)
+      let responseResult = YelpAPIFactory.makeResponse(with: jsonData, from: self)//self.makeResponse(with: jsonData)
       
-      guard let yelpResponse = optionalYelpResponse else {
+      guard case .ok(let yelpResponse) = responseResult else {
         finalResponse = nil
-        finalError = YelpResponseError.failedToParse
+        finalError = YelpResponseError.failedToParse(cause: responseResult.unwrapErr())
         return
       }
       
@@ -138,9 +118,18 @@ extension InternalYelpRequest {
       }
     }
   }
-  
-  func makeResponse(with data: Data) -> Self.Response? {
-    return YelpAPIFactory.makeResponse(with: data, from: self) as? Self.Response
-  }
 }
 
+fileprivate extension YelpRequest {
+  func generateURLRequest() -> URLRequest? {
+    guard let consumerKey = AuthKeys.consumerKey, let consumerSecret = AuthKeys.consumerSecret, let token = AuthKeys.token, let tokenSecret = AuthKeys.tokenSecret else {
+      assert(false, "The request requires a consumerKey, consumerSecret, token, and tokenSecret in order to access the Yelp API, set these through the YelpAPIFactory")
+      return nil
+    }
+    let oauth = OAuthSwiftClient(consumerKey: consumerKey, consumerSecret: consumerSecret, accessToken: token, accessTokenSecret: tokenSecret)
+    
+    guard let request = oauth.makeRequest("https://\(self.host)\(self.path)", method: self.requestMethod, parameters: self.parameters, headers: nil, body: nil) else { return nil }
+    
+    return try? request.makeRequest()
+  }
+}

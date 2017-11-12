@@ -17,7 +17,8 @@ import CoreLocation
     send another request create a new instance of this class. The query parameters can only be set in the 
     initializer. Instances of this class should be created through the YelpAPIFactory.
  */
-public final class YelpV2SearchRequest: InternalYelpRequest {
+public final class YelpV2SearchRequest: YelpRequest {
+  
   public typealias Response = YelpV2SearchResponse
   
   public let path: String = YelpEndpoints.V2.search

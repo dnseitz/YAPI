@@ -14,7 +14,7 @@ public final class YelpV2BusinessResponse : YelpV2Response {
   public let businesses: [YelpBusiness]?
   public let error: YelpResponseError?
   
-  init(withJSON data: [String: AnyObject]) {
+  public init(withJSON data: [String: AnyObject]) {
     if let error = data["error"] as? [String: AnyObject] {
       self.error = YelpV2BusinessResponse.parseError(errorDict: error)
     }

@@ -186,9 +186,13 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   func test_Factory_BuildsResponseWithValidJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpValidThreeBusinessResponse)
-      let response = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)!
+      let responseResult = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)
       
-      XCTAssert(response is YelpV2SearchResponse)
+      XCTAssert(responseResult.isOk())
+
+      guard let response = responseResult.intoOk() else {
+        return XCTFail("Response is not of the required type")
+      }
       XCTAssert(response.wasSuccessful == true)
       XCTAssert(response.error == nil)
     } catch {
@@ -199,9 +203,13 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   func test_Factory_BuildsResponseWithErrorJSON() {
     do {
       let dict = try self.dictFromBase64(ResponseInjections.yelpErrorResponse)
-      let response = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)!
+      let responseResult = YelpAPIFactory.makeResponse(withJSON: dict, from: searchRequestStub)
       
-      XCTAssert(response is YelpV2SearchResponse)
+      XCTAssert(responseResult.isOk())
+      
+      guard let response = responseResult.intoOk() else {
+        return XCTFail("Response is not of the required type")
+      }
       XCTAssertNotNil(response.error)
       XCTAssert(response.error! == .invalidParameter(field: "location"))
       XCTAssert(response.wasSuccessful == false)
@@ -212,30 +220,39 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
   
   func test_Factory_BuildsResponseWithValidNSData() {
     let data = Data(base64Encoded: ResponseInjections.yelpValidThreeBusinessResponse, options: .ignoreUnknownCharacters)!
-    let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
+    let responseResult = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
-    XCTAssertNotNil(response)
-    XCTAssert(response is YelpV2SearchResponse)
-    XCTAssert(response!.wasSuccessful == true)
-    XCTAssert(response!.error == nil)
+    XCTAssert(responseResult.isOk())
+    
+    guard let response = responseResult.intoOk() else {
+      return XCTFail("Response is not of the required type")
+    }
+    XCTAssert(response.wasSuccessful == true)
+    XCTAssert(response.error == nil)
   }
   
   func test_Factory_BuildsResponseWithErrorNSData() {
     let data = Data(base64Encoded: ResponseInjections.yelpErrorResponse, options: .ignoreUnknownCharacters)!
-    let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
+    let responseResult = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
-    XCTAssertNotNil(response)
-    XCTAssert(response is YelpV2SearchResponse)
-    XCTAssertNotNil(response!.error)
-    XCTAssert(response!.error! == .invalidParameter(field: "location"))
-    XCTAssert(response!.wasSuccessful == false)
+    XCTAssert(responseResult.isOk())
+    
+    guard let response = responseResult.intoOk() else {
+      return XCTFail("Response is not of the required type")
+    }
+    XCTAssertNotNil(response.error)
+    XCTAssert(response.error! == .invalidParameter(field: "location"))
+    XCTAssert(response.wasSuccessful == false)
   }
   
-  func test_Factory_BuildsNilWithInvalidNSData() {
+  func test_Factory_GivesErrorWithInvalidNSData() {
     let data = Data()
     let response = YelpAPIFactory.makeResponse(with: data, from: searchRequestStub)
     
-    XCTAssertNil(response)
+    XCTAssert(response.isErr())
+    guard case .invalidJson = response.unwrapErr() else {
+      return XCTFail("Wrong error type returned")
+    }
   }
   
   func test_Factory_BuildsCorrectTypeOfResponseBasedOnRequest() {
@@ -247,12 +264,8 @@ class YelpAPIFactoryTests: YAPIXCTestCase {
     let businessResponse = YelpAPIFactory.makeResponse(with: businessData, from: businessRequestStub)
     let phoneSearchResponse = YelpAPIFactory.makeResponse(with: phoneSearchData, from: phoneSearchRequestStub)
     
-    XCTAssertNotNil(searchResponse)
-    XCTAssertNotNil(businessResponse)
-    XCTAssertNotNil(phoneSearchResponse)
-    
-    XCTAssert(searchResponse is YelpV2SearchResponse)
-    XCTAssert(businessResponse is YelpV2BusinessResponse)
-    XCTAssert(phoneSearchResponse is YelpV2PhoneSearchResponse)
+    XCTAssert(searchResponse.isOk())
+    XCTAssert(businessResponse.isOk())
+    XCTAssert(phoneSearchResponse.isOk())
   }
 }

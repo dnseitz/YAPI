@@ -156,9 +156,9 @@ public final class ImageReference {
    */
   public func load(withScale scale: CGFloat = 1.0, completionHandler handler: @escaping (_ image: UIImage?, _ error: ImageLoadError?) -> Void) {
     if self.state == .loading {
-      DispatchQueue.main.async {
+//      DispatchQueue.main.async {
         handler(nil, .loadInProgress)
-      }
+//      }
       return
     }
     self.state = .loading
@@ -167,14 +167,14 @@ public final class ImageReference {
     }
     if let image = self.cachedImage {
       guard let imageCopy = image.cgImage?.copy() else {
-        DispatchQueue.main.async {
+//        DispatchQueue.main.async {
           handler(nil, .copyError)
-        }
+//        }
         return
       }
-      DispatchQueue.main.async {
+//      DispatchQueue.main.async {
         handler(UIImage(cgImage: imageCopy, scale: scale, orientation: image.imageOrientation), nil)
-      }
+//      }
       self.state = .idle
       return
     }
@@ -184,9 +184,9 @@ public final class ImageReference {
       let errorResult: ImageLoadError?
       defer {
         self.state = .idle
-        DispatchQueue.main.async {
-          handler(imageResult, errorResult)
-        }
+//        DispatchQueue.main.async {
+        handler(imageResult, errorResult)
+//        }
       }
       if let err = error {
         imageResult = nil
