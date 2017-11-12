@@ -34,7 +34,7 @@ protocol YelpArrayParameter : ExpressibleByArrayLiteral, YelpParameter {
   
   var internalValue: [Self.Element] { get }
   
-  init?(_ elements: [Self.Element]?)
+  init(_ elements: [Self.Element])
 }
 
 extension YelpParameter {
@@ -48,13 +48,8 @@ extension YelpBooleanParameter {
     return String(self.internalValue)
   }
   
-  public init?(_ value: BooleanLiteralType?) {
-    if let value = value {
-      self.init(booleanLiteral: value)
-    }
-    else {
-      return nil
-    }
+  public init(_ value: BooleanLiteralType) {
+    self.init(booleanLiteral: value)
   }
 }
 
@@ -63,13 +58,8 @@ extension YelpStringParameter {
     return self.internalValue
   }
   
-  public init?(_ value: StringLiteralType?) {
-    if let value = value {
-      self.init(stringLiteral: value)
-    }
-    else {
-      return nil
-    }
+  public init(_ value: StringLiteralType) {
+    self.init(stringLiteral: value)
   }
 }
 
@@ -78,13 +68,8 @@ extension YelpIntParameter {
     return String(self.internalValue)
   }
   
-  public init?(_ value: IntegerLiteralType?) {
-    if let value = value {
-      self.init(integerLiteral: value)
-    }
-    else {
-      return nil
-    }
+  public init(_ value: IntegerLiteralType) {
+    self.init(integerLiteral: value)
   }
 }
 
@@ -93,13 +78,8 @@ extension YelpDoubleParameter {
     return String(self.internalValue)
   }
   
-  public init?(_ value: FloatLiteralType?) {
-    if let value = value {
-      self.init(floatLiteral: value)
-    }
-    else {
-      return nil
-    }
+  public init(_ value: FloatLiteralType) {
+    self.init(floatLiteral: value)
   }
 }
 
@@ -109,6 +89,6 @@ extension YelpArrayParameter {
   }
   
   public init(arrayLiteral elements: Self.Element...) {
-    self.init(elements)!
+    self.init(elements)
   }
 }

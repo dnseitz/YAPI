@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
-    YelpAPIFactory.setAuthenticationKeys(consumerKey: "OoXKn646Mxl8jwJ7LVgoug", consumerSecret: "ke6ZqhkOawz1XgbQSjSQYDarpmA")
+//    YelpAPIFactory.V2.setAuthenticationKeys(consumerKey: "OoXKn646Mxl8jwJ7LVgoug", consumerSecret: "ke6ZqhkOawz1XgbQSjSQYDarpmA", token: "viwLEKhJMb-Cpvj-QGQ5hsn54cRlHvvq", tokenSecret: "AfBo_5z0cSRGSyb-TCHAz2Mi3Lc")
     return true
   }
 

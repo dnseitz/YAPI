@@ -69,13 +69,8 @@ public struct YelpV2SearchParameters {
       return "category_filter"
     }
     
-    public init?(_ elements: [Element]?) {
-      if let elements = elements {
-        self.internalValue = elements
-      }
-      else {
-        return nil
-      }
+    public init(_ elements: [Element]) {
+      self.internalValue = elements
     }
   }
   

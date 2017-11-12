@@ -36,19 +36,20 @@ private func oauthClient(for version: OAuthSwiftCredential.Version) -> OAuthSwif
     }
   case .oauth2:
     if let client = oauth2Client {
+      if let token = AuthKeys.token {
+        client.credential.oauthToken = token
+      }
       return client
     }
     else {
       guard
         let consumerKey = AuthKeys.consumerKey,
-        let consumerSecret = AuthKeys.consumerSecret,
-        let token = AuthKeys.token
+        let consumerSecret = AuthKeys.consumerSecret
         else {
-          assert(false, "The request requires a consumerKey, consumerSecret, and token in order to access the Yelp API, set these through the YelpAPIFactory")
+          assert(false, "The request requires a consumerKey and consumerSecret in order to access the Yelp API, set these through the YelpAPIFactory")
           return nil
       }
       let credential = OAuthSwiftCredential(consumerKey: consumerKey, consumerSecret: consumerSecret)
-      credential.oauthToken = token
       let client = OAuthSwiftClient(credential: credential)
       oauth2Client = client
       return client

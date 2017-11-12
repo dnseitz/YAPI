@@ -17,7 +17,7 @@ public final class YelpV3TokenResponse : YelpV3Response {
   
   
   public enum TokenType : String {
-    case bearer = "bearer"
+    case bearer = "Bearer"
   }
   
   public let accessToken: String?
@@ -31,7 +31,7 @@ public final class YelpV3TokenResponse : YelpV3Response {
   
   public init(withJSON data: [String: AnyObject]) throws {
     if let error = data["error"] as? [String: AnyObject] {
-      self.error = YelpV3TokenResponse.parseError(error: error)
+      self.error = YelpV3TokenResponse.parse(error: error)
     }
     else {
       self.error = nil

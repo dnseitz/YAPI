@@ -32,7 +32,7 @@ class SearchRequestViewController: UIViewController {
     responseField.text = ""
   }
   
-  func sendRequest(sender: UIButton) {
+  @objc func sendRequest(sender: UIButton) {
     clearParameters()
     
     setTerm()
@@ -45,26 +45,24 @@ class SearchRequestViewController: UIViewController {
     
     let request = YelpAPIFactory.V2.makeSearchRequest(with: self.searchParameters)
     
-    request.send { (response, error) in
+    request.send { result in
       var text = ""
-      defer {
-        print(text)
-        DispatchQueue.main.async {
-          self.responseField.text = text
+      switch result {
+      case .ok(let response):
+        if response.wasSuccessful, let businesses = response.businesses {
+          for business in businesses {
+            text += "\(business.name)\n"
+          }
         }
-      }
-      if let error = error {
+        else {
+          text += "\(response.error)\n"
+        }
+      case .err(let error):
         text += "Error recieved: \(error)\n"
       }
-      
-      guard let response = response else { return }
-      if response.wasSuccessful {
-        for business in response.businesses! {
-          text += "\(business.name)\n"
-        }
-      }
-      else {
-        text += "\(response.error)\n"
+      print(text)
+      DispatchQueue.main.async {
+        self.responseField.text = text
       }
     }
   }

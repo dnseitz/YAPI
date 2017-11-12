@@ -8,12 +8,10 @@
 
 import Foundation
 
-public protocol YelpV3Response : YelpResponse {
-  
-}
+public protocol YelpV3Response : YelpResponse {}
 
 extension YelpV3Response {
-  static func parseError(error dict: [String: AnyObject]) -> YelpResponseError {
+  static func parse(error dict: [String: AnyObject]) -> YelpResponseError {
     return .unknownError
     /*
     switch dict["id"] as? String {
