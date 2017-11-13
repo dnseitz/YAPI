@@ -15,6 +15,7 @@
 		087648C41FB8FF190058E110 /* project_alphaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087648C31FB8FF190058E110 /* project_alphaTests.swift */; };
 		087648CF1FB8FF190058E110 /* project_alphaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087648CE1FB8FF190058E110 /* project_alphaUITests.swift */; };
 		08CCBE8F1FB8FF9D007EC96E /* YAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08CCBE901FB8FF9D007EC96E /* YAPI.framework */; };
+		08CCBE941FB96D8D007EC96E /* secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 08CCBE931FB96D8D007EC96E /* secrets.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		087648CE1FB8FF190058E110 /* project_alphaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = project_alphaUITests.swift; sourceTree = "<group>"; };
 		087648D01FB8FF190058E110 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08CCBE901FB8FF9D007EC96E /* YAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = YAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		08CCBE931FB96D8D007EC96E /* secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = secrets.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 		087648A21FB8FF190058E110 = {
 			isa = PBXGroup;
 			children = (
+				08CCBE921FB96D57007EC96E /* Configuration */,
 				087648AD1FB8FF190058E110 /* project-alpha */,
 				087648C21FB8FF190058E110 /* project-alphaTests */,
 				087648CD1FB8FF190058E110 /* project-alphaUITests */,
@@ -137,6 +140,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		08CCBE921FB96D57007EC96E /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				08CCBE931FB96D8D007EC96E /* secrets.plist */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -144,6 +155,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 087648D31FB8FF190058E110 /* Build configuration list for PBXNativeTarget "project-alpha" */;
 			buildPhases = (
+				08CCBE911FB967E6007EC96E /* ShellScript */,
 				087648A71FB8FF190058E110 /* Sources */,
 				087648A81FB8FF190058E110 /* Frameworks */,
 				087648A91FB8FF190058E110 /* Resources */,
@@ -244,6 +256,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08CCBE941FB96D8D007EC96E /* secrets.plist in Resources */,
 				087648B91FB8FF190058E110 /* LaunchScreen.storyboard in Resources */,
 				087648B61FB8FF190058E110 /* Assets.xcassets in Resources */,
 				087648B41FB8FF190058E110 /* Main.storyboard in Resources */,
@@ -265,6 +278,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		08CCBE911FB967E6007EC96E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#check if env-vars.sh exists\nif [ -f ./env-vars.sh ]\nthen\nsource ./env-vars.sh\necho \"env found\"\necho $APP_ID\necho $CLIENT_SECRET\nfi\n\necho \"done\"";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		087648A71FB8FF190058E110 /* Sources */ = {
