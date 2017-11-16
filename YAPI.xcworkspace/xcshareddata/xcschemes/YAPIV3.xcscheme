@@ -17,7 +17,7 @@
                BlueprintIdentifier = "083C5E301D77280900132923"
                BuildableName = "YAPI.framework"
                BlueprintName = "YAPI"
-               ReferencedContainer = "container:YAPI.xcodeproj">
+               ReferencedContainer = "container:YAPI/YAPI.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -37,7 +37,7 @@
                BlueprintIdentifier = "083C5E3A1D77280A00132923"
                BuildableName = "YAPITests.xctest"
                BlueprintName = "YAPITests"
-               ReferencedContainer = "container:YAPI.xcodeproj">
+               ReferencedContainer = "container:YAPI/YAPI.xcodeproj">
             </BuildableReference>
             <SkippedTests>
                <Test
@@ -56,7 +56,7 @@
             BlueprintIdentifier = "083C5E301D77280900132923"
             BuildableName = "YAPI.framework"
             BlueprintName = "YAPI"
-            ReferencedContainer = "container:YAPI.xcodeproj">
+            ReferencedContainer = "container:YAPI/YAPI.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -79,7 +79,7 @@
             BlueprintIdentifier = "083C5E301D77280900132923"
             BuildableName = "YAPI.framework"
             BlueprintName = "YAPI"
-            ReferencedContainer = "container:YAPI.xcodeproj">
+            ReferencedContainer = "container:YAPI/YAPI.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -97,7 +97,7 @@
             BlueprintIdentifier = "083C5E301D77280900132923"
             BuildableName = "YAPI.framework"
             BlueprintName = "YAPI"
-            ReferencedContainer = "container:YAPI.xcodeproj">
+            ReferencedContainer = "container:YAPI/YAPI.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
